@@ -10,6 +10,10 @@ public class MessageString extends Message {
         super(recipientUser, timestamp);
         this.content = content;
     }
+
+    public MessageString (User recipientUser, Timestamp timestamp) {
+        super(recipientUser, timestamp);
+    }
     
     @Override
     public String getContent() {

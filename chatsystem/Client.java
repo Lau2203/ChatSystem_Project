@@ -1,6 +1,9 @@
 package chatsystem;
 
+import java.util.ArrayList;
+
 import chatsystem.network.NetworkManager;
+import chatsystem.network.NetworkManagerInformation;
 
 import chatsystem.util.Logs;
 
@@ -8,11 +11,18 @@ public abstract class Client {
     
 	protected NetworkManager netmanager;
 
+    protected NetworkManagerInformation networkManagerInformation;
+
 	protected static final String DEFAULT_CONFIG_FILE_PATH = "config.cfg";
+
+	protected ArrayList<User> activeUsersList;
+	protected ArrayList<ChatSession> activeChatSessionList;
 
 	protected Client(int port) {
 
 		this.netmanager = new NetworkManager(this, port);
+		this.activeUsersList = new ArrayList<User>();
+		this.activeChatSessionList = new ArrayList<ChatSession>();
 	}
 
 	protected void startNetworkManager() {
@@ -27,4 +37,9 @@ public abstract class Client {
 		if 	(cmd.equals("quit")) { this.netmanager.shutdown(); System.exit(0); }
 		else if (cmd.equals("logs")) { Logs.readLogs(); }
 	}
+
+    public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
+        this.networkManagerInformation = ni;
+        this.notify();
+    }
 }

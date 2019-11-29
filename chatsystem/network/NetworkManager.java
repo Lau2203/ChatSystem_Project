@@ -8,7 +8,11 @@ import java.net.Socket;
 
 import java.lang.Thread;
 
+import java.sql.Timestamp;
+
 import chatsystem.Client;
+import chatsystem.NotifyInformation;
+import chatsystem.MessageString;
 
 public class NetworkManager extends Thread {
 
@@ -16,7 +20,9 @@ public class NetworkManager extends Thread {
 
 	private ConnectionListener colistener;
 
-	private static ArrayList<ConnectionHandler> cohandlers;
+	private ArrayList<ConnectionHandler> cohandlers;
+
+    private NetworkManagerInformation networkManagerInformation;
 
 	public NetworkManager(Client master, int listeningTCPPort) {
 
@@ -25,6 +31,7 @@ public class NetworkManager extends Thread {
 		
 		this.cohandlers = new ArrayList<ConnectionHandler>();
 
+        this.networkManagerInformation = new NetworkManagerInformation();
 	}
 
 	public void startAll() {
@@ -59,24 +66,97 @@ public class NetworkManager extends Thread {
 		}
 	}
 
-	private static synchronized ArrayList<ConnectionHandler> getConnectionHandlers() {
-		return NetworkManager.cohandlers;
+	private synchronized ArrayList<ConnectionHandler> getConnectionHandlers() {
+		return this.cohandlers;
 	}
 
-	protected static synchronized void notifyDeathOfConnectionHandler(ConnectionHandler sub) {
-		NetworkManager.cohandlers.remove(sub);
+	protected synchronized void notifyDeathOfConnectionHandler(ConnectionHandler ch) {
+		this.cohandlers.remove(ch);
+        /* Handle new information */
+        this.networkManagerInformation.setToBeNotified(ch);
+        this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
+        this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
+        /* Wake NetworkManager to handle the death of the connection handler
+         * and tell the client too */
+        this.notify();
 	}
-	
-	protected static synchronized void notifyNewConnection(Socket clientConnection) {
+
+    protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
+
+        MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
+
+        msg.setContent(content);
+
+        /* Handle new information */
+        this.networkManagerInformation.setToBeNotified(ch);
+        this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
+        this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
+        this.networkManagerInformation.setMessage(msg);
+        /* Wake NetworkManager to handle the death of the connection handler
+         * and tell the client too */
+        this.notify();
+    }
+
+	protected synchronized void notifyNewConnection(Socket clientConnection) {
 		ConnectionHandler ch = new ConnectionHandler(clientConnection);	
 
-		NetworkManager.cohandlers.add(ch);
-		ch.start();
+		this.cohandlers.add(ch);
+        /* Handle new information */
+        this.networkManagerInformation.setToBeNotified(this.colistener);
+        this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+        
+        ch.start();
+        /* Wake NetworkManager to handle the death of the connection handler
+         * and tell the client too */
+        this.notify();	
 	}
+
+    
+
+    private void handleNewInformation() {
+        switch (this.networkManagerInformation.getNotifyInformation()) {
+
+            case NEW_CONNECTION:
+                break;
+
+            case END_OF_CONNECTION:
+                break;
+
+            case USERNAME_MODIFICATION:
+                break;
+
+            case NEW_ACTIVE_USER:
+                break;
+
+            case USER_LEFT:
+                break;
+
+            default: break;
+        }
+
+        this.master.notifyFromNetworkManager(this.networkManagerInformation);
+
+        synchronized(this.networkManagerInformation.getToBeNotified()) {
+            /* Wake the information provider (either ConnectionListener, ConnectionHandler or Client) */
+            this.networkManagerInformation.getToBeNotified().notify();
+        }
+    }
 
 	public void run() {
 
-		this.startAll();	
+        ConnectionHandler.setMaster(this);
+
+		this.startAll();
+
+        while (true) {
+            synchronized(this) {
+                try { 
+                    wait();
+                } catch (InterruptedException ie) {}
+            }
+
+            this.handleNewInformation();
+        }
 	}
 }
 

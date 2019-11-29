@@ -3,6 +3,7 @@ package chatsystem;
 import java.sql.Timestamp;
 
 public abstract class Message {
+
     private User recipientUser;
     private Timestamp timestamp;
 

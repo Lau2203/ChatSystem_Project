@@ -10,13 +10,19 @@ import java.net.InetAddress;
 
 import java.lang.Thread;
 
+import chatsystem.User;
+
 import chatsystem.network.ConnectionListener;
 
 import chatsystem.util.Logs;
 
 public class ConnectionHandler extends Thread {
 
-	Socket cs;
+    private static NetworkManager master;
+
+    private User recipient;
+
+	private Socket cs;
 
 	private BufferedReader in;
 	private PrintWriter out;
@@ -37,6 +43,26 @@ public class ConnectionHandler extends Thread {
 		this.isInterrupted = false;
 		this.instanceName = "ConnectionHandler - " + this.toString();
 	}
+
+    public ConnectionHandler(User recipient, Socket clientSocket) {
+        this.recipient = recipient;
+
+		this.cs = clientSocket;	
+
+		this.remoteAddress = this.cs.getInetAddress();
+		this.remotePort = this.cs.getPort();
+
+		this.isInterrupted = false;
+		this.instanceName = "ConnectionHandler - " + this.toString();
+	}
+
+    public User getRecipientUser() {
+        return this.recipient;
+    }
+
+    public static void setMaster(NetworkManager master) {
+        ConnectionHandler.master = master;
+    }
 
 	private void prepareIO() {
 		try {
@@ -74,7 +100,12 @@ public class ConnectionHandler extends Thread {
 	}
 
 	private void die() {
-		NetworkManager.notifyDeathOfConnectionHandler(this);
+        synchronized(this) {
+		    this.master.notifyDeathOfConnectionHandler(this);
+            try {
+                wait();
+            } catch (InterruptedException ie) {}
+        }
 	}
 
 	private void interruptSubServer() {
@@ -120,6 +151,13 @@ public class ConnectionHandler extends Thread {
 				}
 				break;
 			}
+
+            synchronized(this) {
+                    this.master.notifyNewMessage(this, userInput);
+                    try {
+                        wait();
+                    } catch (InterruptedException ie) {}
+            }
 
 			Logs.println(this.instanceName, "Received '" + userInput + "'");
 
