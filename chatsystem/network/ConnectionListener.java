@@ -11,27 +11,23 @@ import java.lang.Thread;
 
 import chatsystem.util.Logs;
 
-public class NetworkServer extends Thread {
+public class ConnectionListener extends Thread {
 
-	private NetworkServerApplication master;
+	private NetworkManager master;
 
 	private ServerSocket ssocket;
 	private int port;
 
 	private Socket clientSocket;
 
-	private static ArrayList<NetworkSubServer> subs;
+	private String instanceName = "ConnectionListener";
 
-	private String instanceName = "NetworkServer";
-
-	public NetworkServer(NetworkServerApplication master, int port) {
+	public ConnectionListener(NetworkManager master, int port) {
 
 		this.master = master;
 
 		this.ssocket = null;
 		this.port = port;
-
-		this.subs = new ArrayList<NetworkSubServer>();
 	}
 
 	private void prepareServer() throws IOException {
@@ -53,40 +49,20 @@ public class NetworkServer extends Thread {
 		}
 	}
 
-	protected void shutdown() {
-
-		ArrayList<NetworkSubServer> subs = new ArrayList<NetworkSubServer>(this.subs);
-
-		for (NetworkSubServer s: subs) {
-
-			s.shutdown();
-		}		
-
-		try {
-			this.ssocket.close();
-		} catch (IOException ioe) {
-			System.out.println("Issue in disconnecting, aborted");
-			System.exit(1);
-		}
-	}
-
-	protected static synchronized void notifyDeathOfNetworkSubServer(NetworkSubServer sub) {
-		NetworkServer.subs.remove(sub);
+	protected void shutdown() throws IOException {
+		this.ssocket.close();
 	}
 
 	private void listen() {
 
 		Socket clientSocket;
-		NetworkSubServer sub;
 
 		while (true) {
 
 			try {
 				clientSocket = this.ssocket.accept();
 
-				sub = new NetworkSubServer(clientSocket);
-				this.subs.add(sub);
-				sub.start();	
+				NetworkManager.notifyNewConnection(clientSocket);
 
 			} catch (IOException ioe) {}
 		}
@@ -104,10 +80,6 @@ public class NetworkServer extends Thread {
 		Logs.printinfo(this.instanceName, "Server successfully started");
 
 		this.listen();
-	}
-
-	public void readLogs() {
-		Logs.readLogs();
 	}
 }
 

@@ -10,9 +10,11 @@ import java.net.InetAddress;
 
 import java.lang.Thread;
 
+import chatsystem.network.ConnectionListener;
+
 import chatsystem.util.Logs;
 
-public class NetworkSubServer extends Thread {
+public class ConnectionHandler extends Thread {
 
 	Socket cs;
 
@@ -26,14 +28,14 @@ public class NetworkSubServer extends Thread {
 
 	private String instanceName;
 
-	public NetworkSubServer(Socket clientSocket) {
+	public ConnectionHandler(Socket clientSocket) {
 		this.cs = clientSocket;	
 
 		this.remoteAddress = this.cs.getInetAddress();
 		this.remotePort = this.cs.getPort();
 
 		this.isInterrupted = false;
-		this.instanceName = "NetworkSubServer - " + this.toString();
+		this.instanceName = "ConnectionHandler - " + this.toString();
 	}
 
 	private void prepareIO() {
@@ -72,13 +74,24 @@ public class NetworkSubServer extends Thread {
 	}
 
 	private void die() {
-		NetworkServer.notifyDeathOfNetworkSubServer(this);
+		NetworkManager.notifyDeathOfConnectionHandler(this);
+	}
+
+	private void interruptSubServer() {
+		synchronized(this) {
+			this.isInterrupted = true;
+		}
+	}
+
+	private boolean isSubServerInterrupted() {
+		synchronized(this) {
+			return this.isInterrupted;
+		}
 	}
 
 	protected void shutdown() {
+		this.interruptSubServer();
 		this.disconnect();
-		this.interrupt();
-		this.isInterrupted = true;
 	}
 
 	public void run() {
@@ -95,14 +108,14 @@ public class NetworkSubServer extends Thread {
 				userInput = this.readln();
 			} catch (IOException ioe) {
 				/* If we are actually the one that closed the socket (or the main subserver manager) */
-				if (!this.isInterrupted) {
+				if (!this.isSubServerInterrupted()) {
 					userShotDownConnection = true;
 				}
 				break;
 			}
 
 			if (userInput == null) {
-				if (!isInterrupted) {
+				if (!this.isSubServerInterrupted()) {
 					userShotDownConnection = true;
 				}
 				break;
