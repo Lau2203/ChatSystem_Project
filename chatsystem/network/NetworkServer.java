@@ -22,9 +22,7 @@ public class NetworkServer extends Thread {
 
 	private static ArrayList<NetworkSubServer> subs;
 
-	private static final String logsFilePath = ".server.logs";
-
-	private Logs logs;
+	private String instanceName = "NetworkServer";
 
 	public NetworkServer(NetworkServerApplication master, int port) {
 
@@ -34,13 +32,6 @@ public class NetworkServer extends Thread {
 		this.port = port;
 
 		this.subs = new ArrayList<NetworkSubServer>();
-
-		try {
-			this.logs = new Logs(this.logsFilePath);
-		} catch (IOException ioe) {
-			System.out.println("[x] ERROR: Unable to reach log file");	
-			System.exit(1);
-		}
 	}
 
 	private void prepareServer() throws IOException {
@@ -57,7 +48,6 @@ public class NetworkServer extends Thread {
 
 			System.out.println("Server listening on port " + this.port);
 
-			this.logs.println("=== NEW INSTANCE OF SERVER ===");
 			/* Notify the application that the server is now listening */
 			this.master.notify();
 		}
@@ -78,8 +68,6 @@ public class NetworkServer extends Thread {
 			System.out.println("Issue in disconnecting, aborted");
 			System.exit(1);
 		}
-
-		this.logs.writeLogs();
 	}
 
 	protected static synchronized void notifyDeathOfNetworkSubServer(NetworkSubServer sub) {
@@ -106,20 +94,20 @@ public class NetworkServer extends Thread {
 
 	public void run() {
 
+		Logs.printinfo(this.instanceName, "Starting the server");
 		try {
 			this.prepareServer();
 		} catch (IOException ioe) {
-			System.out.println("Could not create server socket, aborted");
+			Logs.printerro("Could not create server socket, aborted");
 			System.exit(1);
 		}
-
-		NetworkSubServer.logs = this.logs;
+		Logs.printinfo(this.instanceName, "Server successfully started");
 
 		this.listen();
 	}
 
 	public void readLogs() {
-		this.logs.readLogs();
+		Logs.readLogs();
 	}
 }
 

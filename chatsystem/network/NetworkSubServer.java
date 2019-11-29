@@ -14,8 +14,6 @@ import chatsystem.util.Logs;
 
 public class NetworkSubServer extends Thread {
 
-	protected static Logs logs;
-
 	Socket cs;
 
 	private BufferedReader in;
@@ -24,11 +22,18 @@ public class NetworkSubServer extends Thread {
 	private InetAddress remoteAddress;
 	private int remotePort;
 
+	private boolean isInterrupted;
+
+	private String instanceName;
+
 	public NetworkSubServer(Socket clientSocket) {
 		this.cs = clientSocket;	
 
 		this.remoteAddress = this.cs.getInetAddress();
 		this.remotePort = this.cs.getPort();
+
+		this.isInterrupted = false;
+		this.instanceName = "NetworkSubServer - " + this.toString();
 	}
 
 	private void prepareIO() {
@@ -59,10 +64,10 @@ public class NetworkSubServer extends Thread {
 	private void disconnect() {
 		try {
 			this.cs.close();
-			this.logs.printinfo("Disconnected from [" + this.remoteAddress + ":" + this.remotePort + "]");
+			Logs.printinfo(this.instanceName, "Disconnected from [" + this.remoteAddress + ":" + this.remotePort + "]");
 
 		} catch (IOException ioe) {
-			this.logs.printerro(this + " : Issue with closing client socket, aborted");
+			Logs.printerro(this.instanceName, "Issue with closing client socket, aborted");
 		}
 	}
 
@@ -73,6 +78,7 @@ public class NetworkSubServer extends Thread {
 	protected void shutdown() {
 		this.disconnect();
 		this.interrupt();
+		this.isInterrupted = true;
 		this.die();
 	}
 
@@ -82,13 +88,13 @@ public class NetworkSubServer extends Thread {
 
 		this.prepareIO();
 
-		this.logs.printinfo("Connected with [" + this.remoteAddress + ":" + this.remotePort + "]");
+		Logs.printinfo(this.instanceName, "Successfully connected with [" + this.remoteAddress + ":" + this.remotePort + "]");
 
 		while (true) {
 			try {
 				userInput = this.readln();
 			} catch (IOException ioe) {
-				this.logs.printinfo(this + " : User shot down connection");
+				Logs.printinfo(this.instanceName, "User shot down connection");
 				break;
 			}
 
@@ -97,15 +103,15 @@ public class NetworkSubServer extends Thread {
 				break;
 			}
 
-			this.logs.println(this + " : " + userInput);
+			Logs.println(this.instanceName, "Received '" + userInput + "'");
 
 			this.writeln("'userInput' : " + userInput.length());
 		}
 
-		if (!this.interrupted()) { this.shutdown(); }
+		if (!this.isInterrupted) { this.shutdown(); }
 	}
 
 	public String toString() {
-		return "[" + this.remoteAddress + ":" + this.remotePort + "]";
+		return this.remoteAddress + ":" + this.remotePort;
 	}
 }

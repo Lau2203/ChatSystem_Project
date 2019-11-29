@@ -13,6 +13,8 @@ BASE_OBJS=$(PACKAGE_PATH)/*.java
 NETWORK_OBJS=$(PACKAGE_PATH)/network/*.java
 UTIL_OBJS=$(PACKAGE_PATH)/util/*.java
 
+LOG_FILE=./logs
+
 ALL_OBJS=$(OBJ) $(BASE_OBJS) $(NETWORK_OBJS) $(UTIL_OBJS)
 
 all: $(ALL_OBJS)
@@ -30,5 +32,5 @@ util: $(UTIL_OBJS)
 .PHONY: clean
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(LOG_FILE)
 

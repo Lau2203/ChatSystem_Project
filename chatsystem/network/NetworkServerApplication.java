@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import java.util.Scanner;
 
+import chatsystem.util.Logs;
 import chatsystem.util.ConfigParser;
 
 public class NetworkServerApplication {
@@ -50,7 +51,8 @@ public class NetworkServerApplication {
 	public static void main(String[] args) {
 
 		NetworkServerApplication nsa;
-		String serverPort;
+		String serverPort, logFilePath;
+		boolean isLogEnabled = true;
 
 		try {
 			if (args.length == 0) {
@@ -60,7 +62,17 @@ public class NetworkServerApplication {
 			}
 		} catch (IOException ioe) {}
 
+		logFilePath = ConfigParser.get("logfile");
 		serverPort = ConfigParser.get("server-port");
+
+		if (logFilePath != null) {
+			try {
+				Logs.init(isLogEnabled, logFilePath);
+			} catch (IOException ioe) {
+				/* Log init failed, logs filling is just abandonned */
+				System.out.println("[x] ERROR while initializing log file, logs filling is abandonned.");
+			}
+		}
 
 		if (serverPort == null)
 			nsa = new NetworkServerApplication(0);	
