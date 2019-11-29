@@ -102,7 +102,9 @@ public class NetworkSubServer extends Thread {
 			}
 
 			if (userInput == null) {
-				userShotDownConnection = true;
+				if (!isInterrupted) {
+					userShotDownConnection = true;
+				}
 				break;
 			}
 

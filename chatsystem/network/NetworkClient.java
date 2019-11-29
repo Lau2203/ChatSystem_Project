@@ -95,11 +95,12 @@ public class NetworkClient {
 
 			System.out.print(">>> ");
 			userInput = userScanner.nextLine();
-			this.writeln(userInput);
 
 			if (userInput.equals("quit")) {
 				break;
 			}
+
+			this.writeln(userInput);
 
 			try {
 				serverInput = this.readln();
