@@ -138,7 +138,7 @@ public class NetworkManager extends Thread {
             case NEW_ACTIVE_USER:
                 break;
 
-            case USER_LEFT:
+            case USER_LEFT_NETWORK:
                 break;
 
             default: break;

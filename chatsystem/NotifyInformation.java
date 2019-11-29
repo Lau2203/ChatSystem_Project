@@ -8,7 +8,7 @@ public enum NotifyInformation {
     USERNAME_MODIFICATION,
 
     NEW_ACTIVE_USER,
-    USER_LEFT,
+    USER_LEFT_NETWORK,
 
     NEW_MESSAGE,
 

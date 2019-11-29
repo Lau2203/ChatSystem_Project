@@ -2,12 +2,14 @@ package chatsystem;
 
 import java.util.ArrayList;
 
+import java.lang.Thread;
+
 import chatsystem.network.NetworkManager;
 import chatsystem.network.NetworkManagerInformation;
 
 import chatsystem.util.Logs;
 
-public abstract class Client {
+public abstract class Client extends Thread {
     
 	protected NetworkManager netmanager;
 

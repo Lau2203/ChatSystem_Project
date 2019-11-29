@@ -58,7 +58,8 @@ public class ConfigParser {
 			
 			config = line.split("=");	
 
-			ConfigParser.configBindings.put(config[0], config[1]);
+			if (config.length == 2)
+				ConfigParser.configBindings.put(config[0], config[1]);
 		}
 
 		ConfigParser.close();	
