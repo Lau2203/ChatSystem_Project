@@ -10,9 +10,12 @@ import java.lang.Thread;
 
 import java.sql.Timestamp;
 
+import chatsystem.User;
 import chatsystem.Client;
 import chatsystem.NotifyInformation;
 import chatsystem.MessageString;
+
+import chatsystem.util.ConfigParser;
 
 public class NetworkManager extends Thread {
 
@@ -24,6 +27,8 @@ public class NetworkManager extends Thread {
 
     private NetworkManagerInformation networkManagerInformation;
 
+    private ArrayList<User> activeUsersList;
+
 	public NetworkManager(Client master, int listeningTCPPort) {
 
 		this.master = master;
@@ -32,6 +37,11 @@ public class NetworkManager extends Thread {
 		this.cohandlers = new ArrayList<ConnectionHandler>();
 
         this.networkManagerInformation = new NetworkManagerInformation();
+
+        this.activeUsersList = new ArrayList<User>();
+
+        //String hostname = ConfigParser.get("main-user");
+        //this.activeUsersList.add(new User("", "main-user", InetAddress.getByName(hostname)));
 	}
 
 	public void startAll() {

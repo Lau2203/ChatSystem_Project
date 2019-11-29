@@ -15,13 +15,12 @@ public abstract class Client {
 
 	protected static final String DEFAULT_CONFIG_FILE_PATH = "config.cfg";
 
-	protected ArrayList<User> activeUsersList;
 	protected ArrayList<ChatSession> activeChatSessionList;
 
 	protected Client(int port) {
 
 		this.netmanager = new NetworkManager(this, port);
-		this.activeUsersList = new ArrayList<User>();
+
 		this.activeChatSessionList = new ArrayList<ChatSession>();
 	}
 
