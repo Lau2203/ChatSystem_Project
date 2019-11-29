@@ -108,6 +108,11 @@ public class NetworkClient {
 				break;
 			}
 
+			if (serverInput == null) {
+				System.out.println("Server shot down connection");
+				break;
+			}
+
 			System.out.println("Received : " + serverInput);
 		}
 

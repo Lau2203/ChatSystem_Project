@@ -79,12 +79,12 @@ public class NetworkSubServer extends Thread {
 		this.disconnect();
 		this.interrupt();
 		this.isInterrupted = true;
-		this.die();
 	}
 
 	public void run() {
 
 		String userInput;
+		boolean userShotDownConnection = false;	
 
 		this.prepareIO();
 
@@ -94,12 +94,15 @@ public class NetworkSubServer extends Thread {
 			try {
 				userInput = this.readln();
 			} catch (IOException ioe) {
-				Logs.printinfo(this.instanceName, "User shot down connection");
+				/* If we are actually the one that closed the socket (or the main subserver manager) */
+				if (!this.isInterrupted) {
+					userShotDownConnection = true;
+				}
 				break;
 			}
 
-			if (userInput.equals("quit")) {
-
+			if (userInput == null) {
+				userShotDownConnection = true;
 				break;
 			}
 
@@ -108,7 +111,16 @@ public class NetworkSubServer extends Thread {
 			this.writeln("'userInput' : " + userInput.length());
 		}
 
-		if (!this.isInterrupted) { this.shutdown(); }
+		/* 2 Possibilities 
+		 *  - The endpoint user connection has ended
+		 *  - We (or the main sub server manager) shot down the connection */
+
+		/* The endpoint user connection has ended */
+		if (userShotDownConnection) {
+			Logs.printinfo(this.instanceName, "User shot down connection");
+		}
+		
+		this.die();
 	}
 
 	public String toString() {
