@@ -11,15 +11,17 @@ import java.lang.Thread;
 
 import chatsystem.util.Logs;
 
+/* Listener for incoming TCP connections */
 public class ConnectionListener extends Thread {
-
+	/* We need a reference to the NetworkManager so that we are able to
+	 * to wake him up once the server started for instance, or once a new connection arises */
 	private NetworkManager master;
 
 	private ServerSocket ssocket;
 	private int port;
 
 	private Socket clientSocket;
-
+	/* For logs filling only */
 	private String instanceName = "ConnectionListener";
 
 	public ConnectionListener(NetworkManager master, int port) {
@@ -44,15 +46,16 @@ public class ConnectionListener extends Thread {
 
 			System.out.println("Server listening on port " + this.port);
 
-			/* Notify the application that the server is now listening */
+			/* Notify the NetworkManager that the server is now listening */
 			this.master.notify();
 		}
 	}
-
+	/* Can only be called by the NetworkManager when itself is shutting down */
 	protected void shutdown() throws IOException {
 		this.ssocket.close();
 	}
 
+	/* Actual process of waiting for incoming TCP connections */
 	private void listen() {
 
 		Socket clientSocket;
@@ -61,13 +64,13 @@ public class ConnectionListener extends Thread {
 
 			try {
 				clientSocket = this.ssocket.accept();
-
-                synchronized(this) {
-                    try {
-                        this.master.notifyNewConnection(clientSocket);
-                        wait();
-                    } catch (InterruptedException ie) {}
-                }
+				/* We now notify the NetworkManager that a new connection arised */
+				synchronized(this) {
+					try {
+						this.master.notifyNewConnection(clientSocket);
+						wait();
+					} catch (InterruptedException ie) {}
+				}
 
 
 			} catch (IOException ioe) {}
@@ -80,7 +83,7 @@ public class ConnectionListener extends Thread {
 		try {
 			this.prepareServer();
 		} catch (IOException ioe) {
-			Logs.printerro("Could not create server socket, aborted");
+			Logs.printerro(this.instanceName, "Could not create server socket, aborted");
 			System.exit(1);
 		}
 		Logs.printinfo(this.instanceName, "Server successfully started");

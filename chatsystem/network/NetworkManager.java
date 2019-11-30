@@ -15,36 +15,48 @@ import chatsystem.Client;
 import chatsystem.NotifyInformation;
 import chatsystem.MessageString;
 
+/* FOR TESTING ONLY */
 import chatsystem.util.ConfigParser;
 
 public class NetworkManager extends Thread {
 
+	/* The main client process we will wake up once we've been waken up by
+	 * several available notifications (for instance a new connection,
+	 * new message, new active user on the network). */
 	private Client master;
+	/* The TCP listener waiting for new connections to arise.
+	 * Once it happens, it notify the NetworkManager, which then creates a ConnectionHandler
+	 * in order to give it the control of that connection. */
+	private ConnectionListener connectionListener;
+	/* All the subconnections detected by the ConnectionListeners are handled
+	 * by the ConnectionHandler. Each ConnectionHandler provides one User-to-User TCP connection */
+	private ArrayList<ConnectionHandler> connectionHandlers;
+	/* This is the placeholder for notifiers to put their notification information. For instance,
+	 * it may contain a new User's information (fingerprint, username, IP address), or a new message.
+	 * This is the place the NetworkManager will be looking at when waken up by the ConnectionListener,
+	 * ConnectionHandler or NetworkSignalListener. */
+	private NetworkManagerInformation networkManagerInformation;
 
-	private ConnectionListener colistener;
-
-	private ArrayList<ConnectionHandler> cohandlers;
-
-    private NetworkManagerInformation networkManagerInformation;
-
-    private ArrayList<User> activeUsersList;
+	private ArrayList<User> activeUsersList;
 
 	public NetworkManager(Client master, int listeningTCPPort) {
 
 		this.master = master;
-		this.colistener = new ConnectionListener(this, listeningTCPPort);
-		
-		this.cohandlers = new ArrayList<ConnectionHandler>();
+		this.connectionListener = new ConnectionListener(this, listeningTCPPort);
 
-        this.networkManagerInformation = new NetworkManagerInformation();
+		this.connectionHandlers = new ArrayList<ConnectionHandler>();
 
-        this.activeUsersList = new ArrayList<User>();
+		this.networkManagerInformation = new NetworkManagerInformation();
 
-        //String hostname = ConfigParser.get("main-user");
-        //this.activeUsersList.add(new User("", "main-user", InetAddress.getByName(hostname)));
+		this.activeUsersList = new ArrayList<User>();
+
+		//String hostname = ConfigParser.get("main-user");
+		//this.activeUsersList.add(new User("", "main-user", InetAddress.getByName(hostname)));
 	}
 
 	public void startAll() {
+		/* Once the ConnectionListener and the NetworkSignalListener are started,
+		 * We want to notify the main client process */
 		synchronized(this.master) {
 			startConnectionListener();
 
@@ -53,12 +65,13 @@ public class NetworkManager extends Thread {
 	}
 
 	private void startConnectionListener() {
-		this.colistener.start();
+		/* We wait for the ConnectionListener to wake us up, meaning that it started successfully */
+		this.connectionListener.start();
 		synchronized(this) {
 			try { wait(); } catch (InterruptedException ie) {}
 		}
 	}
-
+	/* Can only be called by the main client process */
 	public synchronized void shutdown() {
 
 		ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
@@ -69,7 +82,7 @@ public class NetworkManager extends Thread {
 		}		
 
 		try {
-			this.colistener.shutdown();
+			this.connectionListener.shutdown();
 		} catch (IOException ioe) {
 			System.out.println("[x] Issue while shutting down the connection listener, aborted");
 			System.exit(1);
@@ -77,96 +90,111 @@ public class NetworkManager extends Thread {
 	}
 
 	private synchronized ArrayList<ConnectionHandler> getConnectionHandlers() {
-		return this.cohandlers;
+		return this.connectionHandlers;
 	}
 
+	/* Notification methods called by either the ConnectionListener, ConnectionHandlers or the NetworkSignalListener
+	 * These notifications refer to the type of information they convey. These different types can be 
+	 * seen in the NotifyInformation class */
+
+	/* Can only be called by a ConnectionHandler */
+	/* Meaning that a User-to-User connection has ended */
 	protected synchronized void notifyDeathOfConnectionHandler(ConnectionHandler ch) {
-		this.cohandlers.remove(ch);
-        /* Handle new information */
-        this.networkManagerInformation.setToBeNotified(ch);
-        this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
-        this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
-        /* Wake NetworkManager to handle the death of the connection handler
-         * and tell the client too */
-        this.notify();
+
+		this.connectionHandlers.remove(ch);
+		/* Put information for the NetworkManager to handle it */
+		this.networkManagerInformation.setToBeNotified(ch);
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
+		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
+		/* Wake up the NetworkManager to handle the death of the connection handler
+		 * and tell the client too */
+		this.notify();
 	}
+	/* Can only be called by a ConnectionHandler, since we must be connected to the remote client first */
+	protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
 
-    protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
+		MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
 
-        MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
+		msg.setContent(content);
 
-        msg.setContent(content);
-
-        /* Handle new information */
-        this.networkManagerInformation.setToBeNotified(ch);
-        this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
-        this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
-        this.networkManagerInformation.setMessage(msg);
-        /* Wake NetworkManager to handle the death of the connection handler
-         * and tell the client too */
-        this.notify();
-    }
-
+		/* Put information for the NetworkManager to handle it */
+		this.networkManagerInformation.setToBeNotified(ch);
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
+		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
+		this.networkManagerInformation.setMessage(msg);
+		/* Wake up the NetworkManager to handle the death of the connection handler
+		 * and tell the client too */
+		this.notify();
+	}
+	/* Can only be called by the ConnectionListener */
 	protected synchronized void notifyNewConnection(Socket clientConnection) {
 		ConnectionHandler ch = new ConnectionHandler(clientConnection);	
 
-		this.cohandlers.add(ch);
-        /* Handle new information */
-        this.networkManagerInformation.setToBeNotified(this.colistener);
-        this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
-        
-        ch.start();
-        /* Wake NetworkManager to handle the death of the connection handler
-         * and tell the client too */
-        this.notify();	
+		this.connectionHandlers.add(ch);
+		/* Put information for the NetworkManager to handle it */
+		this.networkManagerInformation.setToBeNotified(this.connectionListener);
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+
+		ch.start();
+		/* Wake up the NetworkManager to handle the death of the connection handler
+		 * and tell the client too */
+		this.notify();	
 	}
 
-    
 
-    private void handleNewInformation() {
-        switch (this.networkManagerInformation.getNotifyInformation()) {
 
-            case NEW_CONNECTION:
-                break;
+	/* Once it's been waken up, the NetworkManager needs to understand why
+	 * and act consequently */
+	private void handleNewInformation() {
+		switch (this.networkManagerInformation.getNotifyInformation()) {
 
-            case END_OF_CONNECTION:
-                break;
+			case NEW_CONNECTION:
+				break;
 
-            case USERNAME_MODIFICATION:
-                break;
+			case END_OF_CONNECTION:
+				break;
 
-            case NEW_ACTIVE_USER:
-                break;
+			case USERNAME_MODIFICATION:
+				break;
 
-            case USER_LEFT_NETWORK:
-                break;
+			case NEW_ACTIVE_USER:
+				break;
 
-            default: break;
-        }
+			case USER_LEFT_NETWORK:
+				break;
 
-        this.master.notifyFromNetworkManager(this.networkManagerInformation);
+			default: break;
+		}
 
-        synchronized(this.networkManagerInformation.getToBeNotified()) {
-            /* Wake the information provider (either ConnectionListener, ConnectionHandler or Client) */
-            this.networkManagerInformation.getToBeNotified().notify();
-        }
-    }
+		/* We relay the information to the main client process */
+		this.master.notifyFromNetworkManager(this.networkManagerInformation);
+		/* Eventually, we wake up the one that's waken us up */
+		synchronized(this.networkManagerInformation.getToBeNotified()) {
+			/* Wake the information provider (either ConnectionListener, ConnectionHandler or Client) */
+			this.networkManagerInformation.getToBeNotified().notify();
+		}
+	}
 
+
+	/* The whole process is here */
 	public void run() {
-
-        ConnectionHandler.setMaster(this);
-
+		/* So that all the ConnectionHandlers are able to call NetworkManager notification methods */
+		ConnectionHandler.setMaster(this);
+		/* Start the ConnectionListener (TCP) and the NetworkSignalListener (UDP) */
 		this.startAll();
 
-        while (true) {
-            synchronized(this) {
-                try { 
-                    wait();
-                } catch (InterruptedException ie) {}
-            }
-
-            this.handleNewInformation();
-        }
+		while (true) {
+			/* We constantly wait for a signal from either the ConnectionListener,
+			 * the ConnectionHandlers or the NetworkSignalListener */
+			synchronized(this) {
+				try { 
+					wait();
+				} catch (InterruptedException ie) {}
+			}
+			/* Once we've been waken up, we now need to know why,
+			 * and we need to process that information */
+			this.handleNewInformation();
+		}
 	}
 }
 

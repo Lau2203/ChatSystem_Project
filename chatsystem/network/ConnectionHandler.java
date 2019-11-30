@@ -16,11 +16,14 @@ import chatsystem.network.ConnectionListener;
 
 import chatsystem.util.Logs;
 
+/* Handler for one TCP connection */
 public class ConnectionHandler extends Thread {
-
-    private static NetworkManager master;
-
-    private User recipient;
+	/* We need a reference to the NetworkManager in order to wake him up
+	 * once we received a new message or once the endpoint connection ended */
+	private static NetworkManager master;
+	/* Since it is a User-to-User connection, a ConnectionHandler is always
+	 * associated to one single recipient User */
+	private User recipient;
 
 	private Socket cs;
 
@@ -31,7 +34,7 @@ public class ConnectionHandler extends Thread {
 	private int remotePort;
 
 	private boolean isInterrupted;
-
+	/* For logs filling only */
 	private String instanceName;
 
 	public ConnectionHandler(Socket clientSocket) {
@@ -44,8 +47,8 @@ public class ConnectionHandler extends Thread {
 		this.instanceName = "ConnectionHandler - " + this.toString();
 	}
 
-    public ConnectionHandler(User recipient, Socket clientSocket) {
-        this.recipient = recipient;
+	public ConnectionHandler(User recipient, Socket clientSocket) {
+		this.recipient = recipient;
 
 		this.cs = clientSocket;	
 
@@ -56,13 +59,13 @@ public class ConnectionHandler extends Thread {
 		this.instanceName = "ConnectionHandler - " + this.toString();
 	}
 
-    public User getRecipientUser() {
-        return this.recipient;
-    }
+	public User getRecipientUser() {
+		return this.recipient;
+	}
 
-    public static void setMaster(NetworkManager master) {
-        ConnectionHandler.master = master;
-    }
+	public static void setMaster(NetworkManager master) {
+		ConnectionHandler.master = master;
+	}
 
 	private void prepareIO() {
 		try {
@@ -100,12 +103,12 @@ public class ConnectionHandler extends Thread {
 	}
 
 	private void die() {
-        synchronized(this) {
-		    this.master.notifyDeathOfConnectionHandler(this);
-            try {
-                wait();
-            } catch (InterruptedException ie) {}
-        }
+		synchronized(this) {
+			this.master.notifyDeathOfConnectionHandler(this);
+			try {
+				wait();
+			} catch (InterruptedException ie) {}
+		}
 	}
 
 	private void interruptSubServer() {
@@ -152,12 +155,12 @@ public class ConnectionHandler extends Thread {
 				break;
 			}
 
-            synchronized(this) {
-                    this.master.notifyNewMessage(this, userInput);
-                    try {
-                        wait();
-                    } catch (InterruptedException ie) {}
-            }
+			synchronized(this) {
+				this.master.notifyNewMessage(this, userInput);
+				try {
+					wait();
+				} catch (InterruptedException ie) {}
+			}
 
 			Logs.println(this.instanceName, "Received '" + userInput + "'");
 
@@ -172,7 +175,7 @@ public class ConnectionHandler extends Thread {
 		if (userShotDownConnection) {
 			Logs.printinfo(this.instanceName, "User shot down connection");
 		}
-		
+
 		this.die();
 	}
 
