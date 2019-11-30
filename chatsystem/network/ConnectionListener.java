@@ -37,7 +37,7 @@ public class ConnectionListener extends Thread {
 			try {
 				this.ssocket = new ServerSocket(this.port);
 			} catch (IllegalArgumentException iae) {
-				System.out.println("Invalid port number, aborted");
+				Logs.printerro(this.instanceName, "Invalid port number, aborted");
 				System.exit(1);
 			}
 
@@ -72,21 +72,20 @@ public class ConnectionListener extends Thread {
 					} catch (InterruptedException ie) {}
 				}
 
-
 			} catch (IOException ioe) {}
 		}
 	}
 
 	public void run() {
 
-		Logs.printinfo(this.instanceName, "Starting the server");
+		Logs.printinfo(this.instanceName, "Starting the ConnectionListener...");
 		try {
 			this.prepareServer();
 		} catch (IOException ioe) {
-			Logs.printerro(this.instanceName, "Could not create server socket, aborted");
+			Logs.printerro(this.instanceName, "Could not create server socket, aborted.");
 			System.exit(1);
 		}
-		Logs.printinfo(this.instanceName, "Server successfully started");
+		Logs.printinfo(this.instanceName, "ConnectionListener successfully started.");
 
 		this.listen();
 	}

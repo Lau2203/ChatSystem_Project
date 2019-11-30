@@ -15,6 +15,10 @@ public class Logs {
 	private static boolean isLogEnabled;
 	private static boolean isLogFileOpen;
 
+	private static boolean isINFOEnabled;
+	private static boolean isWARNEnabled;
+	private static boolean isERROEnabled;
+
 	public static void init(boolean isLogEnabled, String logFilePath) throws IOException {
 		Logs.filePath = logFilePath;
 
@@ -32,6 +36,10 @@ public class Logs {
 		}
 
 		Logs.isLogEnabled = isLogEnabled && isLogFileOpen;
+
+		Logs.isINFOEnabled = true;
+		Logs.isWARNEnabled = true;
+		Logs.isERROEnabled = true;
 	}
 	
 	public static void println(String s) { 
@@ -45,14 +53,14 @@ public class Logs {
 		}
 	}
 
-	public static void printinfo(String s) { Logs.println("[+] " + s); }
-	public static void printwarn(String s) { Logs.println("[!] " + s); }
-	public static void printerro(String s) { Logs.println("[x] " + s); }
+	public static void printinfo(String s) { if (Logs.isINFOEnabled) { Logs.println("[+] " + s); }}
+	public static void printwarn(String s) { if (Logs.isWARNEnabled) { Logs.println("[!] " + s); }}
+	public static void printerro(String s) { if (Logs.isERROEnabled) { Logs.println("[x] " + s); }}
 
 	public static void println(String instance, String s) 	{ Logs.println("[+] [" + instance + "] " + s); }
-	public static void printinfo(String instance, String s) { Logs.println("[+] [" + instance + "] " + s); }
-	public static void printwarn(String instance, String s) { Logs.println("[!] [" + instance + "] " + s); }
-	public static void printerro(String instance, String s) { Logs.println("[x] [" + instance + "] " + s); }
+	public static void printinfo(String instance, String s) { if (Logs.isINFOEnabled) { Logs.println("[+] [" + instance + "] " + s); }}
+	public static void printwarn(String instance, String s) { if (Logs.isWARNEnabled) { Logs.println("[!] [" + instance + "] " + s); }}
+	public static void printerro(String instance, String s) { if (Logs.isERROEnabled) { Logs.println("[x] [" + instance + "] " + s); }}
 
 	public static void readLogs() {
 

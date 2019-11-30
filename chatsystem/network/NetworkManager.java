@@ -15,6 +15,8 @@ import chatsystem.Client;
 import chatsystem.NotifyInformation;
 import chatsystem.MessageString;
 
+import chatsystem.util.Logs;
+
 /* FOR TESTING ONLY */
 import chatsystem.util.ConfigParser;
 
@@ -38,6 +40,8 @@ public class NetworkManager extends Thread {
 	private NetworkManagerInformation networkManagerInformation;
 
 	private ArrayList<User> activeUsersList;
+
+	private String instanceName = "NetworkManager";
 
 	public NetworkManager(Client master, int listeningTCPPort) {
 
@@ -76,15 +80,18 @@ public class NetworkManager extends Thread {
 
 		ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
 
+		Logs.printinfo(this.instanceName, "Shutting down all the ConnectionHandlers...");
 		for (ConnectionHandler s: subs) {
 
 			s.shutdown();
 		}		
 
+		Logs.printinfo(this.instanceName, "Shutting down the ConnectionListener...");
 		try {
 			this.connectionListener.shutdown();
+			Logs.printinfo(this.instanceName, "All has been shot down successfully.");
 		} catch (IOException ioe) {
-			System.out.println("[x] Issue while shutting down the connection listener, aborted");
+			Logs.printerro(this.instanceName, "Issue while shutting down the connection listener, aborted.");
 			System.exit(1);
 		}
 	}
@@ -180,8 +187,11 @@ public class NetworkManager extends Thread {
 	public void run() {
 		/* So that all the ConnectionHandlers are able to call NetworkManager notification methods */
 		ConnectionHandler.setMaster(this);
+
+		Logs.printinfo(this.instanceName, "Starting the Network Manager...");
 		/* Start the ConnectionListener (TCP) and the NetworkSignalListener (UDP) */
 		this.startAll();
+		Logs.printinfo(this.instanceName, "Network Manager successfully started !");
 
 		while (true) {
 			/* We constantly wait for a signal from either the ConnectionListener,
