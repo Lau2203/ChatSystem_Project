@@ -12,7 +12,7 @@ import chatsystem.util.Logs;
 import chatsystem.util.ConfigParser;
 
 public class LocalClient extends Client {
-    
+
 	public LocalClient(int port) {
 		super(port);
 	}
@@ -23,35 +23,35 @@ public class LocalClient extends Client {
 		while (true) {
 			synchronized(this) {
 				try {
-				    wait();
+					wait();
 				} catch (InterruptedException ie) {}
-            		}
+			}
 
 			switch (this.networkManagerInformation.getNotifyInformation()) {
 
 				case NEW_CONNECTION:
-				    System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - NEW CONNECTION");
-				    break;
+					System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - NEW CONNECTION");
+					break;
 
 				case END_OF_CONNECTION:
-				    System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - END OF CONNECTION");
-				    break;
+					System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - END OF CONNECTION");
+					break;
 
 				case USERNAME_MODIFICATION:
-				    break;
+					break;
 
 				case NEW_ACTIVE_USER:
-				    break;
+					break;
 
 				case USER_LEFT_NETWORK:
-				    break;
+					break;
 
 				case NEW_MESSAGE:
-				    System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
-				    break;
+					System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
+					break;
 
 				default: break;
-		    	}
+			}
 		}
 	}
 }

@@ -11,93 +11,74 @@ import chatsystem.Message;
 
 public class NetworkManagerInformation {
 
-    private Thread toBeNotified;
+	private Thread toBeNotified;
 
-    private User recipient;
+	private User recipient;
 
-    private NotifyInformation info;
-    private String fingerprint;
-    private String username;
-    private InetAddress address;
+	private NotifyInformation info;
+	private String fingerprint;
+	private String username;
+	private InetAddress address;
 
-    private Message msg;
+	private Message msg;
 
-    public NetworkManagerInformation() {
-        this.toBeNotified = null;
+	public NetworkManagerInformation() {
+		this.toBeNotified = null;
 
-        this.info = null;
-        this.fingerprint = null;
-        this.username = null;
-        this.address = null;
-    }
+		this.info = null;
+		this.fingerprint = null;
+		this.username = null;
+		this.address = null;
+	}
 
-    public NetworkManagerInformation(Thread toBeNotified, User recipient, NotifyInformation info, String fingerprint, String username, InetAddress address, Message msg) {
-        this.toBeNotified = toBeNotified;
+	public NetworkManagerInformation(Thread toBeNotified,
+					User recipient,
+					NotifyInformation info,
+					String fingerprint,
+					String username,
+					InetAddress address,
+					Message msg) {
 
-        this.recipient = recipient;
+		this.toBeNotified = toBeNotified;
 
-        this.info = info;
-        this.fingerprint = fingerprint;
-        this.username = username;
-        this.address = address;
+		this.recipient = recipient;
 
-        this.msg = msg;
-    }
+		this.info = info;
+		this.fingerprint = fingerprint;
+		this.username = username;
+		this.address = address;
 
-    public Thread getToBeNotified() {
-        return this.toBeNotified;
-    }
+		this.msg = msg;
+	}
 
-    public User getRecipientUser() {
-        return this.recipient;
-    }
+	/* Getters */
+	public Thread 			getToBeNotified() 	{ return this.toBeNotified; }
 
-    public NotifyInformation getNotifyInformation() {
-        return this.info;
-    }
+	public User 			getRecipientUser() 	{ return this.recipient; }
 
-    public String getFingerprint() {
-        return this.fingerprint;
-    }
+	public NotifyInformation	getNotifyInformation()	{ return this.info; }
 
-    public String getUsername() {
-        return this.username;
-    }
+	public String 			getFingerprint() 	{ return this.fingerprint; }
 
-    public InetAddress getAddress() {
-        return this.address;
-    }
+	public String 			getUsername() 		{ return this.username; }
 
-    public Message getMessage() {
-        return this.msg;
-    }
+	public InetAddress 		getAddress() 		{ return this.address; }
 
-    public void setToBeNotified(Thread t) {
-        this.toBeNotified = t;
-    }
+	public Message 			getMessage() 		{ return this.msg; }
 
-    public void setRecipientUser(User recipient) {
-        this.recipient = recipient;
-    }
+	/* Setters */
+	public void setToBeNotified(Thread t) 				{ this.toBeNotified = t; }
 
-    public void setNotifyInformation(NotifyInformation info) {
-        this.info = info;
-    }
+	public void setRecipientUser(User recipient) 			{ this.recipient = recipient; }
 
-    public void setFingerprint(String fingerprint) {
-        this.fingerprint = fingerprint ;
-    }
+	public void setNotifyInformation(NotifyInformation info)	{ this.info = info; }
 
-    public void setUsername(String userName) {
-        this.username = userName;
-    }
+	public void setFingerprint(String fingerprint)			{ this.fingerprint = fingerprint; }
 
-    public void setAddress(InetAddress inetAddress) {
-        this.address = inetAddress;
-    }
+	public void setUsername(String userName)			{ this.username = userName; }
 
-    public void setMessage(Message msg) {
-        this.msg = msg;
-    }
+	public void setAddress(InetAddress inetAddress)			{ this.address = inetAddress; }
+
+	public void setMessage(Message msg)				{ this.msg = msg; }
 }
 

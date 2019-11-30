@@ -10,10 +10,10 @@ import chatsystem.network.NetworkManagerInformation;
 import chatsystem.util.Logs;
 
 public abstract class Client extends Thread {
-    
+
 	protected NetworkManager netmanager;
 
-    protected NetworkManagerInformation networkManagerInformation;
+	protected NetworkManagerInformation networkManagerInformation;
 
 	protected static final String DEFAULT_CONFIG_FILE_PATH = "config.cfg";
 
@@ -39,8 +39,8 @@ public abstract class Client extends Thread {
 		else if (cmd.equals("logs")) { Logs.readLogs(); }
 	}
 
-    public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
-        this.networkManagerInformation = ni;
-        this.notify();
-    }
+	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
+		this.networkManagerInformation = ni;
+		this.notify();
+	}
 }

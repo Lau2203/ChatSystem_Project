@@ -3,7 +3,7 @@ package chatsystem;
 import java.net.InetAddress;
 
 public class User {
-    
+
 	private String fingerprint;
 	private String username;
 	private InetAddress address;
@@ -33,7 +33,7 @@ public class User {
 	public String getUsername() {
 		return this.username;
 	}
-	
+
 	public InetAddress getAddress() {
 		return this.address;
 	}
@@ -45,7 +45,7 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	public void setAddress(InetAddress address) {
 		this.address = address;
 	}
