@@ -60,12 +60,13 @@ public class Application {
 
 		this.init(args);	
 		this.lc.start();
-
+		/*
 		while (true) {
 			System.out.print(">>> ");
 			cmd = userInput.nextLine();	
 			this.lc.command(cmd);
 		}	
+		*/
 	}
 
 	public static void main(String[] args) {

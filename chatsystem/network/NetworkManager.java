@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import java.net.Socket;
+import java.net.InetAddress;
 
 import java.lang.Thread;
 
 import java.sql.Timestamp;
 
 import chatsystem.User;
+import chatsystem.MainUser;
 import chatsystem.Client;
 import chatsystem.NotifyInformation;
 import chatsystem.MessageString;
@@ -33,6 +35,9 @@ public class NetworkManager extends Thread {
 	/* All the subconnections detected by the ConnectionListeners are handled
 	 * by the ConnectionHandler. Each ConnectionHandler provides one User-to-User TCP connection */
 	private ArrayList<ConnectionHandler> connectionHandlers;
+
+	private NetworkSignalListener nsl;
+
 	/* This is the placeholder for notifiers to put their notification information. For instance,
 	 * it may contain a new User's information (fingerprint, username, IP address), or a new message.
 	 * This is the place the NetworkManager will be looking at when waken up by the ConnectionListener,
@@ -43,12 +48,17 @@ public class NetworkManager extends Thread {
 
 	private String instanceName = "NetworkManager";
 
-	public NetworkManager(Client master, int listeningTCPPort) {
+	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort) {
+
+		/* ====================== CAREFULL ======================= */
+		int networkSignalListenerListeningPort 	= Integer.parseInt(ConfigParser.get("nsl-port"));
 
 		this.master = master;
 		this.connectionListener = new ConnectionListener(this, listeningTCPPort);
 
 		this.connectionHandlers = new ArrayList<ConnectionHandler>();
+
+		this.nsl = new NetworkSignalListener(this, mainUser, networkSignalListenerListeningPort);
 
 		this.networkManagerInformation = new NetworkManagerInformation();
 
@@ -58,12 +68,24 @@ public class NetworkManager extends Thread {
 		//this.activeUsersList.add(new User("", "main-user", InetAddress.getByName(hostname)));
 	}
 
+	private User getUser(String fingerprint) {
+		for (User usr: this.activeUsersList) {
+			if (usr.getFingerprint().equals(fingerprint))
+				return usr;
+		}
+
+		return null;
+	}
+
+	/* Do not forget to add +1 for us */
+	public int getActiveClientsNumber() { return this.activeUsersList.size() + 1; }
+
 	public void startAll() {
 		/* Once the ConnectionListener and the NetworkSignalListener are started,
 		 * We want to notify the main client process */
 		synchronized(this.master) {
-			startConnectionListener();
-
+			this.startConnectionListener();
+			this.startNetworkSignalListener();
 			this.master.notify();
 		}
 	}
@@ -75,6 +97,14 @@ public class NetworkManager extends Thread {
 			try { wait(); } catch (InterruptedException ie) {}
 		}
 	}
+
+	private void startNetworkSignalListener() {
+		this.nsl.start();
+		synchronized(this) {
+			try { wait(); } catch (InterruptedException ie) {}
+		}
+	}
+
 	/* Can only be called by the main client process */
 	public synchronized void shutdown() {
 
@@ -96,11 +126,9 @@ public class NetworkManager extends Thread {
 		}
 	}
 
-	private synchronized ArrayList<ConnectionHandler> getConnectionHandlers() {
-		return this.connectionHandlers;
-	}
+	private synchronized ArrayList<ConnectionHandler> getConnectionHandlers() { return this.connectionHandlers; }
 
-	/* Notification methods called by either the ConnectionListener, ConnectionHandlers or the NetworkSignalListener
+	/* Notification methods called either by the ConnectionListener, ConnectionHandlers or the NetworkSignalListener
 	 * These notifications refer to the type of information they convey. These different types can be 
 	 * seen in the NotifyInformation class */
 
@@ -147,8 +175,38 @@ public class NetworkManager extends Thread {
 		 * and tell the client too */
 		this.notify();	
 	}
+	/* Can only be called by the NetworkSignalListener */
+	protected synchronized void notifyNewActiveClient(String fingerprint, InetAddress address) {
 
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
 
+		this.networkManagerInformation.setToBeNotified(this.nsl);
+		this.networkManagerInformation.setFingerprint(fingerprint);
+		this.networkManagerInformation.setAddress(address);
+
+		this.notify();
+	}
+	/* Can only be called by the NetworkSignalListener */
+	protected synchronized void notifyNewUsername(String fingerprint, InetAddress address, String username) {
+
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+
+		this.networkManagerInformation.setToBeNotified(this.nsl);
+		this.networkManagerInformation.setFingerprint(fingerprint);
+		this.networkManagerInformation.setAddress(address);
+		this.networkManagerInformation.setUsername(username);
+
+		this.notify();
+	}
+	/* Can only be called by the NetworkSignalListener */
+	protected synchronized void notifyReadyToCheckUsername() {
+
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
+
+		this.networkManagerInformation.setToBeNotified(this.nsl);
+
+		this.notify();
+	}
 
 	/* Once it's been waken up, the NetworkManager needs to understand why
 	 * and act consequently */
@@ -162,12 +220,37 @@ public class NetworkManager extends Thread {
 				break;
 
 			case USERNAME_MODIFICATION:
+				User usr = this.getUser(this.networkManagerInformation.getFingerprint());
+				if (usr == null) {
+					usr = new User();
+					usr.setFingerprint(this.networkManagerInformation.getFingerprint());
+					usr.setAddress(this.networkManagerInformation.getAddress());
+					usr.setUsername(this.networkManagerInformation.getUsername());
+
+					this.activeUsersList.add(usr);
+				} else {
+					usr.setFingerprint(this.networkManagerInformation.getFingerprint());
+					usr.setAddress(this.networkManagerInformation.getAddress());
+					usr.setUsername(this.networkManagerInformation.getUsername());
+				}	
 				break;
 
-			case NEW_ACTIVE_USER:
+			case NEW_ACTIVE_CLIENT:
+				System.out.println("CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
+
+				User new_usr = new User();
+				new_usr.setFingerprint(this.networkManagerInformation.getFingerprint());
+				new_usr.setAddress(this.networkManagerInformation.getAddress());
+
+				this.activeUsersList.add(new_usr);	
+
 				break;
 
 			case USER_LEFT_NETWORK:
+				break;
+
+			case READY_TO_CHECK_USERNAME:
+				System.out.println("IT'S ALL GOOD");
 				break;
 
 			default: break;

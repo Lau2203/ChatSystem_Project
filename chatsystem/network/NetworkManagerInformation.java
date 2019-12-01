@@ -22,6 +22,21 @@ public class NetworkManagerInformation {
 
 	private Message msg;
 
+	public static final int FINGERPRINT_SIZE = 16;
+	/* Size in bytes (String character) of the below signal in 
+	 * a UDP packet */
+	public static final int NETWORK_SIGNAL_SIZE = 2;
+
+	/* for New Active user */
+	public static final String NEW_ACTIVE_USER_STRING 	= "NA";
+	/* for End of active User */
+	public static final String END_OF_ACTIVE_USER_STRING 	= "EU";
+	/* for End of active User */
+	public static final String NEW_USERNAME_STRING 		= "NU";
+
+	public static final String WELCOME_STRING 		= "WE";
+
+
 	public NetworkManagerInformation() {
 		this.toBeNotified = null;
 

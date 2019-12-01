@@ -22,6 +22,10 @@ public class ConfigParser {
 
 	private static Hashtable<String, String> configBindings;
 
+	/* In number of bytes */
+	private static final int DEFAULT_FINGERPRINT_SIZE = 256;
+	private static final int DEFAULT_NETWORK_SIGNAL_INFORMATION_SIZE = 2;
+
 	private static void init(String cfp) {
 		ConfigParser.configFilePath = cfp;
 		ConfigParser.hasBeenInitialized = true;

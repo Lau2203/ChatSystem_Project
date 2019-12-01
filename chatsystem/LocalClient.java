@@ -18,6 +18,11 @@ public class LocalClient extends Client {
 	}
 
 	public void run() {
+
+		this.login();
+
+		System.out.println("Successfully logged in!");
+
 		this.startNetworkManager();
 
 		while (true) {
