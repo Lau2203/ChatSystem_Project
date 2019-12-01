@@ -102,12 +102,16 @@ public class NetworkSignalListener extends Thread {
 
 		} else if (signal.equals(NetworkManagerInformation.NEW_USERNAME_STRING)) {
 
-		} else if (signal.equals(NetworkManagerInformation.WELCOME_STRING)) {
+		}
+		/* No problem when we are the first and only one to connect to the network. Since we also receive the broadcast signal,
+		 * this.activeClientsResponseToWaitFor will first be set to 0 and unlock the whole system by notifying
+		 * READY_TO_CHECK_USERNAME */
+		else if (signal.equals(NetworkManagerInformation.WELCOME_STRING)) {
 
 			int activeClientsTotal = Integer.parseInt(information[2]);
 			String username = information[3];
 
-			if (this.activeClientsResponseToWaitFor == -1) {
+			if (this.activeClientsResponseToWaitFor == 0) {
 				this.activeClientsResponseToWaitFor = activeClientsTotal;
 				if (activeClientsTotal != 0)
 					this.activeClientsResponseToWaitFor--;

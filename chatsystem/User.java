@@ -31,7 +31,7 @@ public class User {
 	}
 
 	public String getUsername() {
-		return "HELLOE";//this.username;
+		return this.username;
 	}
 
 	public InetAddress getAddress() {
