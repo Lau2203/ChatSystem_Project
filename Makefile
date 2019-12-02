@@ -12,10 +12,11 @@ BASE_OBJS=$(PACKAGE_PATH)/*.java
 
 NETWORK_OBJS=$(PACKAGE_PATH)/network/*.java
 UTIL_OBJS=$(PACKAGE_PATH)/util/*.java
+GUI_OBJS=$(PACKAGE_PATH)/gui/*.java
 
 LOG_FILE=./logs
 
-ALL_OBJS=$(OBJ) $(BASE_OBJS) $(NETWORK_OBJS) $(UTIL_OBJS)
+ALL_OBJS=$(OBJ) $(BASE_OBJS) $(NETWORK_OBJS) $(UTIL_OBJS) $(GUI_OBJS)
 
 all: $(ALL_OBJS)
 	$(COMP) $(ALL_OBJS)
@@ -28,6 +29,9 @@ network: $(NETWORK_OBJS)
 
 util: $(UTIL_OBJS)
 	$(COMP) $(UTIL_OBJS)
+
+gui: $(GUI_OBJS)
+	$(COMP) $(GUI_OBJS)
 
 .PHONY: clean
 

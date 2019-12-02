@@ -1,3 +1,5 @@
+package chatsystem.gui;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -32,7 +34,7 @@ public class ConnectionWindow extends JFrame {
 		
 	
 		//Logo
-		ImageIcon icon = new ImageIcon("../images/Aura2.jpg");
+		ImageIcon icon = new ImageIcon("/home/cacao/INSA/ChatSystem_Project/resources/images/Aura2.jpg");
 		JLabel image = new JLabel(icon); 
 		
 		JPanel paneltext = new JPanel();
@@ -63,7 +65,7 @@ public class ConnectionWindow extends JFrame {
 
 		//Bouton
 		LineBorder noBorder = new LineBorder(Color.WHITE, 3);
-		JButton button = new JButton(new ImageIcon("../images/buttongo.jpg"));
+		JButton button = new JButton(new ImageIcon("/home/cacao/INSA/ChatSystem_Project/resources/images/buttongo.jpg"));
 		button.setBorder(noBorder);
 		paneltext.add(button);
 	
