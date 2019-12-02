@@ -8,10 +8,13 @@ import java.net.Socket;
 import java.net.InetAddress;
 
 import java.lang.Thread;
-
+/* For message timestamping */
 import java.sql.Timestamp;
 
+/* Creating a new user when there is a new active client */
 import chatsystem.User;
+/* Reference to the main user, only for NetworkSignalListener, in order
+ * for him to be able to directly respond to request with the main user's username */
 import chatsystem.MainUser;
 import chatsystem.Client;
 import chatsystem.NotifyInformation;
@@ -213,12 +216,33 @@ public class NetworkManager extends Thread {
 	private void handleNewInformation() {
 		switch (this.networkManagerInformation.getNotifyInformation()) {
 
-			case NEW_CONNECTION:
+			/* Happens when a new client appears on the network.
+			 * The NetworkSignalListener welcomes the new client by telling him
+			 * our main user's fingerprint and username, the current number of active clients 
+			 * and inherently providing our address. With every client doing so, that client 
+			 * is now able fill its active users list and thus get a valid representation of
+			 * what usernames aren't available. */
+			case NEW_ACTIVE_CLIENT:
+				System.out.println("CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
+
+				User new_usr = new User();
+				new_usr.setFingerprint(this.networkManagerInformation.getFingerprint());
+				new_usr.setAddress(this.networkManagerInformation.getAddress());
+
+				this.activeUsersList.add(new_usr);	
+
 				break;
 
-			case END_OF_CONNECTION:
-				break;
+			/* 2 Possibilities:
+				
+			 * - 	As a reaction to NEW_ACTIVE_CLIENT, the new active client received all the welcoming
+			 * 	responses from all the current active clients online (he knows that since he got the number of
+			 * 	active clients to wait for in each welcoming packet). He can now tell whether or not its username
+			 * 	is available by looking at its active users list. He might be forced to ask the user to choose
+			 * 	a different username. Once he get an available username, he needs to informa all the clients online,
+			 * 	thus intercepting this USERNAME_MODIFICATION from the NetworkSignalListener.
 
+			 * - 	An online user basically changed its username. */
 			case USERNAME_MODIFICATION:
 				User usr = this.getUser(this.networkManagerInformation.getFingerprint());
 				if (usr == null) {
@@ -233,24 +257,20 @@ public class NetworkManager extends Thread {
 					usr.setAddress(this.networkManagerInformation.getAddress());
 					usr.setUsername(this.networkManagerInformation.getUsername());
 				}	
-				break;
 
-			case NEW_ACTIVE_CLIENT:
-				System.out.println("CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
-
-				User new_usr = new User();
-				new_usr.setFingerprint(this.networkManagerInformation.getFingerprint());
-				new_usr.setAddress(this.networkManagerInformation.getAddress());
-
-				this.activeUsersList.add(new_usr);	
-
-				break;
-
-			case USER_LEFT_NETWORK:
 				break;
 
 			case READY_TO_CHECK_USERNAME:
 				System.out.println("IT'S ALL GOOD");
+				break;
+
+			case NEW_CONNECTION:
+				break;
+
+			case END_OF_CONNECTION:
+				break;
+
+			case USER_LEFT_NETWORK:
 				break;
 
 			default: break;

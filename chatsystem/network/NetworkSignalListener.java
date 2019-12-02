@@ -67,13 +67,10 @@ public class NetworkSignalListener extends Thread {
 		try { this.ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 	}
 
+	/* UDP Packets will at least have this shape : fingerprint:signal */
 	private void getInformation(String input, InetAddress remoteAddress, int remotePort) {
 
 		int fingerprintSize = this.mainUser.getFingerprint().length();		
-
-		//String fingerprint = input.substring(0, 0 + fingerprintSize);	
-
-		//String signal = input.substring(0 + fingerprintSize, 0 + fingerprintSize + NetworkManagerInformation.NETWORK_SIGNAL_SIZE);	
 
 		String[] information = input.split(":");
 
@@ -81,7 +78,7 @@ public class NetworkSignalListener extends Thread {
 		String signal = information[1];
 
 		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_USER_STRING)) {
-
+			/* Example of built packet : fingerprint:WE:243:USERNAME */
 			String response = this.mainUser.getFingerprint() + ":" +
 						NetworkManagerInformation.WELCOME_STRING + ":" +
 						this.master.getActiveClientsNumber() + ":" +
