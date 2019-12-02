@@ -79,9 +79,15 @@ public class NetworkSignalListener extends Thread {
 
 		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_USER_STRING)) {
 			/* Example of built packet : fingerprint:WE:243:USERNAME */
+
+			int currentActiveClientsNumber;
+			synchronized(this.master) {
+				currentActiveClientsNumber = this.master.getActiveClientsNumber();
+			}
+
 			String response = this.mainUser.getFingerprint() + ":" +
 						NetworkManagerInformation.WELCOME_STRING + ":" +
-						this.master.getActiveClientsNumber() + ":" +
+						currentActiveClientsNumber + ":" +
 						this.mainUser.getUsername();
 
 			DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
@@ -89,10 +95,7 @@ public class NetworkSignalListener extends Thread {
 			try { this.ds.send(dp); } catch (IOException ioe) {}
 
 			synchronized (this) {
-				try {
-					this.master.notifyNewActiveClient(fingerprint, remoteAddress);
-					wait();
-				} catch (InterruptedException ie) {}
+				this.master.notifyNewActiveClient(fingerprint, remoteAddress);
 			}
 
 		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_USER_STRING)) {
@@ -106,9 +109,10 @@ public class NetworkSignalListener extends Thread {
 		else if (signal.equals(NetworkManagerInformation.WELCOME_STRING)) {
 
 			int activeClientsTotal = Integer.parseInt(information[2]);
-			String username = information[3];
+			String username;
+			try { username = information[3]; } catch (Exception e) { username = "undefined"; }
 
-			if (this.activeClientsResponseToWaitFor == 0) {
+			if (this.activeClientsResponseToWaitFor == -1) {
 				this.activeClientsResponseToWaitFor = activeClientsTotal;
 				if (activeClientsTotal != 0)
 					this.activeClientsResponseToWaitFor--;
@@ -117,18 +121,12 @@ public class NetworkSignalListener extends Thread {
 			}
 
 			synchronized(this) {
-				try {
-					this.master.notifyNewUsername(fingerprint, remoteAddress, username);
-					wait();
-				} catch (InterruptedException ie) {}
+				this.master.notifyNewUsername(fingerprint, remoteAddress, username);
 			}
 
 			if (this.activeClientsResponseToWaitFor == 0) {
 				synchronized(this) {
-					try {
-						this.master.notifyReadyToCheckUsername();
-						wait();
-					} catch (InterruptedException ie) {}
+					this.master.notifyReadyToCheckUsername();
 				}
 			}
 		}	
@@ -156,6 +154,8 @@ public class NetworkSignalListener extends Thread {
 
 		dp = new DatagramPacket(buffer, buffer.length);
 	
+		System.out.println("Signal listener listening on port " + this.listeningPort);
+
 		while (true) {
 
 			try { this.ds.receive(dp); } catch (IOException ioe) {}

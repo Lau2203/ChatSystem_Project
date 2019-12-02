@@ -66,10 +66,7 @@ public class ConnectionListener extends Thread {
 				clientSocket = this.ssocket.accept();
 				/* We now notify the NetworkManager that a new connection arised */
 				synchronized(this) {
-					try {
-						this.master.notifyNewConnection(clientSocket);
-						wait();
-					} catch (InterruptedException ie) {}
+					this.master.notifyNewConnection(clientSocket);
 				}
 
 			} catch (IOException ioe) {}

@@ -11,8 +11,6 @@ import chatsystem.Message;
 
 public class NetworkManagerInformation {
 
-	private Thread toBeNotified;
-
 	private User recipient;
 
 	private NotifyInformation info;
@@ -38,23 +36,18 @@ public class NetworkManagerInformation {
 
 
 	public NetworkManagerInformation() {
-		this.toBeNotified = null;
-
 		this.info = null;
 		this.fingerprint = null;
 		this.username = null;
 		this.address = null;
 	}
 
-	public NetworkManagerInformation(Thread toBeNotified,
-					User recipient,
+	public NetworkManagerInformation(User recipient,
 					NotifyInformation info,
 					String fingerprint,
 					String username,
 					InetAddress address,
 					Message msg) {
-
-		this.toBeNotified = toBeNotified;
 
 		this.recipient = recipient;
 
@@ -67,8 +60,6 @@ public class NetworkManagerInformation {
 	}
 
 	/* Getters */
-	public Thread 			getToBeNotified() 	{ return this.toBeNotified; }
-
 	public User 			getRecipientUser() 	{ return this.recipient; }
 
 	public NotifyInformation	getNotifyInformation()	{ return this.info; }
@@ -82,8 +73,6 @@ public class NetworkManagerInformation {
 	public Message 			getMessage() 		{ return this.msg; }
 
 	/* Setters */
-	public void setToBeNotified(Thread t) 				{ this.toBeNotified = t; }
-
 	public void setRecipientUser(User recipient) 			{ this.recipient = recipient; }
 
 	public void setNotifyInformation(NotifyInformation info)	{ this.info = info; }

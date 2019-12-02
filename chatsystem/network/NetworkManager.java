@@ -66,9 +66,6 @@ public class NetworkManager extends Thread {
 		this.networkManagerInformation = new NetworkManagerInformation();
 
 		this.activeUsersList = new ArrayList<User>();
-
-		//String hostname = ConfigParser.get("main-user");
-		//this.activeUsersList.add(new User("", "main-user", InetAddress.getByName(hostname)));
 	}
 
 	private User getUser(String fingerprint) {
@@ -81,7 +78,7 @@ public class NetworkManager extends Thread {
 	}
 
 	/* Do not forget to add +1 for us */
-	public int getActiveClientsNumber() { return this.activeUsersList.size() + 1; }
+	public synchronized int getActiveClientsNumber() { return this.activeUsersList.size() + 1; }
 
 	public void startAll() {
 		/* Once the ConnectionListener and the NetworkSignalListener are started,
@@ -141,7 +138,6 @@ public class NetworkManager extends Thread {
 
 		this.connectionHandlers.remove(ch);
 		/* Put information for the NetworkManager to handle it */
-		this.networkManagerInformation.setToBeNotified(ch);
 		this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
 		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
 		/* Wake up the NetworkManager to handle the death of the connection handler
@@ -156,7 +152,6 @@ public class NetworkManager extends Thread {
 		msg.setContent(content);
 
 		/* Put information for the NetworkManager to handle it */
-		this.networkManagerInformation.setToBeNotified(ch);
 		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
 		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
 		this.networkManagerInformation.setMessage(msg);
@@ -170,7 +165,6 @@ public class NetworkManager extends Thread {
 
 		this.connectionHandlers.add(ch);
 		/* Put information for the NetworkManager to handle it */
-		this.networkManagerInformation.setToBeNotified(this.connectionListener);
 		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
 
 		ch.start();
@@ -181,9 +175,8 @@ public class NetworkManager extends Thread {
 	/* Can only be called by the NetworkSignalListener */
 	protected synchronized void notifyNewActiveClient(String fingerprint, InetAddress address) {
 
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
 
-		this.networkManagerInformation.setToBeNotified(this.nsl);
 		this.networkManagerInformation.setFingerprint(fingerprint);
 		this.networkManagerInformation.setAddress(address);
 
@@ -194,7 +187,6 @@ public class NetworkManager extends Thread {
 
 		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
 
-		this.networkManagerInformation.setToBeNotified(this.nsl);
 		this.networkManagerInformation.setFingerprint(fingerprint);
 		this.networkManagerInformation.setAddress(address);
 		this.networkManagerInformation.setUsername(username);
@@ -205,8 +197,6 @@ public class NetworkManager extends Thread {
 	protected synchronized void notifyReadyToCheckUsername() {
 
 		this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
-
-		this.networkManagerInformation.setToBeNotified(this.nsl);
 
 		this.notify();
 	}
@@ -261,7 +251,7 @@ public class NetworkManager extends Thread {
 				break;
 
 			case READY_TO_CHECK_USERNAME:
-				System.out.println("IT'S ALL GOOD");
+				System.out.println("READY TO SET USERNAME !!!!");
 				break;
 
 			case NEW_CONNECTION:
@@ -278,11 +268,6 @@ public class NetworkManager extends Thread {
 
 		/* We relay the information to the main client process */
 		this.master.notifyFromNetworkManager(this.networkManagerInformation);
-		/* Eventually, we wake up the one that's waken us up */
-		synchronized(this.networkManagerInformation.getToBeNotified()) {
-			/* Wake the information provider (either ConnectionListener, ConnectionHandler or Client) */
-			this.networkManagerInformation.getToBeNotified().notify();
-		}
 	}
 
 
