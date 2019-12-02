@@ -23,7 +23,9 @@ import java.awt.*;
 
 
 public class ConnectionWindow extends JFrame {
+
   	Color myBlue = new Color(24, 147, 248);
+
 	public ConnectionWindow()  {    
 		super();         
 	  	this.setTitle("ConnectionWindow");
