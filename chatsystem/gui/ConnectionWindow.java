@@ -34,7 +34,7 @@ public class ConnectionWindow extends JFrame {
 		
 	
 		//Logo
-		ImageIcon icon = new ImageIcon("/home/cacao/INSA/ChatSystem_Project/resources/images/Aura2.jpg");
+		ImageIcon icon = new ImageIcon("../resources/images/Aura2.jpg");
 		JLabel image = new JLabel(icon); 
 		
 		JPanel paneltext = new JPanel();
@@ -65,7 +65,7 @@ public class ConnectionWindow extends JFrame {
 
 		//Bouton
 		LineBorder noBorder = new LineBorder(Color.WHITE, 3);
-		JButton button = new JButton(new ImageIcon("/home/cacao/INSA/ChatSystem_Project/resources/images/buttongo.jpg"));
+		JButton button = new JButton(new ImageIcon("../resources/images/buttongo.jpg"));
 		button.setBorder(noBorder);
 		paneltext.add(button);
 	
@@ -88,12 +88,12 @@ public class ConnectionWindow extends JFrame {
 		Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
    		Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		button.addMouseListener(new MouseAdapter() {
-         	public void mouseEntered(MouseEvent me) {
-            		setCursor(handCursor);
-         	}
-        	public void mouseExited(MouseEvent me) {
-           		setCursor(defaultCursor);
-         	}
+			public void mouseEntered(MouseEvent me) {
+				setCursor(handCursor);
+			}
+			public void mouseExited(MouseEvent me) {
+				setCursor(defaultCursor);
+			}
       		});
 
 		//Forgot Password
@@ -103,12 +103,12 @@ public class ConnectionWindow extends JFrame {
 		paneltext2.add(labelArea);
 		paneltext2.setBackground(Color.white);
 		labelArea.addMouseListener(new MouseAdapter() {
-         	public void mouseEntered(MouseEvent me) {
-            		setCursor(handCursor);
-         	}
-        	public void mouseExited(MouseEvent me) {
-           		setCursor(defaultCursor);
-         	}
+			public void mouseEntered(MouseEvent me) {
+				setCursor(handCursor);
+			}
+			public void mouseExited(MouseEvent me) {
+				setCursor(defaultCursor);
+			}
       		});
 
 
