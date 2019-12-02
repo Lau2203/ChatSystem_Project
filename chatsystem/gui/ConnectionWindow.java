@@ -20,6 +20,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
+
+
 public class ConnectionWindow extends JFrame {
   	Color myBlue = new Color(24, 147, 248);
 	public ConnectionWindow()  {    
@@ -65,25 +67,29 @@ public class ConnectionWindow extends JFrame {
 
 		//Bouton
 		LineBorder noBorder = new LineBorder(Color.WHITE, 3);
-		JButton button = new JButton(new ImageIcon("../resources/images/buttongo.jpg"));
-		button.setBorder(noBorder);
+		Icon mouseEntered = new ImageIcon("../resources/images/buttongo.jpg");
+		Icon mouseExited = new ImageIcon("../resources/images/buttongoshadow.png");
+		JButton button = new JButton(mouseExited);
+		Border b = BorderFactory.createLineBorder(Color.white);
+           	button.setBorder(b);
 		paneltext.add(button);
-	
+
 		//Changer bouton passage de la souris
 		button.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e){}
      			public void mousePressed(MouseEvent e){}
         		public void mouseReleased(MouseEvent e){}
         		public void mouseEntered(MouseEvent e){
-				Border b = BorderFactory.createLineBorder(Color.gray);
-           			button.setBorder(b);
+				
+				button.setIcon(mouseEntered);
        			}
 			public void mouseExited(MouseEvent e) {
-				Border b = BorderFactory.createLineBorder(Color.white);
-           			button.setBorder(b);}
+				button.setIcon(mouseExited);
+			}
 			
  
     		});
+
 		//Cursor
 		Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
    		Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
@@ -105,9 +111,14 @@ public class ConnectionWindow extends JFrame {
 		labelArea.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent me) {
 				setCursor(handCursor);
+				labelArea.setForeground(myBlue);
 			}
 			public void mouseExited(MouseEvent me) {
 				setCursor(defaultCursor);
+				labelArea.setForeground(Color.black);
+			}
+			public void mouseClicked(MouseEvent e){
+				JOptionPane.showMessageDialog(null, "Please contact your administrator");
 			}
       		});
 
