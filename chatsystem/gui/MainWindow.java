@@ -79,4 +79,6 @@ public class MainWindow extends JFrame{
 		MainWindow cw = new MainWindow();
 		cw.setVisible(true);
 	}
+
+//END
 }
