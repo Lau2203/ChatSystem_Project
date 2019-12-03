@@ -19,8 +19,7 @@ import javax.swing.border.Border;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Calendar;
-import java.applet.Applet;
+
 
 
 public class MainWindow extends JFrame{
@@ -40,11 +39,21 @@ public class MainWindow extends JFrame{
 		this.setResizable(true); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
-		JPanel panUs = new JPanel();	
-		panUs.setBackground(myBlue);
-		JLabel textName = new JLabel("Paul Hochon", SwingConstants.CENTER);
+		//About US
+		JPanel panUs = new JPanel();
+		Box BoxAboutUs = Box.createVerticalBox();
+		panUs.add(BoxAboutUs);
+		panUs.setBackground(Color.white);
+		JLabel padding1 = new JLabel("\n");
+		BoxAboutUs.add(padding1);
+		ImageIcon icon = new ImageIcon("../resources/images/user.png");
+		JLabel image = new JLabel(icon); 
+		BoxAboutUs.add(image);
+		JLabel padding2 = new JLabel("\n");
+		BoxAboutUs.add(padding2);
+		JLabel textName = new JLabel("Paul Hochon");
 		textName.setFont(new java.awt.Font(Font.SERIF,Font.BOLD,15));
-		panUs.add(textName);
+		BoxAboutUs.add(textName);
 		
 
    	 	JPanel panUsers = new JPanel();
