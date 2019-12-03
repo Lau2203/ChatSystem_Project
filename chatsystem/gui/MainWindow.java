@@ -30,17 +30,21 @@ public class MainWindow extends JFrame{
 	private JSplitPane s2;
 	private JSplitPane s3;
 
-	public MainWindow()  {    
+	public MainWindow()  {  
 		super();         
 	  	this.setTitle("MailWindow");
-	    	this.setLocationRelativeTo(null); 
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setSize(900, 650); 				
+		this.setLocationRelativeTo(null);
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		this.getContentPane().setBackground(Color.white);
-		this.setResizable(false); 			
+		this.setResizable(true); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
 		JPanel panUs = new JPanel();	
 		panUs.setBackground(myBlue);
+		JLabel textName = new JLabel("Paul Hochon", SwingConstants.CENTER);
+		textName.setFont(new java.awt.Font(Font.SERIF,Font.BOLD,15));
+		panUs.add(textName);
 		
 
    	 	JPanel panUsers = new JPanel();
@@ -56,21 +60,18 @@ public class MainWindow extends JFrame{
 		//SPLITS
     		s1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, panUsers);
 		s1.setDividerSize(2);
-		s1.setDividerLocation(300);
+		s1.setDividerLocation(200);
  		s1.setEnabled( false );
 
 		s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
-    		s2.setDividerLocation(400);
+    		s2.setDividerLocation(300);
 		s2.setDividerSize(7);
 		s2.setEnabled( false );
 
 
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 
-		//Add Logo
-		ImageIcon icon = new ImageIcon("../resources/images/AuraBlue.jpg");
-		JLabel image = new JLabel(icon); 
-		panUs.add(image);
+		
 		
 
 	}
@@ -80,5 +81,5 @@ public class MainWindow extends JFrame{
 		cw.setVisible(true);
 	}
 
-//END
+
 }

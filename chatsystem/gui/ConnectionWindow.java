@@ -105,7 +105,7 @@ public class ConnectionWindow extends JFrame {
       		});
 
 		//Forgot Password
-		JTextArea labelArea = new JTextArea("Forgot your ID ?  \n \n \n \n \n \n \n \n \n");
+		JTextArea labelArea = new JTextArea("Forgot your Password ?  \n \n \n \n \n \n \n \n \n");
 		labelArea.setEditable(false);
 		labelArea.setOpaque(false);
 		paneltext2.add(labelArea);
