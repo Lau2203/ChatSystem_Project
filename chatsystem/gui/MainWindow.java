@@ -39,6 +39,10 @@ public class MainWindow extends JFrame{
 		this.setResizable(true); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
+		// Cursors
+		Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
+   		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
+	
 		//About US
 		JPanel panUs = new JPanel();
 		panUs.setBackground(Color.BLUE); 
@@ -55,22 +59,81 @@ public class MainWindow extends JFrame{
 		JLabel image = new JLabel(icon); 
 		image.setAlignmentX(Component.CENTER_ALIGNMENT);
 		BoxAboutUs.add(image);
-		JLabel padding2 = new JLabel("\n\n");
+		JLabel padding2 = new JLabel("\n");
 		BoxAboutUs.add(padding2);
 		JLabel textName = new JLabel("Paul Hochon");
 		textName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
 		textName.setAlignmentX(Component.CENTER_ALIGNMENT);
 		BoxAboutUs.add(textName);
-		
+		JLabel padding3 = new JLabel("\n");
+		BoxAboutUs.add(padding3);
 
 		Box BoxAboutUs2 = Box.createHorizontalBox();
 		BoxAboutUsMain.add(BoxAboutUs2, BorderLayout.SOUTH);
-		ImageIcon icon2 = new ImageIcon("../resources/images/msg.png");
-		JLabel msg = new JLabel(icon2); 
-		BoxAboutUs2.add(msg);
-		ImageIcon icon3 = new ImageIcon("../resources/images/option.png");
-		JLabel option= new JLabel(icon3); 
-		BoxAboutUs2.add(option);
+		Icon mouseEnteredM 	= new ImageIcon("../resources/images/MsgB2.png");
+		Icon mouseExitedM 	= new ImageIcon("../resources/images/MsgA2.png");
+		Icon mouseEnteredO 	= new ImageIcon("../resources/images/OptB.png");
+		Icon mouseExitedO	= new ImageIcon("../resources/images/OptA.png");
+		
+		JButton buttonO = new JButton(mouseExitedO);
+		JButton buttonM = new JButton(mouseExitedM);
+		buttonM.setBorder(BorderFactory.createLineBorder(Color.white));
+		buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
+		
+		buttonM.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {}
+			@Override
+     			public void mousePressed(MouseEvent e) {
+				//buttonM.setIcon(mouseEnteredM);
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
+				//buttonM.setIcon(mouseExitedM);
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				buttonM.setIcon(mouseEnteredM);
+				buttonM.setBorder(BorderFactory.createLineBorder(myBlue));
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+				buttonM.setIcon(mouseExitedM);
+				buttonM.setBorder(BorderFactory.createLineBorder(Color.white));
+			}
+		});
+
+		buttonO.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {}
+			@Override
+     			public void mousePressed(MouseEvent e) {
+				//buttonO.setIcon(mouseEnteredO);
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
+				//buttonO.setIcon(mouseExitedO);
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				buttonO.setIcon(mouseEnteredO);
+				buttonO.setBorder(BorderFactory.createLineBorder(myBlue));
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+				buttonO.setIcon(mouseExitedO);
+				buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
+			}
+		});
+
+
+
+		
+		BoxAboutUs2.add(buttonO);
+		BoxAboutUs2.add(buttonM);
+		
 		
 
 
@@ -88,7 +151,7 @@ public class MainWindow extends JFrame{
 		//SPLITS
     		s1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, panUsers);
 		s1.setDividerSize(2);
-		s1.setDividerLocation(180);
+		s1.setDividerLocation(185);
  		s1.setEnabled( false );
 
 		s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
