@@ -61,7 +61,7 @@ public class NetworkSignalListener extends Thread {
 		DatagramPacket dp = null;
 
 		try {
-			dp = new DatagramPacket(request.getBytes(), request.length(), InetAddress.getByName("10.1.5.22"), this.listeningPort);
+			dp = new DatagramPacket(request.getBytes(), request.length(), InetAddress.getByName("192.168.43.35"), this.listeningPort);
 		} catch (UnknownHostException uhe) { uhe.printStackTrace(); }
 
 		try { this.ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
