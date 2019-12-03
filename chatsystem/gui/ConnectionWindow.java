@@ -24,6 +24,7 @@ import java.awt.*;
 
 import chatsystem.LocalClient;
 
+@SuppressWarnings("serial")
 public class ConnectionWindow extends JFrame {
 
 	public ConnectionWindow(LocalClient master)  {    

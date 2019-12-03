@@ -1,5 +1,7 @@
 package chatsystem.gui;
 
+import chatsystem.gui.UserBox;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -20,7 +22,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-
+@SuppressWarnings("serial")
 
 public class MainWindow extends JFrame{
 
@@ -135,14 +137,16 @@ public class MainWindow extends JFrame{
 		BoxAboutUs2.add(buttonM);
 		
 		
-
-
-
+		//User Box
    	 	JPanel panUsers = new JPanel();
-    		panUsers.setBackground(Color.white);
+    		panUsers.setBackground(Color.red);
         	JScrollPane editorScrollPaneUsers = new JScrollPane(panUsers);  
  		
+		/* UserBox firstUBox = UserBox.createVerticalBox();
+		panUsers.add(firstUBox,BorderLayout.NORTH); */
 		
+
+		//Messages
    	 	JPanel panMsg = new JPanel();
     		panMsg.setBackground(Color.white);
 		JScrollPane editorScrollPaneMsg = new JScrollPane(panMsg);
@@ -159,7 +163,7 @@ public class MainWindow extends JFrame{
 		s2.setDividerSize(7);
 		s2.setEnabled( false );
 
-
+		
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 
 		
@@ -168,8 +172,8 @@ public class MainWindow extends JFrame{
 	}
 
 	public static void main(String[] args) {
-		MainWindow cw = new MainWindow();
-		cw.setVisible(true);
+		MainWindow mw = new MainWindow();
+		mw.setVisible(true);
 	}
 
 
