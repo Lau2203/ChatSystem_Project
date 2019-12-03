@@ -7,28 +7,31 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
-import java.awt.Color;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
-import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+
+import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
-import javax.swing.border.Border;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-
+import chatsystem.LocalClient;
 
 public class ConnectionWindow extends JFrame {
 
-  	Color myBlue = new Color(24, 147, 248);
+	public ConnectionWindow(LocalClient master)  {    
 
-	public ConnectionWindow()  {    
 		super();         
-	  	this.setTitle("ConnectionWindow");
+
+		Color myBlue = new Color(24, 147, 248);
+
+	  	this.setTitle("Aura - Login");
 	    	this.setSize(600, 600);
 	    	this.setLocationRelativeTo(null); 
 		this.getContentPane().setBackground(Color.white);
@@ -36,14 +39,24 @@ public class ConnectionWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            
 	 
 		
+		/* Basic resources */
+		Icon mouseEntered 	= new ImageIcon("../resources/images/buttongo.jpg");
+		Icon mouseExited 	= new ImageIcon("../resources/images/buttongoshadow.png");
+
+		// Cursors
+		Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
+   		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
-		//Logo
-		ImageIcon icon = new ImageIcon("../resources/images/Aura2.jpg");
-		JLabel image = new JLabel(icon); 
+		// Logo
+		ImageIcon icon 		= new ImageIcon("../resources/images/Aura2.jpg");
+		JLabel image 		= new JLabel(icon); 
+		/* End of basic resources */
 		
-		JPanel paneltext = new JPanel();
-		JPanel paneltext1 = new JPanel();
-		JPanel paneltext2 = new JPanel();
+		JPanel paneltext 	= new JPanel();
+		JPanel paneltext1 	= new JPanel();
+		JPanel paneltext2 	= new JPanel();
+
+		JButton button = new JButton(mouseExited);
 		
 
 		//Text zone
@@ -65,44 +78,51 @@ public class ConnectionWindow extends JFrame {
 				Border b = BorderFactory.createLineBorder(Color.black, 2);
            			textField.setBorder(b);}
 		});
+		textField.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					e.consume();
+					button.doClick();
+					login(master, new String(textField.getPassword()));
+				}
+			}
+			public void keyTyped(KeyEvent e) {}
+			public void keyReleased(KeyEvent e) {}
+		});
  
 
-		//Bouton
 		LineBorder noBorder = new LineBorder(Color.WHITE, 3);
-		Icon mouseEntered = new ImageIcon("../resources/images/buttongo.jpg");
-		Icon mouseExited = new ImageIcon("../resources/images/buttongoshadow.png");
-		JButton button = new JButton(mouseExited);
-		Border b = BorderFactory.createLineBorder(Color.white);
-           	button.setBorder(b);
+
+		/* Login button settings */
+           	button.setBorder(BorderFactory.createLineBorder(Color.white));
 		paneltext.add(button);
 
 		//Changer bouton passage de la souris
 		button.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e){}
-     			public void mousePressed(MouseEvent e){}
-        		public void mouseReleased(MouseEvent e){}
-        		public void mouseEntered(MouseEvent e){
-				
+			public void mouseClicked(MouseEvent e) {
+				login(master, new String(textField.getPassword()));
+			}
+			@Override
+     			public void mousePressed(MouseEvent e) {
 				button.setIcon(mouseEntered);
-       			}
-			public void mouseExited(MouseEvent e) {
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
 				button.setIcon(mouseExited);
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
 			}
 			
  
     		});
-
-		//Cursor
-		Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
-   		Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-		button.addMouseListener(new MouseAdapter() {
-			public void mouseEntered(MouseEvent me) {
-				setCursor(handCursor);
-			}
-			public void mouseExited(MouseEvent me) {
-				setCursor(defaultCursor);
-			}
-      		});
+		/* END of login button settings */
 
 		//Forgot Password
 		JTextArea labelArea = new JTextArea("Forgot your Password ?  \n \n \n \n \n \n \n \n \n");
@@ -111,14 +131,17 @@ public class ConnectionWindow extends JFrame {
 		paneltext2.add(labelArea);
 		paneltext2.setBackground(Color.white);
 		labelArea.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseEntered(MouseEvent me) {
 				setCursor(handCursor);
 				labelArea.setForeground(myBlue);
 			}
+			@Override
 			public void mouseExited(MouseEvent me) {
 				setCursor(defaultCursor);
 				labelArea.setForeground(Color.black);
 			}
+			@Override
 			public void mouseClicked(MouseEvent e){
 				JOptionPane.showMessageDialog(null, "Please contact your administrator");
 			}
@@ -131,8 +154,15 @@ public class ConnectionWindow extends JFrame {
 		
   	}       	
 
+	private void login(LocalClient master, String input) {
+		if (master.login(input)) {
+			this.setVisible(false);
+			this.dispose();
+		}
+	}
+
 	public static void main(String[] args) {
-		ConnectionWindow cw = new ConnectionWindow();
+		ConnectionWindow cw = new ConnectionWindow(null);
 		cw.setVisible(true);
 	}
 }

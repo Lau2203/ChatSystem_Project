@@ -73,8 +73,8 @@ public abstract class Client extends Thread {
 		this.notify();
 	}
 
-	public void login() {
-
+	public boolean login(String input) {
+		/*
 		Scanner userInput = new Scanner(System.in);
 		String input_key;
 
@@ -88,7 +88,9 @@ public abstract class Client extends Thread {
 			if (this.encryptionHandler.testWitnessFile(input_key))
 				break;
 		}
+		*/
+		this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
+		return this.encryptionHandler.testWitnessFile(input);
 
-		this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input_key));	
 	}
 }

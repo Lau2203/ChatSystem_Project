@@ -11,6 +11,8 @@ import chatsystem.NotifyInformation;
 import chatsystem.util.Logs;
 import chatsystem.util.ConfigParser;
 
+import chatsystem.gui.ConnectionWindow;
+
 public class LocalClient extends Client {
 
 	public LocalClient(int port) {
@@ -19,7 +21,11 @@ public class LocalClient extends Client {
 
 	public void run() {
 
-		this.login();
+		//this.login();
+
+		ConnectionWindow cw = new ConnectionWindow(this);
+		cw.setVisible(true);	
+		//System.exit(1);
 
 		System.out.println("Successfully logged in!");
 
@@ -58,5 +64,9 @@ public class LocalClient extends Client {
 				default: break;
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		new LocalClient(5555).start();
 	}
 }
