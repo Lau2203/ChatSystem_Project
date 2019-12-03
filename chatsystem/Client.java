@@ -26,8 +26,8 @@ public abstract class Client extends Thread {
 
 	protected EncryptionHandler encryptionHandler;
 
-	protected static final String DEFAULT_CONFIG_FILE_PATH = "/home/cacao/INSA/ChatSystem_Project/config.cfg";
-	protected static final String DEFAULT_WITNESS_FILE_PATH = "/home/cacao/INSA/ChatSystem_Project/witness";
+	protected static final String DEFAULT_CONFIG_FILE_PATH = "../config.cfg";
+	protected static final String DEFAULT_WITNESS_FILE_PATH = "../witness";
 
 	protected ArrayList<ChatSession> activeChatSessionList;
 

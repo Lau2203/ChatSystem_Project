@@ -156,7 +156,13 @@ public class ConnectionWindow extends JFrame {
 
 	private void login(LocalClient master, String input) {
 		if (master.login(input)) {
+
 			this.setVisible(false);
+
+			synchronized(master) {
+				master.notify();
+			}
+
 			this.dispose();
 		}
 	}

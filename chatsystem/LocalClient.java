@@ -21,11 +21,9 @@ public class LocalClient extends Client {
 
 	public void run() {
 
-		//this.login();
-
-		ConnectionWindow cw = new ConnectionWindow(this);
-		cw.setVisible(true);	
-		//System.exit(1);
+		/* Show Login window until successfully logged in */
+		this.askLogin();
+		/* User logged in successfully */
 
 		System.out.println("Successfully logged in!");
 
@@ -63,6 +61,17 @@ public class LocalClient extends Client {
 
 				default: break;
 			}
+		}
+	}
+
+	private void askLogin() {
+		ConnectionWindow cw = new ConnectionWindow(this);
+		cw.setVisible(true);	
+
+		synchronized(this) {
+			try {
+				wait();
+			} catch (InterruptedException ie) {}
 		}
 	}
 
