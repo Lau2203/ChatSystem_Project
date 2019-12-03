@@ -113,7 +113,7 @@ public class EncryptionHandler {
 		} catch (IOException ioe) { System.out.println(ioe); return false;}
 
 		try {
-			if (this.decrypt(key, line).equals(this.WITNESS_STRING))
+			if (this.decrypt(key, line).equals(EncryptionHandler.WITNESS_STRING))
 				return true;
 		} catch (BadPaddingException bpe) { return false; }
 

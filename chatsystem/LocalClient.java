@@ -12,6 +12,7 @@ import chatsystem.util.Logs;
 import chatsystem.util.ConfigParser;
 
 import chatsystem.gui.ConnectionWindow;
+import chatsystem.gui.MainWindow;
 
 public class LocalClient extends Client {
 
@@ -26,6 +27,8 @@ public class LocalClient extends Client {
 		/* User logged in successfully */
 
 		System.out.println("Successfully logged in!");
+
+		this.runGUI();
 
 		this.startNetworkManager();
 
@@ -80,6 +83,11 @@ public class LocalClient extends Client {
 	/* Called when first time lauching */
 	private void setup() {
 
+	}
+
+	private void runGUI() {
+		MainWindow mw = new MainWindow();
+		mw.setVisible(true);
 	}
 
 	public static void main(String[] args) {

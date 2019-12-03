@@ -2,7 +2,7 @@
 
 BUILD_DIR=./build/
 SRC_PATH=.
-FLAGS=-d $(BUILD_DIR) --source-path $(SRC_PATH)
+FLAGS=-Xlint -d $(BUILD_DIR) --source-path $(SRC_PATH)
 COMP=javac $(FLAGS)
 
 PACKAGE_PATH=./chatsystem/

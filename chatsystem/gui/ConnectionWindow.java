@@ -12,6 +12,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import java.awt.Component;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.BorderLayout;
@@ -56,8 +57,11 @@ public class ConnectionWindow extends JFrame {
 		JPanel paneltext1 	= new JPanel();
 		JPanel paneltext2 	= new JPanel();
 
+		Box box = Box.createVerticalBox();
+
 		JButton button = new JButton(mouseExited);
 		
+		JTextArea wrongLoginLabel = new JTextArea("Wrong login information");
 
 		//Text zone
 		JPasswordField textField = new JPasswordField(15);
@@ -84,7 +88,7 @@ public class ConnectionWindow extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					e.consume();
 					button.doClick();
-					login(master, new String(textField.getPassword()));
+					login(master, new String(textField.getPassword()), wrongLoginLabel);
 				}
 			}
 			public void keyTyped(KeyEvent e) {}
@@ -101,7 +105,7 @@ public class ConnectionWindow extends JFrame {
 		//Changer bouton passage de la souris
 		button.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
-				login(master, new String(textField.getPassword()));
+				login(master, new String(textField.getPassword()), wrongLoginLabel);
 			}
 			@Override
      			public void mousePressed(MouseEvent e) {
@@ -124,12 +128,17 @@ public class ConnectionWindow extends JFrame {
     		});
 		/* END of login button settings */
 
+		wrongLoginLabel.setForeground(Color.red);
+		wrongLoginLabel.setVisible(false);
+
 		//Forgot Password
-		JTextArea labelArea = new JTextArea("Forgot your Password ?  \n \n \n \n \n \n \n \n \n");
+		JTextArea labelArea = new JTextArea("\n Forgot your Password ?  \n \n \n \n \n \n \n");
 		labelArea.setEditable(false);
 		labelArea.setOpaque(false);
-		paneltext2.add(labelArea);
-		paneltext2.setBackground(Color.white);
+		labelArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		wrongLoginLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 		labelArea.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent me) {
@@ -147,6 +156,11 @@ public class ConnectionWindow extends JFrame {
 			}
       		});
 
+		box.add(wrongLoginLabel);
+		box.add(labelArea);
+
+		paneltext2.add(box);
+		paneltext2.setBackground(Color.white);
 
 		this.add(image, BorderLayout.NORTH);
 		this.add(paneltext, BorderLayout.CENTER);
@@ -154,7 +168,7 @@ public class ConnectionWindow extends JFrame {
 		
   	}       	
 
-	private void login(LocalClient master, String input) {
+	private void login(LocalClient master, String input, JTextArea wrongLoginLabel) {
 		if (master.login(input)) {
 
 			this.setVisible(false);
@@ -164,6 +178,8 @@ public class ConnectionWindow extends JFrame {
 			}
 
 			this.dispose();
+		} else {
+			wrongLoginLabel.setVisible(true);
 		}
 	}
 

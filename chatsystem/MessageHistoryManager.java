@@ -10,7 +10,7 @@ public class MessageHistoryManager {
 	private ArrayList<MessageHistory> messageHistoryList;
 
 	public MessageHistoryManager(String messageHistoryPath) {
-		this.MESSAGE_HISTORY_PATH = messageHistoryPath;
+		MessageHistoryManager.MESSAGE_HISTORY_PATH = messageHistoryPath;
 		this.messageHistoryList = new ArrayList<MessageHistory>();
 	}
 

@@ -104,7 +104,7 @@ public class ConnectionHandler extends Thread {
 
 	private void die() {
 		synchronized(this) {
-			this.master.notifyDeathOfConnectionHandler(this);
+			ConnectionHandler.master.notifyDeathOfConnectionHandler(this);
 			try {
 				wait();
 			} catch (InterruptedException ie) {}
@@ -156,7 +156,7 @@ public class ConnectionHandler extends Thread {
 			}
 
 			synchronized(this) {
-				this.master.notifyNewMessage(this, userInput);
+				ConnectionHandler.master.notifyNewMessage(this, userInput);
 				try {
 					wait();
 				} catch (InterruptedException ie) {}
