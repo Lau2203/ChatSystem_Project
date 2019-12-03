@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 import java.io.IOException;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import chatsystem.network.NetworkManagerInformation;
 
 import chatsystem.NotifyInformation;
@@ -49,6 +52,10 @@ public class LocalClient extends Client {
 					System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - END OF CONNECTION");
 					break;
 
+				case READY_TO_CHECK_USERNAME:
+					this.setUsername();
+					break;
+
 				case USERNAME_MODIFICATION:
 					break;
 
@@ -88,6 +95,18 @@ public class LocalClient extends Client {
 	private void runGUI() {
 		MainWindow mw = new MainWindow();
 		mw.setVisible(true);
+	}
+
+	private void setUsername() {
+		String username = ConfigParser.get("username");
+
+		/* Main user's username needs to be set */
+		if (username == null) {
+			JFrame frame = new JFrame();
+			username = JOptionPane.showInputDialog(frame, "Please enter a username:");
+		}
+
+		this.mainUser.setUsername(username);
 	}
 
 	public static void main(String[] args) {

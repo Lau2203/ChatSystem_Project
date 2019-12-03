@@ -26,11 +26,11 @@ public class NetworkManagerInformation {
 	public static final int NETWORK_SIGNAL_SIZE = 2;
 
 	/* for New Active user */
-	public static final String NEW_ACTIVE_USER_STRING 	= "NA";
+	public static final String NEW_ACTIVE_CLIENT_STRING 	= "NA";
 	/* for End of active User */
-	public static final String END_OF_ACTIVE_USER_STRING 	= "EU";
+	public static final String END_OF_ACTIVE_CLIENT_STRING 	= "EU";
 	/* for End of active User */
-	public static final String NEW_USERNAME_STRING 		= "NU";
+	public static final String USERNAME_MODIFICATION_STRING = "NU";
 
 	public static final String WELCOME_STRING 		= "WE";
 

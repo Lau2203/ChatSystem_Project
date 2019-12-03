@@ -56,12 +56,12 @@ public class NetworkSignalListener extends Thread {
 
 	private void tellOthersWeAreActive() {
 
-		String request = this.mainUser.getFingerprint() + ":" + NetworkManagerInformation.NEW_ACTIVE_USER_STRING;
+		String request = this.mainUser.getFingerprint() + ":" + NetworkManagerInformation.NEW_ACTIVE_CLIENT_STRING;
 
 		DatagramPacket dp = null;
 
 		try {
-			dp = new DatagramPacket(request.getBytes(), request.length(), InetAddress.getByName("192.168.43.224"), this.listeningPort);
+			dp = new DatagramPacket(request.getBytes(), request.length(), InetAddress.getByName("archlab"), this.listeningPort);
 		} catch (UnknownHostException uhe) { uhe.printStackTrace(); }
 
 		try { this.ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
@@ -77,10 +77,11 @@ public class NetworkSignalListener extends Thread {
 		String fingerprint = information[0];
 		String signal = information[1];
 
-		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_USER_STRING)) {
+		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_CLIENT_STRING)) {
 			/* Example of built packet : fingerprint:WE:243:USERNAME */
 
 			int currentActiveClientsNumber;
+
 			synchronized(this.master) {
 				currentActiveClientsNumber = this.master.getActiveClientsNumber();
 			}
@@ -94,14 +95,19 @@ public class NetworkSignalListener extends Thread {
 
 			try { this.ds.send(dp); } catch (IOException ioe) {}
 
-			synchronized (this) {
+			synchronized(this.master) {
 				this.master.notifyNewActiveClient(fingerprint, remoteAddress);
 			}
 
-		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_USER_STRING)) {
+		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_CLIENT_STRING)) {
 
-		} else if (signal.equals(NetworkManagerInformation.NEW_USERNAME_STRING)) {
+		} else if (signal.equals(NetworkManagerInformation.USERNAME_MODIFICATION_STRING)) {
 
+			String new_username = information[3];
+
+			synchronized(this.master) {
+				this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
+			}
 		}
 		/* No problem when we are the first and only one to connect to the network. Since we also receive the broadcast signal,
 		 * this.activeClientsResponseToWaitFor will first be set to 0 and unlock the whole system by notifying
@@ -120,17 +126,16 @@ public class NetworkSignalListener extends Thread {
 				this.activeClientsResponseToWaitFor--;
 			}
 
-			synchronized(this) {
+			synchronized(this.master) {
 				this.master.notifyNewUsername(fingerprint, remoteAddress, username);
 			}
 
 			if (this.activeClientsResponseToWaitFor == 0) {
-				synchronized(this) {
+				synchronized(this.master) {
 					this.master.notifyReadyToCheckUsername();
 				}
 			}
-		}	
-		else {
+		} else {
 
 			System.out.println("UNKNOWN SIGNAL");
 		}
