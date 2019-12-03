@@ -31,28 +31,46 @@ public abstract class Client extends Thread {
 
 	protected ArrayList<ChatSession> activeChatSessionList;
 
-	protected Client(int port) {
+	protected String logFilePath;
+	protected String witnessFilePath;
+	protected boolean isLogEnabled;
 
-		String witnessFilePath;
+	protected String instanceName = "Client";
 
-		try {
-			ConfigParser.parse(Client.DEFAULT_CONFIG_FILE_PATH);
-		} catch (IOException ioe) {
-			System.out.println("Could not retrieve config file, aborted");
-			System.exit(1);
+	protected Client(int connectionListenerPort) {
+
+		this.initWithConfigFile();
+
+		this.mainUser 			= new MainUser();
+
+		this.netmanager 		= new NetworkManager(this, this.mainUser, connectionListenerPort);
+
+		this.activeChatSessionList 	= new ArrayList<ChatSession>();
+
+		this.encryptionHandler 		= new EncryptionHandler(this.witnessFilePath);
+	}
+
+	private void initWithConfigFile() {
+
+		String isLogEnabledString;
+
+		this.parseConfigFile();
+
+		this.logFilePath 	= ConfigParser.get("logfile");	
+		this.witnessFilePath 	= ConfigParser.get("witness-file-path");
+		isLogEnabledString	= ConfigParser.get("log-filling");
+
+		this.prepareLogs(this.logFilePath);
+
+		if (this.witnessFilePath == null)
+			this.witnessFilePath = DEFAULT_WITNESS_FILE_PATH;
+
+		if (isLogEnabledString == null || !isLogEnabledString.equals("true")) {
+			this.isLogEnabled = false;
+		} else {
+			this.isLogEnabled = true;
 		}
 
-		witnessFilePath = ConfigParser.get("witness-file-path");
-		if (witnessFilePath == null)
-			witnessFilePath = DEFAULT_WITNESS_FILE_PATH;
-
-		this.mainUser = new MainUser();
-
-		this.netmanager = new NetworkManager(this, this.mainUser, port);
-
-		this.activeChatSessionList = new ArrayList<ChatSession>();
-
-		this.encryptionHandler = new EncryptionHandler(witnessFilePath);
 	}
 
 	protected void startNetworkManager() {
@@ -92,5 +110,25 @@ public abstract class Client extends Thread {
 		this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
 		return this.encryptionHandler.testWitnessFile(input);
 
+	}
+
+	private void parseConfigFile() {
+		try {
+			ConfigParser.parse(Client.DEFAULT_CONFIG_FILE_PATH);
+		} catch (IOException ioe) {
+			Logs.printerro(this.instanceName, "Could not retrieve configuration file, aborted");
+			System.exit(1);
+		}
+	}
+
+	private void prepareLogs(String logFilePath) {
+		if (logFilePath != null) {
+			try {
+				Logs.init(isLogEnabled, logFilePath);
+			} catch (IOException ioe) {
+				/* Log init failed, logs filling is just abandonned */
+				System.out.println("[x] Error while initializing log file, logs filling is abandonned");
+			}
+		}
 	}
 }

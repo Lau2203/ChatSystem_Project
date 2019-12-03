@@ -65,14 +65,21 @@ public class LocalClient extends Client {
 	}
 
 	private void askLogin() {
+		/* This window will call Client.login() to check whether the user entered
+		 * the correct password */
 		ConnectionWindow cw = new ConnectionWindow(this);
 		cw.setVisible(true);	
 
+		/* Wait for the connection window to confirm the user is now connected */
 		synchronized(this) {
 			try {
 				wait();
 			} catch (InterruptedException ie) {}
 		}
+	}
+	/* Called when first time lauching */
+	private void setup() {
+
 	}
 
 	public static void main(String[] args) {
