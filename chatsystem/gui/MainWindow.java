@@ -136,25 +136,28 @@ public class MainWindow extends JFrame{
 		//END of About US - NORTH.LEFT 
 		
 
-		/************************************TO BE DONE IN USER BOX CLASS***************************************/
-		/*********************************************************************************************************/
+		
 		//User Box - SOUTH.LEFT
    	 	JPanel panUsers = new JPanel();
     		panUsers.setBackground(Color.white);
-        	JScrollPane scroll = new JScrollPane(panUsers); 
+        	JScrollPane scroll = new JScrollPane();
+		panUsers.add(scroll);
+
  		
 		//Search Bar
-		Box search = Box.createHorizontalBox();
+		Box search = Box.createVerticalBox();
 		search.setBackground(Color.white);
-		Border border = BorderFactory.createLineBorder(Color.gray, 2);
 		
+
 		JTextField textField = new JTextField(" Search something ? ...               "); //padding to be done
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 15));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
-		textField.setBorder(border);
+		
+		Border borderG = BorderFactory.createLineBorder(Color.gray, 2);
+		Border borderB = BorderFactory.createLineBorder(myBlue, 2);
+		textField.setBorder(borderG);
 		search.add(textField);
-
 		
 
 		textField.addMouseListener(new MouseListener() {           
@@ -163,76 +166,84 @@ public class MainWindow extends JFrame{
 		   	@Override
 		   	public void mousePressed(MouseEvent e) {}          
 		    	@Override
-		    	public void mouseExited(MouseEvent e) {}           
+		    	public void mouseExited(MouseEvent e) {
+				textField.setBorder(borderG);
+			}           
 		    	@Override
-		    	public void mouseEntered(MouseEvent e) {}          
+		    	public void mouseEntered(MouseEvent e) {
+				textField.setBorder(borderB);
+			}          
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
-				JTextField texteField = ((JTextField)e.getSource());
-				texteField.setText("");
-				texteField.getFont().deriveFont(Font.PLAIN);
-				texteField.setForeground(Color.black);
-				texteField.removeMouseListener(this);
+					JTextField texteField = ((JTextField)e.getSource());
+					textField.setText("");
+					textField.getFont().deriveFont(Font.PLAIN);
+					textField.setForeground(Color.black);
 		    }
-});
-
-		panUsers.add(search);
-
-		/******************* CreateUB1 ****************************/
-		for (int i = 0 ; i < 7 ; i++) {	
-		Box mainBox = Box.createHorizontalBox();
-		Box rightBox = Box.createVerticalBox();
-		rightBox.setBorder(BorderFactory.createLineBorder(Color.white));
-	
-		JLabel userName = new JLabel("Paul Hémique");
-		userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
-		rightBox.add(userName);
-		
-		JLabel lastMsg = new JLabel("I spoke to our IT about our Ch..."); //get 29 letters + [...]
-		lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
-		lastMsg.setForeground(myBlue);	
-		rightBox.add(lastMsg);
-		
-		JLabel paddingUB2 = new JLabel("  ");
-		
-		//User Image
-		ImageIcon user = new ImageIcon("../resources/images/active.png");
-		JLabel userL = new JLabel(user); 
-		
-
-		mainBox.add(userL);
-		mainBox.add(paddingUB2);
-		mainBox.add(rightBox);
-		
-		JButton buttonUser1 = new JButton();
-		buttonUser1.setBackground(Color.white);
-		buttonUser1.setBorderPainted(false);
-		buttonUser1.add(mainBox);
-
-		buttonUser1.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {}
-			@Override
-     			public void mousePressed(MouseEvent e) {
-			}
-			@Override
-        		public void mouseReleased(MouseEvent e) {
-			}
-			@Override
-        		public void mouseEntered(MouseEvent e){
-				setCursor(handCursor);
-				userName.setForeground(myBlue);
-       			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				setCursor(defaultCursor);
-				userName.setForeground(Color.black);
-			}
 		});
-		
-		panUsers.add(buttonUser1,BorderLayout.WEST);
-		}
-		/**********************Create UB2 **************************/
 
+		panUsers.add(search);		
+
+		/************************************TO BE DONE IN USER BOX CLASS***************************************/
+		/*********************************************************************************************************/
+		/******************* Create seven UB ****************************/
+		for (int i = 0 ; i < 7 ; i++) {	
+			Box mainBox = Box.createHorizontalBox();
+			mainBox.setBackground(Color.white);
+
+			Box rightBox = Box.createVerticalBox();
+			Border emptyBorder = BorderFactory.createEmptyBorder();
+			rightBox.setBorder(emptyBorder);
+		
+			JLabel userName = new JLabel("Paul Hémique");
+			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+			rightBox.add(userName);
+			
+			JLabel lastMsg = new JLabel("I spoke to our IT about our Ch..."); //get 29 letters + [...]
+			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
+			lastMsg.setForeground(Color.gray);	
+			rightBox.add(lastMsg);
+			
+			JLabel paddingUB2 = new JLabel("  ");
+			
+			//User Image
+			ImageIcon user = new ImageIcon("../resources/images/activet.png");
+			JLabel userL = new JLabel(user); 
+			
+
+			mainBox.add(userL);
+			mainBox.add(paddingUB2);
+			mainBox.add(rightBox);
+			
+			JButton buttonUser1 = new JButton();
+			buttonUser1.setBackground(Color.white);
+			buttonUser1.setBorderPainted(false);
+			buttonUser1.add(mainBox);
+
+			buttonUser1.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {}
+				@Override
+	     			public void mousePressed(MouseEvent e) {
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+				@Override
+				public void mouseEntered(MouseEvent e){
+					setCursor(handCursor);
+					userName.setForeground(myBlue);
+	       			}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					setCursor(defaultCursor);
+					userName.setForeground(Color.black);
+				}
+			});
+			
+			panUsers.add(buttonUser1,BorderLayout.WEST);
+		}
+		
+		
 		/*********************************************************************************************************/
 		/*********************************************************************************************************/
 
@@ -252,7 +263,7 @@ public class MainWindow extends JFrame{
 		s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
     		s2.setDividerLocation(280);
 		s2.setDividerSize(7);
-		s2.setEnabled( false );
+		s2.setEnabled(false);
 
 		
     		this.getContentPane().add(s2, BorderLayout.CENTER);

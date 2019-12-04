@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class UserBox extends Box {
 
+	/*Take back MainWindow code*/
 	public UserBox() {
 		super(BoxLayout.Y_AXIS);
 		Box mainBox = Box.createHorizontalBox();
