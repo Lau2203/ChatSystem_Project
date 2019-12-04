@@ -8,7 +8,7 @@ import java.awt.*;
 public class UserBox extends Box {
 
 	public UserBox() {
-		super(BoxLayout.X_AXIS);
+		super(BoxLayout.Y_AXIS);
 		Box mainBox = Box.createHorizontalBox();
 		Box rightBox = Box.createVerticalBox();
 	
@@ -27,12 +27,12 @@ public class UserBox extends Box {
 
 		mainBox.add(userL);
 		mainBox.add(rightBox);
-		this.setVisible(true);
 	}
 
 	
-	public UserBox createUB() {
+	public static UserBox createUB() {
 		UserBox b1 = new UserBox();
+		b1.setVisible(true);
 		return b1;
 	}
 }

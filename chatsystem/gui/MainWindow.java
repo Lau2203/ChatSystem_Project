@@ -26,17 +26,18 @@ import java.awt.*;
 
 public class MainWindow extends JFrame{
 
+
   	Color myBlue = new Color(24, 147, 248);
 	private JSplitPane s1;
 	private JSplitPane s2;
-	private JSplitPane s3;
 
 	public MainWindow()  {  
-		super();         
+
+		super();   
+      
 	  	this.setTitle("MailWindow");
 		this.setSize(900, 650); 				
-		this.setLocationRelativeTo(null);
-		//this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setLocationRelativeTo(null); 
 		this.getContentPane().setBackground(Color.white);
 		this.setResizable(true); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -45,7 +46,7 @@ public class MainWindow extends JFrame{
 		Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
-		//About US
+		//About US - NORTH.LEFT
 		JPanel panUs = new JPanel();
 		panUs.setBackground(Color.BLUE); 
 		Box BoxAboutUsMain = Box.createVerticalBox();
@@ -130,21 +131,112 @@ public class MainWindow extends JFrame{
 			}
 		});
 
-
-
-		
 		BoxAboutUs2.add(buttonO);
 		BoxAboutUs2.add(buttonM);
-		
-		
-		//User Box
-   	 	JPanel panUsers = new JPanel();
-    		panUsers.setBackground(Color.red);
-        	JScrollPane editorScrollPaneUsers = new JScrollPane(panUsers);  
- 		
-		//createUB
+		//END of About US - NORTH.LEFT 
 		
 
+		/************************************TO BE DONE IN USER BOX CLASS***************************************/
+		/*********************************************************************************************************/
+		//User Box - SOUTH.LEFT
+   	 	JPanel panUsers = new JPanel();
+    		panUsers.setBackground(Color.white);
+        	JScrollPane scroll = new JScrollPane(panUsers); 
+ 		
+		//Search Bar
+		Box search = Box.createHorizontalBox();
+		search.setBackground(Color.white);
+		Border border = BorderFactory.createLineBorder(Color.gray, 2);
+		
+		JTextField textField = new JTextField(" Search something ? ...               "); //padding to be done
+		textField.setFont(new Font("CALIBRI", Font.PLAIN, 15));
+		textField.getFont().deriveFont(Font.ITALIC);
+		textField.setForeground(Color.gray);
+		textField.setBorder(border);
+		search.add(textField);
+
+		
+
+		textField.addMouseListener(new MouseListener() {           
+			@Override
+		   	public void mouseReleased(MouseEvent e) {}         
+		   	@Override
+		   	public void mousePressed(MouseEvent e) {}          
+		    	@Override
+		    	public void mouseExited(MouseEvent e) {}           
+		    	@Override
+		    	public void mouseEntered(MouseEvent e) {}          
+		    	@Override
+		    	public void mouseClicked(MouseEvent e) {
+				JTextField texteField = ((JTextField)e.getSource());
+				texteField.setText("");
+				texteField.getFont().deriveFont(Font.PLAIN);
+				texteField.setForeground(Color.black);
+				texteField.removeMouseListener(this);
+		    }
+});
+
+		panUsers.add(search);
+
+		/******************* CreateUB1 ****************************/
+		for (int i = 0 ; i < 7 ; i++) {	
+		Box mainBox = Box.createHorizontalBox();
+		Box rightBox = Box.createVerticalBox();
+		rightBox.setBorder(BorderFactory.createLineBorder(Color.white));
+	
+		JLabel userName = new JLabel("Paul Hémique");
+		userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+		rightBox.add(userName);
+		
+		JLabel lastMsg = new JLabel("I spoke to our IT about our Ch..."); //get 29 letters + [...]
+		lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
+		lastMsg.setForeground(myBlue);	
+		rightBox.add(lastMsg);
+		
+		JLabel paddingUB2 = new JLabel("  ");
+		
+		//User Image
+		ImageIcon user = new ImageIcon("../resources/images/active.png");
+		JLabel userL = new JLabel(user); 
+		
+
+		mainBox.add(userL);
+		mainBox.add(paddingUB2);
+		mainBox.add(rightBox);
+		
+		JButton buttonUser1 = new JButton();
+		buttonUser1.setBackground(Color.white);
+		buttonUser1.setBorderPainted(false);
+		buttonUser1.add(mainBox);
+
+		buttonUser1.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {}
+			@Override
+     			public void mousePressed(MouseEvent e) {
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				userName.setForeground(myBlue);
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+				userName.setForeground(Color.black);
+			}
+		});
+		
+		panUsers.add(buttonUser1,BorderLayout.WEST);
+		}
+		/**********************Create UB2 **************************/
+
+		/*********************************************************************************************************/
+		/*********************************************************************************************************/
+
+	
 		//Messages
    	 	JPanel panMsg = new JPanel();
     		panMsg.setBackground(Color.white);
@@ -153,9 +245,9 @@ public class MainWindow extends JFrame{
 
 		//SPLITS
     		s1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, panUsers);
-		s1.setDividerSize(2);
+		s1.setDividerSize(0);
 		s1.setDividerLocation(185);
- 		s1.setEnabled( false );
+ 		s1.setEnabled(false);
 
 		s2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
     		s2.setDividerLocation(280);
