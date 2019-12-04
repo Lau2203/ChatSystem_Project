@@ -31,8 +31,11 @@ public class LocalClient extends Client {
 
 		System.out.println("Successfully logged in!");
 
+		synchronized(this.lock) {
+			this.startNetworkManager();
+		}
+
 		this.runGUI();
-		this.startNetworkManager();
 
 		while (true) {
 			synchronized(this.lock) {
@@ -113,6 +116,6 @@ public class LocalClient extends Client {
 	}
 
 	public static void main(String[] args) {
-		new LocalClient(5555).start();
+		(new LocalClient(5555)).start();
 	}
 }

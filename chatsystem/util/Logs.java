@@ -19,7 +19,7 @@ public class Logs {
 	private static boolean isWARNEnabled;
 	private static boolean isERROEnabled;
 
-	public static void init(boolean isLogEnabled, String logFilePath) throws IOException {
+	public synchronized static void init(boolean isLogEnabled, String logFilePath) throws IOException {
 		Logs.filePath = logFilePath;
 
 		Logs.isLogFileOpen = false;
@@ -42,7 +42,7 @@ public class Logs {
 		Logs.isERROEnabled = true;
 	}
 	
-	public static void println(String s) { 
+	public synchronized static void println(String s) { 
 		if (Logs.isLogEnabled) {
 			try { 
 				Logs.out.append(s + "\n"); 
@@ -53,16 +53,16 @@ public class Logs {
 		}
 	}
 
-	public static void printinfo(String s) { if (Logs.isINFOEnabled) { Logs.println("[+] " + s); }}
-	public static void printwarn(String s) { if (Logs.isWARNEnabled) { Logs.println("[!] " + s); }}
-	public static void printerro(String s) { if (Logs.isERROEnabled) { Logs.println("[x] " + s); }}
+	public synchronized static void printinfo(String s) { if (Logs.isINFOEnabled) { Logs.println("[+] " + s); }}
+	public synchronized static void printwarn(String s) { if (Logs.isWARNEnabled) { Logs.println("[!] " + s); }}
+	public synchronized static void printerro(String s) { if (Logs.isERROEnabled) { Logs.println("[x] " + s); }}
 
-	public static void println(String instance, String s) 	{ Logs.println("[+] [" + instance + "] " + s); }
-	public static void printinfo(String instance, String s) { if (Logs.isINFOEnabled) { Logs.println("[+] [" + instance + "] " + s); }}
-	public static void printwarn(String instance, String s) { if (Logs.isWARNEnabled) { Logs.println("[!] [" + instance + "] " + s); }}
-	public static void printerro(String instance, String s) { if (Logs.isERROEnabled) { Logs.println("[x] [" + instance + "] " + s); }}
+	public synchronized static void println(String instance, String s) 	{ Logs.println("[+] [" + instance + "] " + s); }
+	public synchronized static void printinfo(String instance, String s) { if (Logs.isINFOEnabled) { Logs.println("[+] [" + instance + "] " + s); }}
+	public synchronized static void printwarn(String instance, String s) { if (Logs.isWARNEnabled) { Logs.println("[!] [" + instance + "] " + s); }}
+	public synchronized static void printerro(String instance, String s) { if (Logs.isERROEnabled) { Logs.println("[x] [" + instance + "] " + s); }}
 
-	public static void readLogs() {
+	public synchronized static void readLogs() {
 
 		if (Logs.isLogEnabled) {
 			try {

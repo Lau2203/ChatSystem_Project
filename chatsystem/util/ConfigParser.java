@@ -41,7 +41,7 @@ public class ConfigParser {
 		ConfigParser.in.close();
 	}
 
-	public static void parse(String cfp) throws FileNotFoundException, IOException {
+	public synchronized static void parse(String cfp) throws FileNotFoundException, IOException {
 
 		String line;
 		String[] config;
@@ -70,7 +70,7 @@ public class ConfigParser {
 		ConfigParser.hasBeenParsed = true;
 	}
 
-	public static String get(String key) { return ConfigParser.configBindings.get(key); }
+	public synchronized static String get(String key) { return ConfigParser.configBindings.get(key); }
 }
 
 

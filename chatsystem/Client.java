@@ -47,6 +47,8 @@ public abstract class Client extends Thread {
 
 		this.netmanager 		= new NetworkManager(this, this.mainUser, connectionListenerPort);
 
+		this.networkManagerInformation	= new NetworkManagerInformation();
+
 		this.activeChatSessionList 	= new ArrayList<ChatSession>();
 
 		this.encryptionHandler 		= new EncryptionHandler(this.witnessFilePath);
@@ -94,7 +96,13 @@ public abstract class Client extends Thread {
 	}
 
 	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
-		this.networkManagerInformation = ni;
+		/* Make a copy */
+		this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
+		this.networkManagerInformation.setNotifyInformation(ni.getNotifyInformation());
+		this.networkManagerInformation.setFingerprint(ni.getFingerprint());
+		this.networkManagerInformation.setUsername(ni.getUsername());
+		this.networkManagerInformation.setAddress(ni.getAddress());
+		this.networkManagerInformation.setMessage(ni.getMessage());
 		this.wakeUp();
 	}
 

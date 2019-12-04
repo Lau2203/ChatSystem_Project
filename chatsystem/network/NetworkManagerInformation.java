@@ -60,29 +60,29 @@ public class NetworkManagerInformation {
 	}
 
 	/* Getters */
-	public User 			getRecipientUser() 	{ return this.recipient; }
+	public synchronized User 			getRecipientUser() 	{ return this.recipient; }
 
-	public NotifyInformation	getNotifyInformation()	{ return this.info; }
+	public synchronized NotifyInformation	getNotifyInformation()		{ return this.info; }
 
-	public String 			getFingerprint() 	{ return this.fingerprint; }
+	public synchronized String 			getFingerprint() 	{ return this.fingerprint; }
 
-	public String 			getUsername() 		{ return this.username; }
+	public synchronized String 			getUsername() 		{ return this.username; }
 
-	public InetAddress 		getAddress() 		{ return this.address; }
+	public synchronized InetAddress 		getAddress() 		{ return this.address; }
 
-	public Message 			getMessage() 		{ return this.msg; }
+	public synchronized Message 			getMessage() 		{ return this.msg; }
 
 	/* Setters */
-	public void setRecipientUser(User recipient) 			{ this.recipient = recipient; }
+	public synchronized void setRecipientUser(User recipient) 		{ this.recipient = recipient; }
 
-	public void setNotifyInformation(NotifyInformation info)	{ this.info = info; }
+	public synchronized void setNotifyInformation(NotifyInformation info)	{ this.info = info; }
 
-	public void setFingerprint(String fingerprint)			{ this.fingerprint = fingerprint; }
+	public synchronized void setFingerprint(String fingerprint)		{ this.fingerprint = fingerprint; }
 
-	public void setUsername(String userName)			{ this.username = userName; }
+	public synchronized void setUsername(String userName)			{ this.username = userName; }
 
-	public void setAddress(InetAddress inetAddress)			{ this.address = inetAddress; }
+	public synchronized void setAddress(InetAddress inetAddress)		{ this.address = inetAddress; }
 
-	public void setMessage(Message msg)				{ this.msg = msg; }
+	public synchronized void setMessage(Message msg)			{ this.msg = msg; }
 }
 
