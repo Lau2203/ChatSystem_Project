@@ -105,6 +105,7 @@ public class ConnectionWindow extends JFrame {
 
 		//Changer bouton passage de la souris
 		button.addMouseListener(new MouseListener() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				login(master, new String(textField.getPassword()), wrongLoginLabel);
 			}
