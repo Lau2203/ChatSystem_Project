@@ -26,27 +26,27 @@ public class User {
 		this.address = address;
 	}
 
-	public String getFingerprint() {
+	public synchronized String getFingerprint() {
 		return this.fingerprint;
 	}
 
-	public String getUsername() {
+	public synchronized String getUsername() {
 		return this.username;
 	}
 
-	public InetAddress getAddress() {
+	public synchronized InetAddress getAddress() {
 		return this.address;
 	}
 
-	public void setFingerprint(String fingerprint) {
+	public synchronized void setFingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
 	}
 
-	public void setUsername(String username) {
+	public synchronized void setUsername(String username) {
 		this.username = username;
 	}
 
-	public void setAddress(InetAddress address) {
+	public synchronized void setAddress(InetAddress address) {
 		this.address = address;
 	}
 }

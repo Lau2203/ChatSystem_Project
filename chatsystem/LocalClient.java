@@ -32,13 +32,12 @@ public class LocalClient extends Client {
 		System.out.println("Successfully logged in!");
 
 		this.runGUI();
-
 		this.startNetworkManager();
 
 		while (true) {
-			synchronized(this) {
+			synchronized(this.lock) {
 				try {
-					wait();
+					this.lock.wait();
 				} catch (InterruptedException ie) {}
 			}
 
@@ -53,7 +52,7 @@ public class LocalClient extends Client {
 					break;
 
 				case READY_TO_CHECK_USERNAME:
-					this.setUsername();
+					this.mandatorySetUsername();
 					break;
 
 				case USERNAME_MODIFICATION:
@@ -81,10 +80,10 @@ public class LocalClient extends Client {
 		cw.setVisible(true);	
 
 		/* Wait for the connection window to confirm the user is now connected */
-		synchronized(this) {
+		synchronized(this.lock) {
 			try {
-				wait();
-			} catch (InterruptedException ie) {}
+				this.lock.wait();
+			} catch (InterruptedException ie) {ie.printStackTrace();}
 		}
 	}
 	/* Called when first time lauching */
@@ -97,13 +96,17 @@ public class LocalClient extends Client {
 		mw.setVisible(true);
 	}
 
-	private void setUsername() {
+	/* Function for mandatory setting the username
+	 * Open JOptionPane until a valid username is entered */
+	private void mandatorySetUsername() {
 		String username = ConfigParser.get("username");
 
 		/* Main user's username needs to be set */
 		if (username == null) {
 			JFrame frame = new JFrame();
-			username = JOptionPane.showInputDialog(frame, "Please enter a username:");
+			do {
+				username = JOptionPane.showInputDialog(frame, "Please enter a username:");
+			} while(!this.isUsernameAvailable(username));
 		}
 
 		this.mainUser.setUsername(username);

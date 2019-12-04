@@ -37,6 +37,8 @@ public abstract class Client extends Thread {
 
 	protected String instanceName = "Client";
 
+	protected String lock = new String();
+
 	protected Client(int connectionListenerPort) {
 
 		this.initWithConfigFile();
@@ -60,7 +62,6 @@ public abstract class Client extends Thread {
 		this.witnessFilePath 	= ConfigParser.get("witness-file-path");
 		isLogEnabledString	= ConfigParser.get("log-filling");
 
-		this.prepareLogs(this.logFilePath);
 
 		if (this.witnessFilePath == null)
 			this.witnessFilePath = DEFAULT_WITNESS_FILE_PATH;
@@ -71,13 +72,19 @@ public abstract class Client extends Thread {
 			this.isLogEnabled = true;
 		}
 
+		this.prepareLogs();
 	}
 
 	protected void startNetworkManager() {
+		synchronized(this.lock) {
+			this.netmanager.start();
+			try { this.lock.wait(); } catch (InterruptedException ie) {ie.printStackTrace();}
+		}
+	}
 
-		this.netmanager.start();
-		synchronized(this) {
-			try { this.wait(); } catch (InterruptedException ie) {}
+	public synchronized void wakeUp() {
+		synchronized(this.lock) {
+			this.lock.notify();
 		}
 	}
 
@@ -88,10 +95,10 @@ public abstract class Client extends Thread {
 
 	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
 		this.networkManagerInformation = ni;
-		this.notify();
+		this.wakeUp();
 	}
 
-	public boolean login(String input) {
+	public synchronized boolean login(String input) {
 		/*
 		Scanner userInput = new Scanner(System.in);
 		String input_key;
@@ -121,14 +128,31 @@ public abstract class Client extends Thread {
 		}
 	}
 
-	private void prepareLogs(String logFilePath) {
-		if (logFilePath != null) {
+	private void prepareLogs() {
+		if (this.logFilePath != null) {
 			try {
-				Logs.init(isLogEnabled, logFilePath);
+				Logs.init(this.isLogEnabled, this.logFilePath);
 			} catch (IOException ioe) {
 				/* Log init failed, logs filling is just abandonned */
 				System.out.println("[x] Error while initializing log file, logs filling is abandonned");
 			}
 		}
+	}
+
+	public ArrayList<User> getActiveUsersList() {
+		synchronized(this.netmanager) {
+			return this.netmanager.getActiveUsersList();
+		}
+	}
+
+	public boolean isUsernameAvailable(String username) {
+		ArrayList<User> users = this.getActiveUsersList();
+		for (User user: users) {
+			System.out.println("\t\tUSER : '" + user.getUsername() + "'");
+			if (user.getUsername().equals(username)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

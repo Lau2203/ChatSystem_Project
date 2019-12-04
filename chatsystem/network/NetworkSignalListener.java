@@ -50,7 +50,7 @@ public class NetworkSignalListener extends Thread {
 				return;
 			}
 
-			this.master.notify();
+			this.master.wakeUp();
 		}
 	}
 
@@ -93,7 +93,7 @@ public class NetworkSignalListener extends Thread {
 
 			DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
 
-			try { this.ds.send(dp); } catch (IOException ioe) {}
+			try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
 
 			synchronized(this.master) {
 				this.master.notifyNewActiveClient(fingerprint, remoteAddress);
@@ -163,7 +163,7 @@ public class NetworkSignalListener extends Thread {
 
 		while (true) {
 
-			try { this.ds.receive(dp); } catch (IOException ioe) {}
+			try { this.ds.receive(dp); } catch (IOException ioe) {ioe.printStackTrace();}
 
 			remoteAddress 	= dp.getAddress();
 			remotePort 	= dp.getPort();

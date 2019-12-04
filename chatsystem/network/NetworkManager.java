@@ -21,7 +21,6 @@ import chatsystem.NotifyInformation;
 import chatsystem.MessageString;
 
 import chatsystem.util.Logs;
-
 /* FOR TESTING ONLY */
 import chatsystem.util.ConfigParser;
 
@@ -51,21 +50,24 @@ public class NetworkManager extends Thread {
 
 	private String instanceName = "NetworkManager";
 
+	private String lock = new String();
+
 	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort) {
 
 		/* ====================== CAREFULL ======================= */
 		int networkSignalListenerListeningPort 	= Integer.parseInt(ConfigParser.get("nsl-port"));
 
 		this.master = master;
-		this.connectionListener = new ConnectionListener(this, listeningTCPPort);
 
-		this.connectionHandlers = new ArrayList<ConnectionHandler>();
+		this.connectionListener		= new ConnectionListener(this, listeningTCPPort);
 
-		this.nsl = new NetworkSignalListener(this, mainUser, networkSignalListenerListeningPort);
+		this.connectionHandlers 	= new ArrayList<ConnectionHandler>();
 
-		this.networkManagerInformation = new NetworkManagerInformation();
+		this.nsl 			= new NetworkSignalListener(this, mainUser, networkSignalListenerListeningPort);
 
-		this.activeUsersList = new ArrayList<User>();
+		this.networkManagerInformation 	= new NetworkManagerInformation();
+
+		this.activeUsersList 		= new ArrayList<User>();
 	}
 
 	private User getUser(String fingerprint) {
@@ -77,6 +79,11 @@ public class NetworkManager extends Thread {
 		return null;
 	}
 
+	/* returns a copy of the Active Users List */
+	public synchronized ArrayList<User> getActiveUsersList() {
+		return new ArrayList<User>(this.activeUsersList);
+	}
+
 	/* Do not forget to add +1 for us */
 	public synchronized int getActiveClientsNumber() { return this.activeUsersList.size() + 1; }
 
@@ -86,22 +93,28 @@ public class NetworkManager extends Thread {
 		synchronized(this.master) {
 			this.startConnectionListener();
 			this.startNetworkSignalListener();
-			this.master.notify();
+			this.master.wakeUp();
 		}
 	}
 
 	private void startConnectionListener() {
 		/* We wait for the ConnectionListener to wake us up, meaning that it started successfully */
-		this.connectionListener.start();
-		synchronized(this) {
-			try { wait(); } catch (InterruptedException ie) {}
+		synchronized(this.lock) {
+			this.connectionListener.start();
+			try { this.lock.wait(); } catch (InterruptedException ie) {ie.printStackTrace();}
 		}
 	}
 
 	private void startNetworkSignalListener() {
-		this.nsl.start();
-		synchronized(this) {
-			try { wait(); } catch (InterruptedException ie) {}
+		synchronized(this.lock) {
+			this.nsl.start();
+			try { this.lock.wait(); } catch (InterruptedException ie) {ie.printStackTrace();}
+		}
+	}
+
+	public synchronized void wakeUp() {
+		synchronized(this.lock) {
+			this.lock.notify();
 		}
 	}
 
@@ -142,7 +155,7 @@ public class NetworkManager extends Thread {
 		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
 		/* Wake up the NetworkManager to handle the death of the connection handler
 		 * and tell the client too */
-		this.notify();
+		this.wakeUp();
 	}
 	/* Can only be called by a ConnectionHandler, since we must be connected to the remote client first */
 	protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
@@ -157,7 +170,7 @@ public class NetworkManager extends Thread {
 		this.networkManagerInformation.setMessage(msg);
 		/* Wake up the NetworkManager to handle the death of the connection handler
 		 * and tell the client too */
-		this.notify();
+		this.wakeUp();
 	}
 	/* Can only be called by the ConnectionListener */
 	protected synchronized void notifyNewConnection(Socket clientConnection) {
@@ -170,7 +183,7 @@ public class NetworkManager extends Thread {
 		ch.start();
 		/* Wake up the NetworkManager to handle the death of the connection handler
 		 * and tell the client too */
-		this.notify();	
+		this.wakeUp();	
 	}
 	/* Can only be called by the NetworkSignalListener */
 	protected synchronized void notifyNewActiveClient(String fingerprint, InetAddress address) {
@@ -180,7 +193,7 @@ public class NetworkManager extends Thread {
 		this.networkManagerInformation.setFingerprint(fingerprint);
 		this.networkManagerInformation.setAddress(address);
 
-		this.notify();
+		this.wakeUp();
 	}
 	/* Can only be called by the NetworkSignalListener */
 	protected synchronized void notifyNewUsername(String fingerprint, InetAddress address, String username) {
@@ -191,14 +204,14 @@ public class NetworkManager extends Thread {
 		this.networkManagerInformation.setAddress(address);
 		this.networkManagerInformation.setUsername(username);
 
-		this.notify();
+		this.wakeUp();
 	}
 	/* Can only be called by the NetworkSignalListener */
 	protected synchronized void notifyReadyToCheckUsername() {
 
 		this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
 
-		this.notify();
+		this.wakeUp();
 	}
 
 	/* Once it's been waken up, the NetworkManager needs to understand why
@@ -214,6 +227,7 @@ public class NetworkManager extends Thread {
 			 * what usernames aren't available. */
 			case NEW_ACTIVE_CLIENT:
 				System.out.println("CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
+				System.out.flush();
 
 				User new_usr = new User();
 				new_usr.setFingerprint(this.networkManagerInformation.getFingerprint());
@@ -267,7 +281,9 @@ public class NetworkManager extends Thread {
 		}
 
 		/* We relay the information to the main client process */
-		this.master.notifyFromNetworkManager(this.networkManagerInformation);
+		synchronized(this.master) {
+			this.master.notifyFromNetworkManager(this.networkManagerInformation);
+		}
 	}
 
 
@@ -284,10 +300,10 @@ public class NetworkManager extends Thread {
 		while (true) {
 			/* We constantly wait for a signal from either the ConnectionListener,
 			 * the ConnectionHandlers or the NetworkSignalListener */
-			synchronized(this) {
+			synchronized(this.lock) {
 				try { 
-					wait();
-				} catch (InterruptedException ie) {}
+					this.lock.wait();
+				} catch (InterruptedException ie) {ie.printStackTrace();}
 			}
 			/* Once we've been waken up, we now need to know why,
 			 * and we need to process that information */

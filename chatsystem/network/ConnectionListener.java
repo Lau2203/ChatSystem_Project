@@ -47,7 +47,7 @@ public class ConnectionListener extends Thread {
 			System.out.println("Server listening on port " + this.port);
 
 			/* Notify the NetworkManager that the server is now listening */
-			this.master.notify();
+			this.master.wakeUp();
 		}
 	}
 	/* Can only be called by the NetworkManager when itself is shutting down */
@@ -65,11 +65,11 @@ public class ConnectionListener extends Thread {
 			try {
 				clientSocket = this.ssocket.accept();
 				/* We now notify the NetworkManager that a new connection arised */
-				synchronized(this) {
+				synchronized(this.master) {
 					this.master.notifyNewConnection(clientSocket);
 				}
 
-			} catch (IOException ioe) {}
+			} catch (IOException ioe) {ioe.printStackTrace();}
 		}
 	}
 
