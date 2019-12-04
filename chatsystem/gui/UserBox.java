@@ -31,10 +31,8 @@ public class UserBox extends Box {
 	}
 
 	
-	/*public UserBox create() {
-		Box box = Box.createHorizontalBox();
-		box.
-	}*/
-	
-
+	public UserBox createUB() {
+		UserBox b1 = new UserBox();
+		return b1;
+	}
 }

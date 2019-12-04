@@ -142,8 +142,7 @@ public class MainWindow extends JFrame{
     		panUsers.setBackground(Color.red);
         	JScrollPane editorScrollPaneUsers = new JScrollPane(panUsers);  
  		
-		/* UserBox firstUBox = UserBox.createVerticalBox();
-		panUsers.add(firstUBox,BorderLayout.NORTH); */
+		//createUB
 		
 
 		//Messages
