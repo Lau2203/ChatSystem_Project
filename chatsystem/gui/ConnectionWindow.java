@@ -173,17 +173,13 @@ public class ConnectionWindow extends JFrame {
 	private void login(LocalClient master, String input, JTextArea wrongLoginLabel) {
 		boolean loggedIn = false;
 		
-		synchronized(master) {
-			loggedIn = master.login(input);		
-		}
+		loggedIn = master.login(input);		
 
 		if (loggedIn) {
 
 			this.setVisible(false);
 
-			synchronized(master) {
-				master.wakeUp();
-			}
+			master.wakeUp();
 
 			this.dispose();
 		} else {

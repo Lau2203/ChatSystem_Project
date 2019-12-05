@@ -2,6 +2,7 @@ package chatsystem;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 import java.lang.Thread;
 
@@ -38,6 +39,9 @@ public abstract class Client extends Thread {
 	protected String instanceName = "Client";
 
 	protected String lock = new String();
+	protected String childrenLock = new String();
+
+	protected Semaphore semaphore = new Semaphore(0, true);
 
 	protected Client(int connectionListenerPort) {
 
@@ -95,42 +99,48 @@ public abstract class Client extends Thread {
 		else if (cmd.equals("logs")) { Logs.readLogs(); }
 	}
 
-	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
-		/* Make a copy */
-		switch (ni.getNotifyInformation()) {
-			case NEW_CONNECTION:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
-				break;
-			case END_OF_CONNECTION:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
-				break;
-			case READY_TO_CHECK_USERNAME:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
-				break;
-			case USERNAME_MODIFICATION:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
-				break;
-			case NEW_ACTIVE_USER:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
-				break;
-			case USER_LEFT_NETWORK:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USER_LEFT_NETWORK);
-				break;
-			case NEW_MESSAGE:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
-				break;
-			default: break;
-		}
+	public void notifyFromNetworkManager(NetworkManagerInformation ni) {
+		synchronized(this.childrenLock) {
+			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
+			/* Make a copy */
+			switch (ni.getNotifyInformation()) {
+				case NEW_CONNECTION:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+					break;
+				case END_OF_CONNECTION:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
+					break;
+				case NEW_ACTIVE_CLIENT:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
+					break;
+				case READY_TO_CHECK_USERNAME:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
+					break;
+				case USERNAME_MODIFICATION:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
+					break;
+				case NEW_ACTIVE_USER:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+					break;
+				case USER_LEFT_NETWORK:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.USER_LEFT_NETWORK);
+					break;
+				case NEW_MESSAGE:
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
+					break;
+				default: break;
+			}
 
-		this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
-		this.networkManagerInformation.setFingerprint(ni.getFingerprint());
-		this.networkManagerInformation.setUsername(ni.getUsername());
-		this.networkManagerInformation.setAddress(ni.getAddress());
-		this.networkManagerInformation.setMessage(ni.getMessage());
-		this.wakeUp();
+			this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
+			this.networkManagerInformation.setFingerprint(ni.getFingerprint());
+			this.networkManagerInformation.setUsername(ni.getUsername());
+			this.networkManagerInformation.setAddress(ni.getAddress());
+			this.networkManagerInformation.setMessage(ni.getMessage());
+			this.wakeUp();
+		}
 	}
 
-	public synchronized boolean login(String input) {
+	public boolean login(String input) {
 		/*
 		Scanner userInput = new Scanner(System.in);
 		String input_key;
@@ -146,9 +156,12 @@ public abstract class Client extends Thread {
 				break;
 		}
 		*/
-		this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
-		return this.encryptionHandler.testWitnessFile(input);
-
+		boolean loggedin = false;
+		synchronized(this.childrenLock) {
+			this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
+			loggedin = this.encryptionHandler.testWitnessFile(input);
+		}
+		return loggedin;
 	}
 
 	private void parseConfigFile() {
@@ -172,9 +185,7 @@ public abstract class Client extends Thread {
 	}
 
 	public ArrayList<User> getActiveUsersList() {
-		synchronized(this.netmanager) {
-			return this.netmanager.getActiveUsersList();
-		}
+		return this.netmanager.getActiveUsersList();
 	}
 
 	public boolean isUsernameAvailable(String username) {

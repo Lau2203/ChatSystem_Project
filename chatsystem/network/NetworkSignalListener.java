@@ -95,9 +95,7 @@ public class NetworkSignalListener extends Thread {
 
 			try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
 
-			synchronized(this.master) {
-				this.master.notifyNewActiveClient(fingerprint, remoteAddress);
-			}
+			this.master.notifyNewActiveClient(fingerprint, remoteAddress);
 
 		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_CLIENT_STRING)) {
 
@@ -105,9 +103,7 @@ public class NetworkSignalListener extends Thread {
 
 			String new_username = information[3];
 
-			synchronized(this.master) {
-				this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
-			}
+			this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
 		}
 		/* No problem when we are the first and only one to connect to the network. Since we also receive the broadcast signal,
 		 * this.activeClientsResponseToWaitFor will first be set to 0 and unlock the whole system by notifying
@@ -126,14 +122,10 @@ public class NetworkSignalListener extends Thread {
 				this.activeClientsResponseToWaitFor--;
 			}
 
-			synchronized(this.master) {
-				this.master.notifyNewUsername(fingerprint, remoteAddress, username);
-			}
+			this.master.notifyNewUsername(fingerprint, remoteAddress, username);
 
 			if (this.activeClientsResponseToWaitFor == 0) {
-				synchronized(this.master) {
-					this.master.notifyReadyToCheckUsername();
-				}
+				this.master.notifyReadyToCheckUsername();
 			}
 		} else {
 

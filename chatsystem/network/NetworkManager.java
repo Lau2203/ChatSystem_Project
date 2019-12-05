@@ -3,6 +3,7 @@ package chatsystem.network;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import java.net.Socket;
 import java.net.InetAddress;
@@ -51,6 +52,9 @@ public class NetworkManager extends Thread {
 	private String instanceName = "NetworkManager";
 
 	private String lock = new String();
+	private String childrenLock = new String();
+
+	private Semaphore semaphore = new Semaphore(0, true);
 
 	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort) {
 
@@ -80,8 +84,12 @@ public class NetworkManager extends Thread {
 	}
 
 	/* returns a copy of the Active Users List */
-	public synchronized ArrayList<User> getActiveUsersList() {
-		return new ArrayList<User>(this.activeUsersList);
+	public ArrayList<User> getActiveUsersList() {
+		synchronized(this.childrenLock) {
+			synchronized(this.lock) {
+				return new ArrayList<User>(this.activeUsersList);
+			}
+		}
 	}
 
 	/* Do not forget to add +1 for us */
@@ -113,8 +121,10 @@ public class NetworkManager extends Thread {
 	}
 
 	public void wakeUp() {
-		synchronized(this.lock) {
-			this.lock.notify();
+		synchronized(this.childrenLock) {
+			synchronized(this.lock) {
+				this.lock.notify();
+			}
 		}
 	}
 
@@ -147,71 +157,102 @@ public class NetworkManager extends Thread {
 
 	/* Can only be called by a ConnectionHandler */
 	/* Meaning that a User-to-User connection has ended */
-	protected synchronized void notifyDeathOfConnectionHandler(ConnectionHandler ch) {
+	protected void notifyDeathOfConnectionHandler(ConnectionHandler ch) {
 
-		this.connectionHandlers.remove(ch);
-		/* Put information for the NetworkManager to handle it */
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
-		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
-		/* Wake up the NetworkManager to handle the death of the connection handler
-		 * and tell the client too */
-		this.wakeUp();
+		synchronized(this.childrenLock) {
+
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
+
+			this.connectionHandlers.remove(ch);
+			/* Put information for the NetworkManager to handle it */
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
+			this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
+			/* Wake up the NetworkManager to handle the death of the connection handler
+			 * and tell the client too */
+			this.wakeUp();
+		}
 	}
 	/* Can only be called by a ConnectionHandler, since we must be connected to the remote client first */
-	protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
+	protected void notifyNewMessage(ConnectionHandler ch, String content) {
 
-		MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
+		synchronized(this.childrenLock) {
 
-		msg.setContent(content);
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
 
-		/* Put information for the NetworkManager to handle it */
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
-		this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
-		this.networkManagerInformation.setMessage(msg);
-		/* Wake up the NetworkManager to handle the death of the connection handler
-		 * and tell the client too */
-		this.wakeUp();
+			MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
+
+			msg.setContent(content);
+
+			/* Put information for the NetworkManager to handle it */
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
+			this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
+			this.networkManagerInformation.setMessage(msg);
+			/* Wake up the NetworkManager to handle the death of the connection handler
+			 * and tell the client too */
+			this.wakeUp();
+		}
 	}
 	/* Can only be called by the ConnectionListener */
-	protected synchronized void notifyNewConnection(Socket clientConnection) {
-		ConnectionHandler ch = new ConnectionHandler(clientConnection);	
+	protected void notifyNewConnection(Socket clientConnection) {
 
-		this.connectionHandlers.add(ch);
-		/* Put information for the NetworkManager to handle it */
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+		synchronized(this.childrenLock) {
 
-		ch.start();
-		/* Wake up the NetworkManager to handle the death of the connection handler
-		 * and tell the client too */
-		this.wakeUp();	
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
+
+			ConnectionHandler ch = new ConnectionHandler(clientConnection);	
+
+			this.connectionHandlers.add(ch);
+			/* Put information for the NetworkManager to handle it */
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+
+			ch.start();
+			/* Wake up the NetworkManager to handle the death of the connection handler
+			 * and tell the client too */
+			this.wakeUp();	
+		}
 	}
 	/* Can only be called by the NetworkSignalListener */
-	protected synchronized void notifyNewActiveClient(String fingerprint, InetAddress address) {
+	protected void notifyNewActiveClient(String fingerprint, InetAddress address) {
 
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
+		synchronized(this.childrenLock) {
 
-		this.networkManagerInformation.setFingerprint(fingerprint);
-		this.networkManagerInformation.setAddress(address);
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
 
-		this.wakeUp();
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
+
+			this.networkManagerInformation.setFingerprint(fingerprint);
+			this.networkManagerInformation.setAddress(address);
+
+			this.wakeUp();
+		}
 	}
 	/* Can only be called by the NetworkSignalListener */
-	protected synchronized void notifyNewUsername(String fingerprint, InetAddress address, String username) {
+	protected void notifyNewUsername(String fingerprint, InetAddress address, String username) {
 
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+		synchronized(this.childrenLock) {
 
-		this.networkManagerInformation.setFingerprint(fingerprint);
-		this.networkManagerInformation.setAddress(address);
-		this.networkManagerInformation.setUsername(username);
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
 
-		this.wakeUp();
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+
+			this.networkManagerInformation.setFingerprint(fingerprint);
+			this.networkManagerInformation.setAddress(address);
+			this.networkManagerInformation.setUsername(username);
+
+			this.wakeUp();
+		}
 	}
 	/* Can only be called by the NetworkSignalListener */
-	protected synchronized void notifyReadyToCheckUsername() {
+	protected void notifyReadyToCheckUsername() {
 
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
+		synchronized(this.childrenLock) {
 
-		this.wakeUp();
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
+
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
+
+			this.wakeUp();
+		}
 	}
 
 	/* Once it's been waken up, the NetworkManager needs to understand why
@@ -301,9 +342,12 @@ public class NetworkManager extends Thread {
 			/* We constantly wait for a signal from either the ConnectionListener,
 			 * the ConnectionHandlers or the NetworkSignalListener */
 			synchronized(this.lock) {
+				this.semaphore.release();
+
 				try { 
 					this.lock.wait();
 				} catch (InterruptedException ie) {ie.printStackTrace();}
+				//try { this.semaphore.acquire(); } catch(InterruptedException ie) {ie.printStackTrace();}
 			}
 			/* Once we've been waken up, we now need to know why,
 			 * and we need to process that information */

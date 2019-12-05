@@ -39,6 +39,7 @@ public class LocalClient extends Client {
 
 		while (true) {
 			synchronized(this.lock) {
+				this.semaphore.release();
 				try {
 					this.lock.wait();
 				} catch (InterruptedException ie) {}
@@ -111,7 +112,7 @@ public class LocalClient extends Client {
 			JFrame frame = new JFrame();
 			do {
 				username = JOptionPane.showInputDialog(frame, "Please enter a username:");
-			} while(!this.isUsernameAvailable(username));
+			} while(username == null || username.equals("") || !this.isUsernameAvailable(username));
 		}
 
 		this.mainUser.setUsername(username);
