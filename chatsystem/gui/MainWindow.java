@@ -22,6 +22,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
+import chatsystem.MainUser;
+import chatsystem.Client;
+
 @SuppressWarnings("serial")
 
 public class MainWindow extends JFrame{
@@ -358,10 +361,6 @@ public class MainWindow extends JFrame{
 
 		
     		this.getContentPane().add(s2, BorderLayout.CENTER);
-
-		
-		
-
 	}
 
 	public static void main(String[] args) {
