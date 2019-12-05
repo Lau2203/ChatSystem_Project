@@ -39,7 +39,7 @@ public class MainWindow extends JFrame{
 		this.setSize(900, 650); 				
 		this.setLocationRelativeTo(null); 
 		this.getContentPane().setBackground(Color.white);
-		this.setResizable(true); 			
+		this.setResizable(false); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
 		// Cursors
@@ -258,11 +258,26 @@ public class MainWindow extends JFrame{
 		Box mainBoxM = Box.createVerticalBox();
 		mainBoxM.setBackground(Color.white);
 		panMsg.add(mainBoxM);
-
+		
+		
+		//NameBox
+		Box nameBox = Box.createHorizontalBox();
+		mainBoxM.add(nameBox);
+	
+		JLabel userNameC = new JLabel("Paula Roïd ");
+		userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
+		JLabel lastMsgS = new JLabel(" Last message 2 minutes ago");
+		lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
+		userNameC.setForeground(myBlue);
+		lastMsgS.setForeground(Color.gray);
+		nameBox.add(userNameC);
+		nameBox.add(lastMsgS);
+		
+		
 		//Messages Box
 		Box msgBox = Box.createVerticalBox();
 		msgBox.setBackground(Color.white);
-		msgBox.add((Box.createRigidArea(new Dimension(600, 560))));
+		msgBox.add((Box.createRigidArea(new Dimension(270, 537))));
 		mainBoxM.add(msgBox);
 
 		//Write Text Box 
