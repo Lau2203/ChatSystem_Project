@@ -247,13 +247,89 @@ public class MainWindow extends JFrame{
 		/*********************************************************************************************************/
 		/*********************************************************************************************************/
 
-	
+		/*********************************************************************************************************/
+		/**************************************Messages***********************************************************/
 		//Messages
    	 	JPanel panMsg = new JPanel();
     		panMsg.setBackground(Color.white);
-		JScrollPane editorScrollPaneMsg = new JScrollPane(panMsg);
 		
 
+		//Main Box
+		Box mainBoxM = Box.createVerticalBox();
+		mainBoxM.setBackground(Color.white);
+		panMsg.add(mainBoxM);
+
+		//Messages Box
+		Box msgBox = Box.createVerticalBox();
+		msgBox.setBackground(Color.white);
+		msgBox.add((Box.createRigidArea(new Dimension(600, 560))));
+		mainBoxM.add(msgBox);
+
+		//Write Text Box 
+		Box textBox = Box.createHorizontalBox();
+		textBox.setBackground(Color.white);
+		JTextArea writeMsg = new JTextArea(2, 33);
+		writeMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
+		JScrollPane scrollMsg = new JScrollPane(writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		writeMsg.setBorder(borderG);
+		//Do not split words
+		writeMsg.setWrapStyleWord(true);
+		writeMsg.setLineWrap(true);
+
+		writeMsg.setBorder(borderG);
+		textBox.add(scrollMsg);
+		//Set Icons and Button
+		Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
+		Icon mouseExitedL	= new ImageIcon("../resources/images/14.png");
+		Icon mouseEnteredS	= new ImageIcon("../resources/images/16.png");
+		Icon mouseExitedS	= new ImageIcon("../resources/images/17.png");
+		JButton linkButton = new JButton(new ImageIcon("../resources/images/14.png"));
+		JButton sendButton = new JButton(new ImageIcon("../resources/images/17.png"));
+		linkButton.setBorder(BorderFactory.createLineBorder(Color.white));
+		sendButton.setBorder(BorderFactory.createLineBorder(Color.white));
+		textBox.add(linkButton);
+		textBox.add(sendButton);
+		linkButton.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {}
+				@Override
+	     			public void mousePressed(MouseEvent e) {
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+				@Override
+				public void mouseEntered(MouseEvent e){
+					linkButton.setIcon(mouseEnteredL);
+	       			}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					linkButton.setIcon(mouseExitedL);
+				}
+			});
+		sendButton.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {}
+				@Override
+	     			public void mousePressed(MouseEvent e) {
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+				@Override
+				public void mouseEntered(MouseEvent e){
+					sendButton.setIcon(mouseEnteredS);
+	       			}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					sendButton.setIcon(mouseExitedS);
+				}
+			});
+
+		mainBoxM.add(textBox, BorderLayout.SOUTH);
+		
+
+
+		/************************************END OF MESSAGES PART*************************************************/
+		/*********************************************************************************************************/
 		//SPLITS
     		s1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, panUsers);
 		s1.setDividerSize(0);
