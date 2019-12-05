@@ -67,8 +67,47 @@ public class NetworkSignalListener extends Thread {
 		try { this.ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 	}
 
+	private void handleNewActiveClientSignal(String recipientFingerprint, InetAddress remoteAddress, int remotePort) {
+		/* Example of built packet : fingerprint:WE:243:USERNAME */
+		int currentActiveClientsNumber = this.master.getActiveClientsNumber();
+
+		String response = this.mainUser.getFingerprint() + ":" +
+			NetworkManagerInformation.WELCOME_STRING + ":" +
+			currentActiveClientsNumber + ":" +
+			this.mainUser.getUsername();
+
+		DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
+
+		try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
+
+		this.master.notifyNewActiveClient(recipientFingerprint, remoteAddress);
+	}
+
+	private void handleWelcomeSignal(String fingerprint, InetAddress remoteAddress, String username, int activeClientsTotal) {
+
+		if (username == null) { username = "undefined"; }
+
+		if (this.activeClientsResponseToWaitFor == -1) {
+			this.activeClientsResponseToWaitFor = activeClientsTotal;
+			if (activeClientsTotal != 0)
+				this.activeClientsResponseToWaitFor--;
+		} else {
+			this.activeClientsResponseToWaitFor--;
+		}
+
+		this.master.notifyNewUsername(fingerprint, remoteAddress, username);
+
+		if (this.activeClientsResponseToWaitFor == 0) {
+			this.master.notifyReadyToCheckUsername();
+		}
+	}
+
+	private void handleUsernameModificationSignal(String fingerprint, InetAddress remoteAddress, String new_username) {
+			this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
+	}
+
 	/* UDP Packets will at least have this shape : fingerprint:signal */
-	private void getInformation(String input, InetAddress remoteAddress, int remotePort) {
+	private void handleInformation(String input, InetAddress remoteAddress, int remotePort) {
 
 		int fingerprintSize = this.mainUser.getFingerprint().length();		
 
@@ -78,58 +117,26 @@ public class NetworkSignalListener extends Thread {
 		String signal = information[1];
 
 		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_CLIENT_STRING)) {
-			/* Example of built packet : fingerprint:WE:243:USERNAME */
-
-			int currentActiveClientsNumber;
-
-			synchronized(this.master) {
-				currentActiveClientsNumber = this.master.getActiveClientsNumber();
-			}
-
-			String response = this.mainUser.getFingerprint() + ":" +
-						NetworkManagerInformation.WELCOME_STRING + ":" +
-						currentActiveClientsNumber + ":" +
-						this.mainUser.getUsername();
-
-			DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
-
-			try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
-
-			this.master.notifyNewActiveClient(fingerprint, remoteAddress);
+			this.handleNewActiveClientSignal(fingerprint, remoteAddress, remotePort);
 
 		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_CLIENT_STRING)) {
 
 		} else if (signal.equals(NetworkManagerInformation.USERNAME_MODIFICATION_STRING)) {
-
-			String new_username = information[3];
-
-			this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
+			this.handleUsernameModificationSignal(fingerprint, remoteAddress, information[2]);
 		}
 		/* No problem when we are the first and only one to connect to the network. Since we also receive the broadcast signal,
 		 * this.activeClientsResponseToWaitFor will first be set to 0 and unlock the whole system by notifying
 		 * READY_TO_CHECK_USERNAME */
 		else if (signal.equals(NetworkManagerInformation.WELCOME_STRING)) {
-
-			int activeClientsTotal = Integer.parseInt(information[2]);
 			String username;
-			try { username = information[3]; } catch (Exception e) { username = "undefined"; }
-
-			if (this.activeClientsResponseToWaitFor == -1) {
-				this.activeClientsResponseToWaitFor = activeClientsTotal;
-				if (activeClientsTotal != 0)
-					this.activeClientsResponseToWaitFor--;
-			} else {
-				this.activeClientsResponseToWaitFor--;
-			}
-
-			this.master.notifyNewUsername(fingerprint, remoteAddress, username);
-
-			if (this.activeClientsResponseToWaitFor == 0) {
-				this.master.notifyReadyToCheckUsername();
-			}
+			try {
+				username = information[3];
+			} catch (Exception e) {username = "undefined";}
+	
+			this.handleWelcomeSignal(fingerprint, remoteAddress, username, Integer.parseInt(information[2]));
 		} else {
 
-			System.out.println("UNKNOWN SIGNAL");
+			Logs.printwarn(this.instanceName, "received unknown signal '" + signal + "'");
 		}
 	}
 
@@ -164,7 +171,7 @@ public class NetworkSignalListener extends Thread {
 
 			System.out.println("RECEIVED UDP : " + input);
 
-			this.getInformation(input, remoteAddress, remotePort);	
+			this.handleInformation(input, remoteAddress, remotePort);	
 		}
 	}
 }

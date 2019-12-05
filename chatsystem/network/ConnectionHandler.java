@@ -103,14 +103,14 @@ public class ConnectionHandler extends Thread {
 	}
 
 	private void die() {
-		synchronized(ConnectionHandler.master) {
+		//synchronized(ConnectionHandler.master) {
 			ConnectionHandler.master.notifyDeathOfConnectionHandler(this);
 			/*
 			try {
 				this.wait();
 			} catch (InterruptedException ie) {}
 			*/
-		}
+		//}
 	}
 
 	private void interruptSubServer() {
@@ -157,12 +157,14 @@ public class ConnectionHandler extends Thread {
 				break;
 			}
 
-			synchronized(ConnectionHandler.master) {
+			//synchronized(ConnectionHandler.master) {
+			synchronized(this) {
 				ConnectionHandler.master.notifyNewMessage(this, userInput);
 				try {
 					this.wait();
 				} catch (InterruptedException ie) {}
 			}
+			//}
 
 			Logs.println(this.instanceName, "Received '" + userInput + "'");
 

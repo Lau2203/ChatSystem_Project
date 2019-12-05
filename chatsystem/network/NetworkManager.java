@@ -85,7 +85,10 @@ public class NetworkManager extends Thread {
 
 	/* returns a copy of the Active Users List */
 	public ArrayList<User> getActiveUsersList() {
+		/* Needs coordination with the NetworkSignalListener, ConnectionListener and the ConnectionHandler */
 		synchronized(this.childrenLock) {
+			/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
+			 * activeUsersList */
 			synchronized(this.lock) {
 				return new ArrayList<User>(this.activeUsersList);
 			}
@@ -93,7 +96,16 @@ public class NetworkManager extends Thread {
 	}
 
 	/* Do not forget to add +1 for us */
-	public synchronized int getActiveClientsNumber() { return this.activeUsersList.size() + 1; }
+	public int getActiveClientsNumber() { 
+		/* Needs coordination with the NetworkSignalListener, ConnectionListener and the ConnectionHandler */
+		synchronized(this.childrenLock) {
+			/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
+			 * activeUsersList */
+			synchronized(this.lock) {
+				return this.activeUsersList.size() + 1;
+			}
+		}
+	}
 
 	public void startAll() {
 		/* Once the ConnectionListener and the NetworkSignalListener are started,
@@ -267,7 +279,7 @@ public class NetworkManager extends Thread {
 			 * is now able fill its active users list and thus get a valid representation of
 			 * what usernames aren't available. */
 			case NEW_ACTIVE_CLIENT:
-				System.out.println("CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
+				System.out.println(this.instanceName + " : CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
 				System.out.flush();
 
 				User new_usr = new User();
@@ -306,7 +318,6 @@ public class NetworkManager extends Thread {
 				break;
 
 			case READY_TO_CHECK_USERNAME:
-				System.out.println("READY TO SET USERNAME !!!!");
 				break;
 
 			case NEW_CONNECTION:
@@ -322,9 +333,7 @@ public class NetworkManager extends Thread {
 		}
 
 		/* We relay the information to the main client process */
-		synchronized(this.master) {
-			this.master.notifyFromNetworkManager(this.networkManagerInformation);
-		}
+		this.master.notifyFromNetworkManager(this.networkManagerInformation);
 	}
 
 

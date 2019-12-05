@@ -56,7 +56,6 @@ public class LocalClient extends Client {
 					break;
 
 				case READY_TO_CHECK_USERNAME:
-					//System.out.println("READY_TO_CHECK_USERNAME in LOCAL CLIENT");
 					this.mandatorySetUsername();
 					break;
 
