@@ -112,7 +112,7 @@ public class NetworkManager extends Thread {
 		}
 	}
 
-	public synchronized void wakeUp() {
+	public void wakeUp() {
 		synchronized(this.lock) {
 			this.lock.notify();
 		}

@@ -97,8 +97,32 @@ public abstract class Client extends Thread {
 
 	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
 		/* Make a copy */
+		switch (ni.getNotifyInformation()) {
+			case NEW_CONNECTION:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+				break;
+			case END_OF_CONNECTION:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
+				break;
+			case READY_TO_CHECK_USERNAME:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
+				break;
+			case USERNAME_MODIFICATION:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
+				break;
+			case NEW_ACTIVE_USER:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+				break;
+			case USER_LEFT_NETWORK:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USER_LEFT_NETWORK);
+				break;
+			case NEW_MESSAGE:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
+				break;
+			default: break;
+		}
+
 		this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
-		this.networkManagerInformation.setNotifyInformation(ni.getNotifyInformation());
 		this.networkManagerInformation.setFingerprint(ni.getFingerprint());
 		this.networkManagerInformation.setUsername(ni.getUsername());
 		this.networkManagerInformation.setAddress(ni.getAddress());

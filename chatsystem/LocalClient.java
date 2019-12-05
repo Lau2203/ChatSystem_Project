@@ -51,10 +51,11 @@ public class LocalClient extends Client {
 					break;
 
 				case END_OF_CONNECTION:
-					System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - END OF CONNECTION");
+					Logs.println("RECEIVED SIGNAL FROM NETWORK MANAGER - END OF CONNECTION");
 					break;
 
 				case READY_TO_CHECK_USERNAME:
+					//System.out.println("READY_TO_CHECK_USERNAME in LOCAL CLIENT");
 					this.mandatorySetUsername();
 					break;
 
@@ -73,6 +74,7 @@ public class LocalClient extends Client {
 
 				default: break;
 			}
+			Logs.println("LOCAL CLIENT : RECEIVED '" + this.networkManagerInformation.getNotifyInformation() + "' signal");
 		}
 	}
 
