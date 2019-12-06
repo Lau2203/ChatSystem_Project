@@ -143,7 +143,7 @@ public class MainWindow extends JFrame{
 		//User Box - SOUTH.LEFT
    	 	JPanel panUsers 		= new JPanel();
     		panUsers.setBackground(Color.white);
-        
+        	
 
  		
 		//Search Bar
@@ -253,8 +253,7 @@ public class MainWindow extends JFrame{
 		/**************************************Messages***********************************************************/
 		//Messages
    	 	JPanel panMsg 		= new JPanel();
-    		panMsg.setBackground(Color.white);
-		
+    		panMsg.setBackground(Color.white); 
 
 		//Main Box
 		Box mainBoxM = Box.createVerticalBox();
@@ -278,33 +277,52 @@ public class MainWindow extends JFrame{
 		
 		
 		/*********************************************Conversation*********************************************/
+		JPanel msgBoxPanel = new JPanel();
+		//mainBoxM.add(msgBoxPanel);
+		msgBoxPanel.setPreferredSize(new Dimension(275, 547)); //OK
+		mainBoxM.add(msgBoxPanel);
+		msgBoxPanel.setBackground(Color.white);
+
 		//Messages Box
 		Box msgBox = Box.createHorizontalBox();
+		msgBox.setOpaque(true);
 		msgBox.setBackground(Color.white);
-		msgBox.add((Box.createRigidArea(new Dimension(270, 550)))); //OK
-		mainBoxM.add(msgBox);
+		msgBox.add((Box.createRigidArea(new Dimension(60, 0))));
+		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollMsg.setPreferredSize(new Dimension(585,532)); //NE MARCHE PAS
+		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
 		
-		//JScrollPane scrollMsg1 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//mainBoxM.add(scrollMsg1);
-
+		
+		msgBoxPanel.add(scrollMsg);
+		
 		Box leftBox = Box.createVerticalBox();
 		leftBox.setBackground(Color.white);
-		//leftBox.add((Box.createRigidArea(new Dimension(34, 200))));
-		msgBox.add(leftBox);
+		leftBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		msgBox.add(leftBox, BorderLayout.WEST);
 
+		//RIGID AREA BETWEEN LEFT AND RIHGT
+		Box paddingBox = Box.createHorizontalBox();
+		paddingBox.add((Box.createRigidArea(new Dimension(5, 0))));
+		paddingBox.setForeground(Color.white);
+		paddingBox.setOpaque(true);
+		msgBox.add(paddingBox);
+		
 		Box rightBox = Box.createVerticalBox();
 		rightBox.setBackground(Color.white);
-		//rightBox.add((Box.createRigidArea(new Dimension(134, 200))));
-		msgBox.add(rightBox);
+		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		msgBox.add(rightBox, BorderLayout.EAST);
 		
-		for (int i=0 ; i<8; i++){
+		for (int i=0 ; i<40; i++){
 		//For each new message sent -- rightBoxUs
 		Box boxS 	= Box.createVerticalBox();
+		boxS.setBackground(Color.white);
 		rightBox.add(boxS);
-		JTextArea myMsg 	= new JTextArea("MY MESSAGE");
+		JTextArea myMsg 	= new JTextArea("Good Morning, is Sarah Crôche in your office ?", 2, 20);
 		myMsg.setForeground(Color.black);
 		myMsg.setWrapStyleWord(true);
 		myMsg.setLineWrap(true);
+		myMsg.setEditable(false);
 		//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
 		//myMsg.setOpaque(false)
 		boxS.add(myMsg);
@@ -312,23 +330,27 @@ public class MainWindow extends JFrame{
 		//For each new message received -- leftBox
 		//White Message
 		Box boxLabelMsgReceived 	= Box.createVerticalBox();
+		boxLabelMsgReceived.setBackground(Color.white);
 		leftBox.add(boxLabelMsgReceived);
 		boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(Color.white));
-		JTextArea myMsgWhite = new JTextArea("MY MESSAGE WHITE");
+		JTextArea myMsgWhite = new JTextArea("MY MESSAGE WHITE", 2, 20);
 		myMsgWhite.setForeground(Color.white);
 		myMsgWhite.setWrapStyleWord(true);
 		myMsgWhite.setLineWrap(true);
+		myMsgWhite.setEditable(false);
 		//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
 		//myMsg.setOpaque(false)
 		boxLabelMsgReceived.add(myMsgWhite);
 
 		Box boxR 	= Box.createVerticalBox();
+		boxR.setBackground(Color.white);
 		leftBox.add(boxR);
-		JTextArea theirMsg 	= new JTextArea("THE ANSWER");
+		JTextArea theirMsg 	= new JTextArea("I'm sorry but she is in a meeting now, if you give me your number, I'll ask her to call you back", 2, 20);
 		theirMsg.setWrapStyleWord(true);
 		theirMsg.setLineWrap(true);
 		theirMsg.setForeground(myBlue);
-		boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
+		theirMsg.setEditable(false);
+		//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//theirMsg.setOpaque(false);
 		boxR.add(theirMsg);
 		}
@@ -343,7 +365,7 @@ public class MainWindow extends JFrame{
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 13));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
-		JScrollPane scrollMsg 	= new JScrollPane(writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollMsg2 	= new JScrollPane(writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	
 		
 		Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
@@ -351,7 +373,7 @@ public class MainWindow extends JFrame{
 		Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.white);
 		Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
 		
-		scrollMsg.setBorder(borderTextField);
+		scrollMsg2.setBorder(borderTextField);
 		writeMsg.setBorder(borderW);	
 
 		writeMsg.addMouseListener(new MouseListener() {           
@@ -380,7 +402,7 @@ public class MainWindow extends JFrame{
 		//Do not split words
 		writeMsg.setWrapStyleWord(true);
 		writeMsg.setLineWrap(true);
-		textBox.add(scrollMsg);
+		textBox.add(scrollMsg2);
 		//Set Icons and Button
 		Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
 		Icon mouseExitedL	= new ImageIcon("../resources/images/14.png");
