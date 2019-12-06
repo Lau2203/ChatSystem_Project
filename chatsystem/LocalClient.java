@@ -108,7 +108,7 @@ public class LocalClient extends Client {
 		String username = ConfigParser.get("username");
 
 		/* Main user's username needs to be set */
-		if (username == null) {
+		if (username == null || username.equals("undefined")) {
 			JFrame frame = new JFrame();
 			do {
 				username = JOptionPane.showInputDialog(frame, "Your current username is not valid\nPlease enter a new username:", "Username not valid", JOptionPane.INFORMATION_MESSAGE);
@@ -116,6 +116,7 @@ public class LocalClient extends Client {
 		}
 
 		this.mainUser.setUsername(username);
+		this.notifyNewUsernameToBeSent();
 	}
 
 	public static void main(String[] args) {

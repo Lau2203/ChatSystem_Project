@@ -129,9 +129,16 @@ public class NetworkSignalListener extends Thread {
 		int fingerprintSize = this.mainUser.getFingerprint().length();		
 
 		String[] information = input.split(":");
+		String fingerprint;
+		String signal;
 
-		String fingerprint = information[0];
-		String signal = information[1];
+		try {
+			fingerprint = information[0];
+			signal = information[1];
+		} catch (Exception e) {
+			Logs.printerro(this.instanceName, "Incorrect datagram packet received");
+			return;
+		}
 
 		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_CLIENT_STRING)) {
 			this.handleNewActiveClientSignal(fingerprint, remoteAddress, remotePort);

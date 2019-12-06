@@ -7,6 +7,10 @@ import java.util.concurrent.Semaphore;
 
 import java.net.Socket;
 import java.net.InetAddress;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import java.lang.Thread;
 /* For message timestamping */
@@ -40,6 +44,7 @@ public class NetworkManager extends Thread {
 	private ArrayList<ConnectionHandler> connectionHandlers;
 
 	private NetworkSignalListener nsl;
+	private int networkSignalListenerListeningPort;
 
 	/* This is the placeholder for notifiers to put their notification information. For instance,
 	 * it may contain a new User's information (fingerprint, username, IP address), or a new message.
@@ -60,6 +65,7 @@ public class NetworkManager extends Thread {
 
 		/* ====================== CAREFULL ======================= */
 		int networkSignalListenerListeningPort 	= Integer.parseInt(ConfigParser.get("nsl-port"));
+		this.networkSignalListenerListeningPort = networkSignalListenerListeningPort;
 
 		this.master = master;
 
@@ -162,6 +168,7 @@ public class NetworkManager extends Thread {
 	}
 
 	private synchronized ArrayList<ConnectionHandler> getConnectionHandlers() { return this.connectionHandlers; }
+
 
 	/* Notification methods called either by the ConnectionListener, ConnectionHandlers or the NetworkSignalListener
 	 * These notifications refer to the type of information they convey. These different types can be 
@@ -267,9 +274,90 @@ public class NetworkManager extends Thread {
 		}
 	}
 
+	public void notifyNewUsernameToBeSent(String fingerprint, String username) {
+		synchronized(this.childrenLock) {
+
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
+
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_USERNAME_TO_BE_SENT);
+			this.networkManagerInformation.setFingerprint(fingerprint);
+			this.networkManagerInformation.setUsername(username);
+
+			this.wakeUp();
+		}
+
+	}
+
+	private void handleNewActiveClient(String fingerprint, InetAddress remoteAddress) {
+
+		System.out.println(this.instanceName + " : CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
+		System.out.flush();
+
+		User new_usr = new User();
+		new_usr.setFingerprint(fingerprint);
+		new_usr.setAddress(remoteAddress);
+
+		this.activeUsersList.add(new_usr);	
+	}
+
+	private void handleUsernameModification(String fingerprint, InetAddress remoteAddress, String username) {
+
+		User usr = this.getUser(fingerprint);
+		if (usr == null) {
+			usr = new User();
+			usr.setFingerprint(fingerprint);
+			usr.setAddress(remoteAddress);
+			usr.setUsername(username);
+
+			this.activeUsersList.add(usr);
+
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+		} else {
+			/* Happens when a client was active but had not a valid username yet, and now it updates
+			 * its username */
+			if (usr.getUsername().equals("undefined")) {
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);						
+			}
+
+			usr.setFingerprint(fingerprint);
+			usr.setAddress(remoteAddress);
+			usr.setUsername(username);
+		}	
+		/* If a client responded to us without a valid username yet, so we do not notify the main client process,
+		 * since we do not consider the remote user to be active when he hasn't a valid username yet */
+		if (username.equals("undefined")) {
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NONE);
+		}
+	}
+
+	private void handleNewUsernameToBeSent(String fingerprint, String username) {
+
+		String request = fingerprint + ":" + NetworkManagerInformation.USERNAME_MODIFICATION_STRING + ":" + username;
+
+		DatagramSocket ds;
+		DatagramPacket dp = null;
+
+		try {
+			ds = new DatagramSocket();
+		} catch (SocketException se) {
+			ds = null;
+			Logs.printerro(this.instanceName, "Could not create datagram socket while trying to notify a username modification to others, aborted");
+			System.exit(1);
+		}
+
+		try {
+			dp = new DatagramPacket(request.getBytes(), request.length(), InetAddress.getByName("255.255.255.255"), this.networkSignalListenerListeningPort);
+		} catch (UnknownHostException uhe) { uhe.printStackTrace(); }
+
+		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
+	}
+
 	/* Once it's been waken up, the NetworkManager needs to understand why
 	 * and act consequently */
 	private void handleNewInformation() {
+
+		boolean notifierIsMainClientProcess = false;
+
 		switch (this.networkManagerInformation.getNotifyInformation()) {
 
 			/* Happens when a new client appears on the network.
@@ -279,15 +367,8 @@ public class NetworkManager extends Thread {
 			 * is now able fill its active users list and thus get a valid representation of
 			 * what usernames aren't available. */
 			case NEW_ACTIVE_CLIENT:
-				System.out.println(this.instanceName + " : CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
-				System.out.flush();
-
-				User new_usr = new User();
-				new_usr.setFingerprint(this.networkManagerInformation.getFingerprint());
-				new_usr.setAddress(this.networkManagerInformation.getAddress());
-
-				this.activeUsersList.add(new_usr);	
-
+				this.handleNewActiveClient(this.networkManagerInformation.getFingerprint(),
+								this.networkManagerInformation.getAddress());
 				break;
 
 			/* 2 Possibilities:
@@ -301,33 +382,9 @@ public class NetworkManager extends Thread {
 
 			 * - 	An online user basically changed its username. */
 			case USERNAME_MODIFICATION:
-				User usr = this.getUser(this.networkManagerInformation.getFingerprint());
-				if (usr == null) {
-					usr = new User();
-					usr.setFingerprint(this.networkManagerInformation.getFingerprint());
-					usr.setAddress(this.networkManagerInformation.getAddress());
-					usr.setUsername(this.networkManagerInformation.getUsername());
-
-					this.activeUsersList.add(usr);
-
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
-				} else {
-					/* Happens when a client was active but had not a valid username yet, and now it updates
-					 * its username */
-					if (usr.getUsername().equals("undefined")) {
-						this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);						
-					}
-
-					usr.setFingerprint(this.networkManagerInformation.getFingerprint());
-					usr.setAddress(this.networkManagerInformation.getAddress());
-					usr.setUsername(this.networkManagerInformation.getUsername());
-				}	
-				/* If a client responded to us without a valid username yet, so we do not notify the main client process,
-				 * since we do not consider the remote user to be active when he hasn't a valid username yet */
-				if (this.networkManagerInformation.getUsername().equals("undefined")) {
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NONE);
-				}
-
+				this.handleUsernameModification(this.networkManagerInformation.getFingerprint(),
+								this.networkManagerInformation.getAddress(),
+								this.networkManagerInformation.getUsername());
 				break;
 
 			case READY_TO_CHECK_USERNAME:
@@ -342,11 +399,22 @@ public class NetworkManager extends Thread {
 			case USER_LEFT_NETWORK:
 				break;
 
+			case NEW_USERNAME_TO_BE_SENT:
+				this.handleNewUsernameToBeSent(this.networkManagerInformation.getFingerprint(),
+								this.networkManagerInformation.getUsername());
+				notifierIsMainClientProcess = true;
+				break;
+
 			default: break;
 		}
 
-		/* We relay the information to the main client process */
-		this.master.notifyFromNetworkManager(this.networkManagerInformation);
+		/* If the notification does not come from the main client process, then
+		 * it comes from either the ConnectionListener, ConnectionHandler or 
+		 * NetworkSignalListener and we need to notify the main client process */
+		if (notifierIsMainClientProcess == false) {
+			/* We relay the information to the main client process */
+			this.master.notifyFromNetworkManager(this.networkManagerInformation);
+		}
 	}
 
 

@@ -140,22 +140,11 @@ public abstract class Client extends Thread {
 		}
 	}
 
+	public void notifyNewUsernameToBeSent() {
+		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+	}
+
 	public boolean login(String input) {
-		/*
-		Scanner userInput = new Scanner(System.in);
-		String input_key;
-
-		System.out.println("Key = bonjouraurelienm");
-		System.out.println("ENCRYPTED : " + this.encryptionHandler.encrypt("bonjouraurelienm", "THAT IS COOL"));
-
-		while (true) {
-			System.out.print("Login key : ");
-			input_key = userInput.nextLine();
-
-			if (this.encryptionHandler.testWitnessFile(input_key))
-				break;
-		}
-		*/
 		boolean loggedin = false;
 		synchronized(this.childrenLock) {
 			this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
