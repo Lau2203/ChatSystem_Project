@@ -26,6 +26,7 @@ public enum NotifyInformation {
 	READY_TO_CHECK_USERNAME,
 
 	NEW_USERNAME_TO_BE_SENT,
+	NEW_MESSAGE_TO_BE_SENT,
 
 	NONE
 }

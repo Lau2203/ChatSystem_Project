@@ -45,6 +45,9 @@ public class ConnectionHandler extends Thread {
 
 		this.isInterrupted = false;
 		this.instanceName = "ConnectionHandler - " + this.toString();
+
+		this.in = null;
+		this.out = null;
 	}
 
 	public ConnectionHandler(User recipient, Socket clientSocket) {
@@ -67,10 +70,22 @@ public class ConnectionHandler extends Thread {
 		ConnectionHandler.master = master;
 	}
 
+	public synchronized InetAddress getRemoteAddress() {
+		return this.remoteAddress;
+	}
+
+	public synchronized int getRemotePort() {
+		return this.remotePort;
+	}
+
+	public synchronized PrintWriter getWriter() {
+		return this.out;
+	}
+
 	private void prepareIO() {
 		try {
 			this.in = new BufferedReader(new InputStreamReader(this.cs.getInputStream()));
-			this.out = new PrintWriter(this.cs.getOutputStream());
+			this.out = new PrintWriter(this.cs.getOutputStream(), true);
 
 		} catch (IOException ioe) {
 			System.out.println("IO issue, aborted");

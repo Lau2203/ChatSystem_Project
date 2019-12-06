@@ -1,6 +1,7 @@
 package chatsystem.network;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -23,6 +24,7 @@ import chatsystem.User;
 import chatsystem.MainUser;
 import chatsystem.Client;
 import chatsystem.NotifyInformation;
+import chatsystem.Message;
 import chatsystem.MessageString;
 
 import chatsystem.util.Logs;
@@ -39,6 +41,7 @@ public class NetworkManager extends Thread {
 	 * Once it happens, it notify the NetworkManager, which then creates a ConnectionHandler
 	 * in order to give it the control of that connection. */
 	private ConnectionListener connectionListener;
+	private int connectionListenerListeningPort;
 	/* All the subconnections detected by the ConnectionListeners are handled
 	 * by the ConnectionHandler. Each ConnectionHandler provides one User-to-User TCP connection */
 	private ArrayList<ConnectionHandler> connectionHandlers;
@@ -66,6 +69,8 @@ public class NetworkManager extends Thread {
 		/* ====================== CAREFULL ======================= */
 		int networkSignalListenerListeningPort 	= Integer.parseInt(ConfigParser.get("nsl-port"));
 		this.networkSignalListenerListeningPort = networkSignalListenerListeningPort;
+
+		this.connectionListenerListeningPort = listeningTCPPort;
 
 		this.master = master;
 
@@ -111,6 +116,21 @@ public class NetworkManager extends Thread {
 				return this.activeUsersList.size() + 1;
 			}
 		}
+	}
+
+	public ConnectionHandler getConnectionHandler(InetAddress remoteAddress) {
+		synchronized(this.lock) {
+			for (ConnectionHandler ch: this.connectionHandlers) {
+				if (ch.getRemoteAddress().equals(remoteAddress)) {	
+					return ch;
+				}
+			}
+		}
+		return null;
+	}
+
+	public ConnectionHandler getConnectionHandler(User user) {
+		return this.getConnectionHandler(user.getAddress());
 	}
 
 	public void startAll() {
@@ -288,6 +308,19 @@ public class NetworkManager extends Thread {
 
 	}
 
+	public void notifyNewMessageToBeSent(User user, Message msg) {
+		synchronized(this.childrenLock) {
+
+			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
+
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE_TO_BE_SENT);
+			this.networkManagerInformation.setRecipientUser(user);
+			this.networkManagerInformation.setMessage(msg);
+
+			this.wakeUp();
+		}
+	}
+
 	private void handleNewActiveClient(String fingerprint, InetAddress remoteAddress) {
 
 		System.out.println(this.instanceName + " : CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
@@ -352,6 +385,43 @@ public class NetworkManager extends Thread {
 		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 	}
 
+	private void handleNewMessageToBeSent(User usr, Message msg) {
+
+		PrintWriter out = null;
+		String stringPacket;
+
+		stringPacket = msg.getContent();
+
+		ConnectionHandler remote = this.getConnectionHandler(usr);
+		
+		if (remote != null) {
+			out = remote.getWriter();
+		}
+		/* Otherwise we need to instanciate a ConnectionHandler */
+		else {
+			Socket clientConnection;
+			try {
+				clientConnection = new Socket(usr.getAddress(), this.connectionListenerListeningPort);
+			} catch (Exception e) {
+				Logs.printerro(this.instanceName, "Could not create socket to send new message");
+				return;
+			}
+
+			remote = new ConnectionHandler(clientConnection);	
+
+			this.connectionHandlers.add(remote);
+
+			remote.start();
+			/* wait for the connectionHandler to start properly and 
+			 * correctly estblish IO */
+			while (out == null) {
+				out = remote.getWriter();
+			}
+		}
+
+		out.println(stringPacket);
+	}
+
 	/* Once it's been waken up, the NetworkManager needs to understand why
 	 * and act consequently */
 	private void handleNewInformation() {
@@ -403,6 +473,11 @@ public class NetworkManager extends Thread {
 				this.handleNewUsernameToBeSent(this.networkManagerInformation.getFingerprint(),
 								this.networkManagerInformation.getUsername());
 				notifierIsMainClientProcess = true;
+				break;
+
+			case NEW_MESSAGE_TO_BE_SENT:
+				this.handleNewMessageToBeSent(this.networkManagerInformation.getRecipientUser(),
+								this.networkManagerInformation.getMessage());
 				break;
 
 			default: break;
