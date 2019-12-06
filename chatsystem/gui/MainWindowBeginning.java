@@ -143,6 +143,10 @@ public class MainWindowBeginning extends JFrame{
 		//User Box - SOUTH.LEFT
    	 	JPanel panUsers 		= new JPanel();
     		panUsers.setBackground(Color.white);
+		
+
+		JScrollPane scrollMsg1 	= new JScrollPane();
+		scrollMsg1.add(panUsers);
         
 
  		
@@ -258,6 +262,7 @@ public class MainWindowBeginning extends JFrame{
 		boxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelMsg.add(boxMsg);
 
+
 		// Logo
 		ImageIcon logo 			= new ImageIcon("../resources/images/Aura2.jpg");
 		JLabel imageLogo		= new JLabel(logo); 
@@ -301,8 +306,8 @@ public class MainWindowBeginning extends JFrame{
 		//Texte
 		JLabel paddingT2 		= new JLabel(" ");
 		paddingT2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
-		JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session with him.");
-		sendTextMsg.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+		JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session.");
+		sendTextMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
 		sendTextMsg.setForeground(Color.gray);
 		sendTextMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
 		boxMsg.add(paddingT2, BorderLayout.CENTER);

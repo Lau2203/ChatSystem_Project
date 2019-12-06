@@ -201,7 +201,7 @@ public class MainWindow extends JFrame{
 			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 			rightBox.add(userName);
 			
-			JLabel lastMsg 		= new JLabel("I spoke to our IT about our Ch..."); //get 29 letters + [...]
+			JLabel lastMsg 		= new JLabel("I spoke to our IT manager abo..."); //get 29 letters + [...]
 			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
 			lastMsg.setForeground(Color.gray);	
 			rightBox.add(lastMsg);
@@ -276,44 +276,104 @@ public class MainWindow extends JFrame{
 		nameBox.add(lastMsgS);
 		
 		
+		
+		/*********************************************Conversation*********************************************/
 		//Messages Box
 		Box msgBox = Box.createHorizontalBox();
 		msgBox.setBackground(Color.white);
-		msgBox.add((Box.createRigidArea(new Dimension(270, 552))));
+		msgBox.add((Box.createRigidArea(new Dimension(270, 524))));
 		mainBoxM.add(msgBox);
+		
 
-		/*********************************************Conversation*********************************************/
-		Box rightBoxUs = Box.createVerticalBox();
-		rightBoxUs.setBackground(Color.white);
-		rightBoxUs.add((Box.createRigidArea(new Dimension(134, 552))));
-		msgBox.add(rightBoxUs);
 		Box leftBox = Box.createVerticalBox();
 		leftBox.setBackground(Color.white);
-		leftBox.add((Box.createRigidArea(new Dimension(134, 552))));
+		leftBox.add((Box.createRigidArea(new Dimension(134, 523))));
 		msgBox.add(leftBox);
 
+		Box rightBox = Box.createVerticalBox();
+		rightBox.setBackground(Color.white);
+		rightBox.add((Box.createRigidArea(new Dimension(134, 523))));
+		msgBox.add(rightBox);
+	
 		//For each new message sent -- rightBoxUs
-		JTextArea myMsg 	= new JTextArea("Here is my message");
+		Box boxS 	= Box.createVerticalBox();
+		rightBox.add(boxS);
+		JTextArea myMsg 	= new JTextArea("MY MESSAGE");
+		myMsg.setForeground(Color.black);
+		myMsg.setWrapStyleWord(true);
+		myMsg.setLineWrap(true);
+		//myMsg.setOpaque(false)
+		boxS.add(myMsg);
 		
 		//For each new message received -- leftBox
-		JTextArea theirMsg 	= new JTextArea("Here is the anwswer", 1, 30);
+		//White Message
+		Box boxLabelMsgReceived 	= Box.createVerticalBox();
+		leftBox.add(boxLabelMsgReceived);
+		boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(Color.white));
+		JTextArea myMsgWhite = new JTextArea("MY MESSAGE WHITE");
+		myMsgWhite.setForeground(Color.white);
+		myMsgWhite.setWrapStyleWord(true);
+		myMsgWhite.setLineWrap(true);
+		//myMsg.setOpaque(false)
+		boxLabelMsgReceived.add(myMsgWhite);
+
+		Box boxR 	= Box.createVerticalBox();
+		leftBox.add(boxR);
+		JTextArea theirMsg 	= new JTextArea("THE ANSWER");
 		theirMsg.setWrapStyleWord(true);
 		theirMsg.setLineWrap(true);
+		theirMsg.setForeground(myBlue);
+		//theirMsg.setOpaque(false);
+		boxR.add(theirMsg);
+		
 
+		
 		/***********************************End of Code about Conversation**************************************/
 		//Write Text Box 
 		Box textBox = Box.createHorizontalBox();
 		textBox.setBackground(Color.white);
 
-		JTextArea writeMsg	= new JTextArea(0,40);
-		writeMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+		JTextArea writeMsg		= new JTextArea("Write your message...", 0, 43); //padding to be done
+		textField.setFont(new Font("CALIBRI", Font.PLAIN, 13));
+		textField.getFont().deriveFont(Font.ITALIC);
+		textField.setForeground(Color.gray);
 		JScrollPane scrollMsg 	= new JScrollPane(writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//writeMsg.setBorder(borderG);
+	
+		
+		Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
+		//Border borderG2 = BorderFactory.createLineBorder(Color.gray, 1);
+		Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.white);
+		Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
+		
+		scrollMsg.setBorder(borderTextField);
+		writeMsg.setBorder(borderW);	
+
+		writeMsg.addMouseListener(new MouseListener() {           
+			@Override
+		   	public void mouseReleased(MouseEvent e) {}         
+		   	@Override
+		   	public void mousePressed(MouseEvent e) {}          
+		    	@Override
+		    	public void mouseExited(MouseEvent e) {
+				textField.setBorder(borderG);
+			}           
+		    	@Override
+		    	public void mouseEntered(MouseEvent e) {
+				textField.setBorder(borderB);
+			}          
+		    	@Override
+		    	public void mouseClicked(MouseEvent e) {
+					JTextArea writeMsg = ((JTextArea)e.getSource());
+					writeMsg.setText("");
+					writeMsg.getFont().deriveFont(Font.PLAIN);
+					writeMsg.setFont(new Font("CALIBRI", Font.PLAIN, 13));
+					writeMsg.setForeground(Color.black);
+		    }
+		});	
+
 		//Do not split words
 		writeMsg.setWrapStyleWord(true);
 		writeMsg.setLineWrap(true);
-
-		writeMsg.setBorder(borderG);
 		textBox.add(scrollMsg);
 		//Set Icons and Button
 		Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
