@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.FileWriter;
 
 import java.util.Hashtable;
+import java.util.Enumeration;
 
 class Config {
 
@@ -74,7 +75,7 @@ public class ConfigParser {
 
 	public synchronized static String get(String key) { return ConfigParser.configBindings.get(key); }
 
-	public synchronized static void writeNewSetting(String key, String value) {
+	private synchronized static void writeNewSetting(String key, String value) {
 
 		PrintWriter out;
 
@@ -88,6 +89,38 @@ public class ConfigParser {
 		out.println(key + "=" + value);
 		out.flush();
 		out.close();
+	}
+
+	public synchronized static void updateSetting(String key, String value) {
+		if (!ConfigParser.hasBeenInitialized)
+			return;
+
+		/* If the key is not set in the configuration file, we just append it at the end of the config file */
+		if (ConfigParser.get(key) == null) {
+			ConfigParser.writeNewSetting(key, value);
+		}
+		/* Otherwise, we need to rewrite the whole config file */
+		else {
+			PrintWriter out;
+
+			try { 
+				out = new PrintWriter(new FileWriter(ConfigParser.configFilePath));
+			} catch (IOException ioe) { return; }
+
+			ConfigParser.configBindings.put(key, value);
+
+			Enumeration<String> keys = ConfigParser.configBindings.keys();
+			String _key;
+			
+			while (keys.hasMoreElements()) {
+				_key = keys.nextElement();
+
+				out.println(_key + "=" + ConfigParser.get(_key));
+			}
+
+			out.flush();
+			out.close();
+		}
 	}
 }
 

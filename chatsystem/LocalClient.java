@@ -105,6 +105,7 @@ public class LocalClient extends Client {
 	/* Function for mandatory setting the username
 	 * Open JOptionPane until a valid username is entered */
 	private void mandatorySetUsername() {
+		boolean usernameWasModified = false;
 		String username = ConfigParser.get("username");
 
 		/* Main user's username needs to be set */
@@ -117,7 +118,7 @@ public class LocalClient extends Client {
 
 		this.mainUser.setUsername(username);
 		this.notifyNewUsernameToBeSent();
-		ConfigParser.writeNewSetting("username", username);
+		ConfigParser.updateSetting("username", username);
 	}
 
 	public static void main(String[] args) {
