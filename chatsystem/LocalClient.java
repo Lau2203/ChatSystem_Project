@@ -105,10 +105,11 @@ public class LocalClient extends Client {
 	/* Function for mandatory setting the username
 	 * Open JOptionPane until a valid username is entered */
 	private void mandatorySetUsername() {
+		boolean usernameWasModified = false;
 		String username = ConfigParser.get("username");
 
 		/* Main user's username needs to be set */
-		if (username == null || username.equals("undefined")) {
+		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username)) {
 			JFrame frame = new JFrame();
 			do {
 				username = JOptionPane.showInputDialog(frame, "Your current username is not valid\nPlease enter a new username:", "Username not valid", JOptionPane.INFORMATION_MESSAGE);
@@ -117,6 +118,7 @@ public class LocalClient extends Client {
 
 		this.mainUser.setUsername(username);
 		this.notifyNewUsernameToBeSent();
+		ConfigParser.updateSetting("username", username);
 	}
 
 	public static void main(String[] args) {

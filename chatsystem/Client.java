@@ -187,4 +187,16 @@ public abstract class Client extends Thread {
 		}
 		return true;
 	}
+
+	/* Returns whether or not it was able to set that new username */
+	public boolean setNewUsername(String username) {
+		if (!this.isUsernameAvailable(username))	
+			return false;
+
+		this.mainUser.setUsername(username);
+		this.notifyNewUsernameToBeSent();
+		ConfigParser.updateSetting("username", username);
+
+		return true;
+	}
 }
