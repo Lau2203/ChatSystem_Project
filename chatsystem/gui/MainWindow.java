@@ -1,26 +1,32 @@
 package chatsystem.gui;
 
-import chatsystem.gui.UserBox;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
-import java.awt.Color;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
-import javax.swing.border.LineBorder;
-import java.awt.BorderLayout;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.Box;
 import javax.swing.BorderFactory;
+import javax.swing.border.LineBorder;
+import javax.swing.border.Border;
+
+import java.awt.Component;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
-import javax.swing.border.Border;
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
+import chatsystem.gui.UserBox;
 
 import chatsystem.MainUser;
 import chatsystem.Client;
@@ -31,11 +37,29 @@ public class MainWindow extends JFrame{
 
 	private Client master;
 
+	public static final int WIDTH 	= 900;
+	public static final int HEIGHT 	= 650;
+
   	Color myBlue = new Color(24, 147, 248);
+
+	public static Color backgroundColor = Color.white;
+	public static Color foregroundColor = Color.black;
+
 	private JSplitPane s1;
 	private JSplitPane s2;
 
 	private JLabel textName;
+
+	public static ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
+
+	public static Icon mouseEnteredM 	= new ImageIcon("../resources/images/MsgB2.png");
+	public static Icon mouseExitedM 	= new ImageIcon("../resources/images/MsgA2.png");
+	public static Icon mouseEnteredO 	= new ImageIcon("../resources/images/OptB.png");
+	public static Icon mouseExitedO		= new ImageIcon("../resources/images/OptA.png");
+	public static Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
+	public static Icon mouseExitedL		= new ImageIcon("../resources/images/14.png");
+	public static Icon mouseEnteredS	= new ImageIcon("../resources/images/16.png");
+	public static Icon mouseExitedS		= new ImageIcon("../resources/images/17.png");
 
 	public MainWindow(Client master)  {  
 
@@ -43,10 +67,10 @@ public class MainWindow extends JFrame{
 	
 		this.master = master;
       
-	  	this.setTitle("MailWindow");
-		this.setSize(900, 650); 				
+	  	this.setTitle("Aura - Chat System");
+		this.setSize(MainWindow.WIDTH, MainWindow.HEIGHT); 				
 		this.setLocationRelativeTo(null); 
-		this.getContentPane().setBackground(Color.white);
+		this.getContentPane().setBackground(MainWindow.backgroundColor);
 		this.setResizable(false); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
@@ -63,11 +87,10 @@ public class MainWindow extends JFrame{
 		Box BoxAboutUs = Box.createVerticalBox();
 		BoxAboutUsMain.add(BoxAboutUs, BorderLayout.NORTH);
 
-		panUs.setBackground(Color.white);
+		panUs.setBackground(MainWindow.backgroundColor);
 		JLabel padding1 	= new JLabel("\n");
 		BoxAboutUs.add(padding1);
-		ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
-		JLabel image 		= new JLabel(icon); 
+		JLabel image 		= new JLabel(MainWindow.icon); 
 		image.setAlignmentX(Component.CENTER_ALIGNMENT);
 		BoxAboutUs.add(image);
 		JLabel padding2		= new JLabel("\n");
@@ -81,37 +104,33 @@ public class MainWindow extends JFrame{
 
 		Box BoxAboutUs2 = Box.createHorizontalBox();
 		BoxAboutUsMain.add(BoxAboutUs2, BorderLayout.SOUTH);
-		Icon mouseEnteredM 	= new ImageIcon("../resources/images/MsgB2.png");
-		Icon mouseExitedM 	= new ImageIcon("../resources/images/MsgA2.png");
-		Icon mouseEnteredO 	= new ImageIcon("../resources/images/OptB.png");
-		Icon mouseExitedO	= new ImageIcon("../resources/images/OptA.png");
 		
-		JButton buttonO 	= new JButton(mouseExitedO);
-		JButton buttonM 	= new JButton(mouseExitedM);
-		buttonM.setBorder(BorderFactory.createLineBorder(Color.white));
-		buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
+		JButton buttonO 	= new JButton(MainWindow.mouseExitedO);
+		JButton buttonM 	= new JButton(MainWindow.mouseExitedM);
+		buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+		buttonO.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 		
 		buttonM.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {}
 			@Override
      			public void mousePressed(MouseEvent e) {
-				//buttonM.setIcon(mouseEnteredM);
+				//buttonM.setIcon(MainWindow.mouseEnteredM);
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
-				//buttonM.setIcon(mouseExitedM);
+				//buttonM.setIcon(MainWindow.mouseExitedM);
 			}
 			@Override
         		public void mouseEntered(MouseEvent e){
 				setCursor(handCursor);
-				buttonM.setIcon(mouseEnteredM);
+				buttonM.setIcon(MainWindow.mouseEnteredM);
 				buttonM.setBorder(BorderFactory.createLineBorder(myBlue));
        			}
 			@Override
 			public void mouseExited(MouseEvent e) {
 				setCursor(defaultCursor);
-				buttonM.setIcon(mouseExitedM);
-				buttonM.setBorder(BorderFactory.createLineBorder(Color.white));
+				buttonM.setIcon(MainWindow.mouseExitedM);
+				buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 			}
 		});
 
@@ -119,23 +138,23 @@ public class MainWindow extends JFrame{
 			public void mouseClicked(MouseEvent e) {}
 			@Override
      			public void mousePressed(MouseEvent e) {
-				//buttonO.setIcon(mouseEnteredO);
+				//buttonO.setIcon(MainWindow.mouseEnteredO);
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
-				//buttonO.setIcon(mouseExitedO);
+				//buttonO.setIcon(MainWindow.mouseExitedO);
 			}
 			@Override
         		public void mouseEntered(MouseEvent e){
 				setCursor(handCursor);
-				buttonO.setIcon(mouseEnteredO);
+				buttonO.setIcon(MainWindow.mouseEnteredO);
 				buttonO.setBorder(BorderFactory.createLineBorder(myBlue));
        			}
 			@Override
 			public void mouseExited(MouseEvent e) {
 				setCursor(defaultCursor);
-				buttonO.setIcon(mouseExitedO);
-				buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
+				buttonO.setIcon(MainWindow.mouseExitedO);
+				buttonO.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 			}
 		});
 
@@ -147,19 +166,20 @@ public class MainWindow extends JFrame{
 		
 		//User Box - SOUTH.LEFT
    	 	JPanel panUsers 		= new JPanel();
-    		panUsers.setBackground(Color.white);
+    		panUsers.setBackground(MainWindow.backgroundColor);
         	
 
  		
 		//Search Bar
 		Box search = Box.createVerticalBox();
-		search.setBackground(Color.white);
+		search.setBackground(MainWindow.backgroundColor);
 		
 
 		JTextField textField 		= new JTextField(" Search something ? ...               "); //padding to be done
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 15));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
+		textField.setBackground(MainWindow.backgroundColor);
 		
 		Border borderG = BorderFactory.createLineBorder(Color.gray, 2);
 		Border borderB = BorderFactory.createLineBorder(myBlue, 2);
@@ -185,7 +205,7 @@ public class MainWindow extends JFrame{
 					JTextField texteField = ((JTextField)e.getSource());
 					textField.setText("");
 					textField.getFont().deriveFont(Font.PLAIN);
-					textField.setForeground(Color.black);
+					textField.setForeground(MainWindow.foregroundColor);
 		    }
 		});
 
@@ -196,7 +216,7 @@ public class MainWindow extends JFrame{
 		/******************* Create seven UB ****************************/
 		for (int i = 0 ; i < 7 ; i++) {	
 			Box mainBox = Box.createHorizontalBox();
-			mainBox.setBackground(Color.white);
+			mainBox.setBackground(MainWindow.backgroundColor);
 
 			Box rightBox = Box.createVerticalBox();
 			Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -223,7 +243,7 @@ public class MainWindow extends JFrame{
 			mainBox.add(rightBox);
 			
 			JButton buttonUser1 	= new JButton();
-			buttonUser1.setBackground(Color.white);
+			buttonUser1.setBackground(MainWindow.backgroundColor);
 			buttonUser1.setBorderPainted(false);
 			buttonUser1.add(mainBox);
 
@@ -243,7 +263,7 @@ public class MainWindow extends JFrame{
 				@Override
 				public void mouseExited(MouseEvent e) {
 					setCursor(defaultCursor);
-					userName.setForeground(Color.black);
+					userName.setForeground(MainWindow.foregroundColor);
 				}
 			});
 			
@@ -258,11 +278,11 @@ public class MainWindow extends JFrame{
 		/**************************************Messages***********************************************************/
 		//Messages
    	 	JPanel panMsg 		= new JPanel();
-    		panMsg.setBackground(Color.white); 
+    		panMsg.setBackground(MainWindow.backgroundColor); 
 
 		//Main Box
 		Box mainBoxM = Box.createVerticalBox();
-		mainBoxM.setBackground(Color.white);
+		mainBoxM.setBackground(MainWindow.backgroundColor);
 		panMsg.add(mainBoxM);
 		
 		
@@ -286,12 +306,12 @@ public class MainWindow extends JFrame{
 		//mainBoxM.add(msgBoxPanel);
 		msgBoxPanel.setPreferredSize(new Dimension(275, 547)); //OK
 		mainBoxM.add(msgBoxPanel);
-		msgBoxPanel.setBackground(Color.white);
+		msgBoxPanel.setBackground(MainWindow.backgroundColor);
 
 		//Messages Box
 		Box msgBox = Box.createHorizontalBox();
 		msgBox.setOpaque(true);
-		msgBox.setBackground(Color.white);
+		msgBox.setBackground(MainWindow.backgroundColor);
 		msgBox.add((Box.createRigidArea(new Dimension(60, 0))));
 		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -302,80 +322,84 @@ public class MainWindow extends JFrame{
 		msgBoxPanel.add(scrollMsg);
 		
 		Box leftBox = Box.createVerticalBox();
-		leftBox.setBackground(Color.white);
+		leftBox.setBackground(MainWindow.backgroundColor);
 		leftBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		msgBox.add(leftBox, BorderLayout.WEST);
 
 		//RIGID AREA BETWEEN LEFT AND RIHGT
 		Box paddingBox = Box.createHorizontalBox();
 		paddingBox.add((Box.createRigidArea(new Dimension(5, 0))));
-		paddingBox.setForeground(Color.white);
+		paddingBox.setForeground(MainWindow.backgroundColor);
 		paddingBox.setOpaque(true);
 		msgBox.add(paddingBox);
 		
 		Box rightBox = Box.createVerticalBox();
-		rightBox.setBackground(Color.white);
+		rightBox.setBackground(MainWindow.backgroundColor);
 		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		msgBox.add(rightBox, BorderLayout.EAST);
 		
 		for (int i=0 ; i<40; i++){
-		//For each new message sent -- rightBoxUs
-		Box boxS 	= Box.createVerticalBox();
-		boxS.setBackground(Color.white);
-		rightBox.add(boxS);
-		JTextArea myMsg 	= new JTextArea("Good Morning, is Sarah Crôche in your office ?", 2, 20);
-		myMsg.setForeground(Color.black);
-		myMsg.setWrapStyleWord(true);
-		myMsg.setLineWrap(true);
-		myMsg.setEditable(false);
-		//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//myMsg.setOpaque(false)
-		boxS.add(myMsg);
-		
-		//For each new message received -- leftBox
-		//White Message
-		Box boxLabelMsgReceived 	= Box.createVerticalBox();
-		boxLabelMsgReceived.setBackground(Color.white);
-		leftBox.add(boxLabelMsgReceived);
-		boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(Color.white));
-		JTextArea myMsgWhite = new JTextArea("MY MESSAGE WHITE", 2, 20);
-		myMsgWhite.setForeground(Color.white);
-		myMsgWhite.setWrapStyleWord(true);
-		myMsgWhite.setLineWrap(true);
-		myMsgWhite.setEditable(false);
-		//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//myMsg.setOpaque(false)
-		boxLabelMsgReceived.add(myMsgWhite);
+			//For each new message sent -- rightBoxUs
+			Box boxS 	= Box.createVerticalBox();
+			boxS.setBackground(MainWindow.backgroundColor);
+			rightBox.add(boxS);
+			JTextArea myMsg 	= new JTextArea("Good Morning, is Sarah Crôche in your office ?", 2, 20);
+			myMsg.setForeground(MainWindow.foregroundColor);
+			myMsg.setBackground(MainWindow.backgroundColor);
+			myMsg.setWrapStyleWord(true);
+			myMsg.setLineWrap(true);
+			myMsg.setEditable(false);
+			//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
+			//myMsg.setOpaque(false)
+			boxS.add(myMsg);
 
-		Box boxR 	= Box.createVerticalBox();
-		boxR.setBackground(Color.white);
-		leftBox.add(boxR);
-		JTextArea theirMsg 	= new JTextArea("I'm sorry but she is in a meeting now, if you give me your number, I'll ask her to call you back", 2, 20);
-		theirMsg.setWrapStyleWord(true);
-		theirMsg.setLineWrap(true);
-		theirMsg.setForeground(myBlue);
-		theirMsg.setEditable(false);
-		//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//theirMsg.setOpaque(false);
-		boxR.add(theirMsg);
+			//For each new message received -- leftBox
+			//White Message
+			Box boxLabelMsgReceived 	= Box.createVerticalBox();
+			boxLabelMsgReceived.setBackground(MainWindow.backgroundColor);
+			leftBox.add(boxLabelMsgReceived);
+			boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+			JTextArea myMsgWhite = new JTextArea("MY MESSAGE WHITE", 2, 20);
+			myMsgWhite.setForeground(MainWindow.backgroundColor);
+			myMsgWhite.setBackground(MainWindow.backgroundColor);
+			myMsgWhite.setWrapStyleWord(true);
+			myMsgWhite.setLineWrap(true);
+			myMsgWhite.setEditable(false);
+			//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
+			//myMsg.setOpaque(false)
+			boxLabelMsgReceived.add(myMsgWhite);
+
+			Box boxR 	= Box.createVerticalBox();
+			boxR.setBackground(MainWindow.backgroundColor);
+			leftBox.add(boxR);
+			JTextArea theirMsg 	= new JTextArea("I'm sorry but she is in a meeting now, if you give me your number, I'll ask her to call you back", 2, 20);
+			theirMsg.setWrapStyleWord(true);
+			theirMsg.setLineWrap(true);
+			theirMsg.setForeground(myBlue);
+			theirMsg.setBackground(MainWindow.backgroundColor);
+			theirMsg.setEditable(false);
+			//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
+			//theirMsg.setOpaque(false);
+			boxR.add(theirMsg);
 		}
 
 		
 		/***********************************End of Code about Conversation**************************************/
 		//Write Text Box 
 		Box textBox = Box.createHorizontalBox();
-		textBox.setBackground(Color.white);
+		textBox.setBackground(MainWindow.backgroundColor);
 
 		JTextArea writeMsg		= new JTextArea("Write your message...", 0, 43); //padding to be done
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 13));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
+		textField.setBackground(MainWindow.backgroundColor);
 		JScrollPane scrollMsg2 	= new JScrollPane(writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	
 		
-		Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
+		Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, MainWindow.foregroundColor);
 		//Border borderG2 = BorderFactory.createLineBorder(Color.gray, 1);
-		Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.white);
+		Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, MainWindow.backgroundColor);
 		Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
 		
 		scrollMsg2.setBorder(borderTextField);
@@ -400,7 +424,7 @@ public class MainWindow extends JFrame{
 					writeMsg.setText("");
 					writeMsg.getFont().deriveFont(Font.PLAIN);
 					writeMsg.setFont(new Font("CALIBRI", Font.PLAIN, 13));
-					writeMsg.setForeground(Color.black);
+					writeMsg.setForeground(MainWindow.foregroundColor);
 		    }
 		});	
 
@@ -409,14 +433,10 @@ public class MainWindow extends JFrame{
 		writeMsg.setLineWrap(true);
 		textBox.add(scrollMsg2);
 		//Set Icons and Button
-		Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
-		Icon mouseExitedL	= new ImageIcon("../resources/images/14.png");
-		Icon mouseEnteredS	= new ImageIcon("../resources/images/16.png");
-		Icon mouseExitedS	= new ImageIcon("../resources/images/17.png");
-		JButton linkButton 	= new JButton(new ImageIcon("../resources/images/14.png"));
-		JButton sendButton 	= new JButton(new ImageIcon("../resources/images/17.png"));
-		linkButton.setBorder(BorderFactory.createLineBorder(Color.white));
-		sendButton.setBorder(BorderFactory.createLineBorder(Color.white));
+		JButton linkButton 	= new JButton(MainWindow.mouseExitedL);
+		JButton sendButton 	= new JButton(MainWindow.mouseExitedS);
+		linkButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+		sendButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 		textBox.add(linkButton);
 		textBox.add(sendButton);
 		linkButton.addMouseListener(new MouseListener() {
@@ -429,11 +449,11 @@ public class MainWindow extends JFrame{
 				}
 				@Override
 				public void mouseEntered(MouseEvent e){
-					linkButton.setIcon(mouseEnteredL);
+					linkButton.setIcon(MainWindow.mouseEnteredL);
 	       			}
 				@Override
 				public void mouseExited(MouseEvent e) {
-					linkButton.setIcon(mouseExitedL);
+					linkButton.setIcon(MainWindow.mouseExitedL);
 				}
 			});
 		sendButton.addMouseListener(new MouseListener() {
@@ -446,11 +466,11 @@ public class MainWindow extends JFrame{
 				}
 				@Override
 				public void mouseEntered(MouseEvent e){
-					sendButton.setIcon(mouseEnteredS);
+					sendButton.setIcon(MainWindow.mouseEnteredS);
 	       			}
 				@Override
 				public void mouseExited(MouseEvent e) {
-					sendButton.setIcon(mouseExitedS);
+					sendButton.setIcon(MainWindow.mouseExitedS);
 				}
 			});
 
