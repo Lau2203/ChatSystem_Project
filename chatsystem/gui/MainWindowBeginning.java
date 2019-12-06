@@ -27,18 +27,18 @@ import chatsystem.Client;
 
 @SuppressWarnings("serial")
 
-public class MainWindow extends JFrame{
+public class MainWindowBeginning extends JFrame{
 
 
   	Color myBlue = new Color(24, 147, 248);
 	private JSplitPane s1;
 	private JSplitPane s2;
 
-	public MainWindow()  {  
+	public MainWindowBeginning()  {  
 
 		super();   
       
-	  	this.setTitle("MailWindow");
+	  	this.setTitle("MainWindowBeginning");
 		this.setSize(900, 650); 				
 		this.setLocationRelativeTo(null); 
 		this.getContentPane().setBackground(Color.white);
@@ -251,119 +251,63 @@ public class MainWindow extends JFrame{
 
 		/*********************************************************************************************************/
 		/**************************************Messages***********************************************************/
-		//Messages
-   	 	JPanel panMsg 		= new JPanel();
-    		panMsg.setBackground(Color.white);
+		JPanel panelMsg 	= new JPanel();
+    		panelMsg.setBackground(Color.white);
 		
+		Box boxMsg = Box.createVerticalBox();
+		boxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelMsg.add(boxMsg);
 
-		//Main Box
-		Box mainBoxM = Box.createVerticalBox();
-		mainBoxM.setBackground(Color.white);
-		panMsg.add(mainBoxM);
+		// Logo
+		ImageIcon logo 			= new ImageIcon("../resources/images/Aura2.jpg");
+		JLabel imageLogo		= new JLabel(logo); 
+		imageLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		boxMsg.add(imageLogo);
+
+		JLabel paddingT1 		= new JLabel(" ");
+		paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+		boxMsg.add(paddingT1);
+		//About Us
+		Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs2.png");
+		Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs1.png");
 		
-		
-		//NameBox
-		Box nameBox = Box.createHorizontalBox();
-		mainBoxM.add(nameBox);
+		JButton buttonAU 	= new JButton(mouseExitedAU);
+		buttonAU.setBorder(BorderFactory.createLineBorder(Color.white));
+		buttonAU.setAlignmentX(Component.CENTER_ALIGNMENT);
+		buttonAU.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {}
+			@Override
+     			public void mousePressed(MouseEvent e) {
+				
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
+				
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				buttonAU.setIcon(mouseEnteredAU);
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+				buttonAU.setIcon(mouseExitedAU);
+				
+			}
+		});
+		boxMsg.add(buttonAU, BorderLayout.CENTER);
+
+		//Texte
+		JLabel paddingT2 		= new JLabel(" ");
+		paddingT2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+		JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session with him.");
+		sendTextMsg.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+		sendTextMsg.setForeground(Color.gray);
+		sendTextMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+		boxMsg.add(paddingT2, BorderLayout.CENTER);
+		boxMsg.add(sendTextMsg, BorderLayout.CENTER);
 	
-		JLabel userNameC	= new JLabel("Paula Roïd ");
-		userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
-		JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
-		lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
-		userNameC.setForeground(myBlue);
-		lastMsgS.setForeground(Color.gray);
-		nameBox.add(userNameC);
-		nameBox.add(lastMsgS);
-		
-		
-		//Messages Box
-		Box msgBox = Box.createHorizontalBox();
-		msgBox.setBackground(Color.white);
-		msgBox.add((Box.createRigidArea(new Dimension(270, 552))));
-		mainBoxM.add(msgBox);
-
-		/*********************************************Conversation*********************************************/
-		Box rightBoxUs = Box.createVerticalBox();
-		rightBoxUs.setBackground(Color.white);
-		rightBoxUs.add((Box.createRigidArea(new Dimension(134, 552))));
-		msgBox.add(rightBoxUs);
-		Box leftBox = Box.createVerticalBox();
-		leftBox.setBackground(Color.white);
-		leftBox.add((Box.createRigidArea(new Dimension(134, 552))));
-		msgBox.add(leftBox);
-
-		//For each new message sent -- rightBoxUs
-		JTextArea myMsg 	= new JTextArea("Here is my message");
-		
-		//For each new message received -- leftBox
-		JTextArea theirMsg 	= new JTextArea("Here is the anwswer", 1, 30);
-		theirMsg.setWrapStyleWord(true);
-		theirMsg.setLineWrap(true);
-
-		/***********************************End of Code about Conversation**************************************/
-		//Write Text Box 
-		Box textBox = Box.createHorizontalBox();
-		textBox.setBackground(Color.white);
-
-		JTextArea writeMsg	= new JTextArea(0,40);
-		writeMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
-		JScrollPane scrollMsg 	= new JScrollPane(writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//writeMsg.setBorder(borderG);
-		//Do not split words
-		writeMsg.setWrapStyleWord(true);
-		writeMsg.setLineWrap(true);
-
-		writeMsg.setBorder(borderG);
-		textBox.add(scrollMsg);
-		//Set Icons and Button
-		Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
-		Icon mouseExitedL	= new ImageIcon("../resources/images/14.png");
-		Icon mouseEnteredS	= new ImageIcon("../resources/images/16.png");
-		Icon mouseExitedS	= new ImageIcon("../resources/images/17.png");
-		JButton linkButton 	= new JButton(new ImageIcon("../resources/images/14.png"));
-		JButton sendButton 	= new JButton(new ImageIcon("../resources/images/17.png"));
-		linkButton.setBorder(BorderFactory.createLineBorder(Color.white));
-		sendButton.setBorder(BorderFactory.createLineBorder(Color.white));
-		textBox.add(linkButton);
-		textBox.add(sendButton);
-		linkButton.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {}
-				@Override
-	     			public void mousePressed(MouseEvent e) {
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-				@Override
-				public void mouseEntered(MouseEvent e){
-					linkButton.setIcon(mouseEnteredL);
-	       			}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					linkButton.setIcon(mouseExitedL);
-				}
-			});
-		sendButton.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {}
-				@Override
-	     			public void mousePressed(MouseEvent e) {
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-				@Override
-				public void mouseEntered(MouseEvent e){
-					sendButton.setIcon(mouseEnteredS);
-	       			}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					sendButton.setIcon(mouseExitedS);
-				}
-			});
-
-		mainBoxM.add(textBox, BorderLayout.SOUTH);
-		
-
 
 		/************************************END OF MESSAGES PART*************************************************/
 		/*********************************************************************************************************/
@@ -373,7 +317,7 @@ public class MainWindow extends JFrame{
 		s1.setDividerLocation(185);
  		s1.setEnabled(false);
 
-		s2 	= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
+		s2 	= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panelMsg);
     		s2.setDividerLocation(280);
 		s2.setDividerSize(7);
 		s2.setEnabled(false);
@@ -383,7 +327,7 @@ public class MainWindow extends JFrame{
 	}
 
 	public static void main(String[] args) {
-		MainWindow mw = new MainWindow();
+		MainWindowBeginning mw = new MainWindowBeginning();
 		mw.setVisible(true);
 	}
 
