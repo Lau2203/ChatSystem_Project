@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.FileWriter;
 
 import java.util.Hashtable;
 
@@ -71,6 +73,22 @@ public class ConfigParser {
 	}
 
 	public synchronized static String get(String key) { return ConfigParser.configBindings.get(key); }
+
+	public synchronized static void writeNewSetting(String key, String value) {
+
+		PrintWriter out;
+
+		if (!ConfigParser.hasBeenInitialized)
+			return;
+
+		try { 
+			out = new PrintWriter(new FileWriter(ConfigParser.configFilePath, true));
+		} catch (IOException ioe) { return; }
+
+		out.println(key + "=" + value);
+		out.flush();
+		out.close();
+	}
 }
 
 
