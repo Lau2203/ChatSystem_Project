@@ -281,20 +281,23 @@ public class MainWindow extends JFrame{
 		//Messages Box
 		Box msgBox = Box.createHorizontalBox();
 		msgBox.setBackground(Color.white);
-		msgBox.add((Box.createRigidArea(new Dimension(270, 524))));
+		msgBox.add((Box.createRigidArea(new Dimension(270, 550)))); //OK
 		mainBoxM.add(msgBox);
 		
+		//JScrollPane scrollMsg1 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		//mainBoxM.add(scrollMsg1);
 
 		Box leftBox = Box.createVerticalBox();
 		leftBox.setBackground(Color.white);
-		leftBox.add((Box.createRigidArea(new Dimension(134, 523))));
+		//leftBox.add((Box.createRigidArea(new Dimension(34, 200))));
 		msgBox.add(leftBox);
 
 		Box rightBox = Box.createVerticalBox();
 		rightBox.setBackground(Color.white);
-		rightBox.add((Box.createRigidArea(new Dimension(134, 523))));
+		//rightBox.add((Box.createRigidArea(new Dimension(134, 200))));
 		msgBox.add(rightBox);
-	
+		
+		for (int i=0 ; i<8; i++){
 		//For each new message sent -- rightBoxUs
 		Box boxS 	= Box.createVerticalBox();
 		rightBox.add(boxS);
@@ -302,6 +305,7 @@ public class MainWindow extends JFrame{
 		myMsg.setForeground(Color.black);
 		myMsg.setWrapStyleWord(true);
 		myMsg.setLineWrap(true);
+		//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
 		//myMsg.setOpaque(false)
 		boxS.add(myMsg);
 		
@@ -314,6 +318,7 @@ public class MainWindow extends JFrame{
 		myMsgWhite.setForeground(Color.white);
 		myMsgWhite.setWrapStyleWord(true);
 		myMsgWhite.setLineWrap(true);
+		//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
 		//myMsg.setOpaque(false)
 		boxLabelMsgReceived.add(myMsgWhite);
 
@@ -323,9 +328,10 @@ public class MainWindow extends JFrame{
 		theirMsg.setWrapStyleWord(true);
 		theirMsg.setLineWrap(true);
 		theirMsg.setForeground(myBlue);
+		boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//theirMsg.setOpaque(false);
 		boxR.add(theirMsg);
-		
+		}
 
 		
 		/***********************************End of Code about Conversation**************************************/
