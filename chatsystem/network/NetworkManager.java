@@ -245,7 +245,7 @@ public class NetworkManager extends Thread {
 
 			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
 
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
 
 			this.networkManagerInformation.setFingerprint(fingerprint);
 			this.networkManagerInformation.setAddress(address);
@@ -309,11 +309,24 @@ public class NetworkManager extends Thread {
 					usr.setUsername(this.networkManagerInformation.getUsername());
 
 					this.activeUsersList.add(usr);
+
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
 				} else {
+					/* Happens when a client was active but had not a valid username yet, and now it updates
+					 * its username */
+					if (usr.getUsername().equals("undefined")) {
+						this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);						
+					}
+
 					usr.setFingerprint(this.networkManagerInformation.getFingerprint());
 					usr.setAddress(this.networkManagerInformation.getAddress());
 					usr.setUsername(this.networkManagerInformation.getUsername());
 				}	
+				/* If a client responded to us without a valid username yet, so we do not notify the main client process,
+				 * since we do not consider the remote user to be active when he hasn't a valid username yet */
+				if (this.networkManagerInformation.getUsername().equals("undefined")) {
+					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NONE);
+				}
 
 				break;
 

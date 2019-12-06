@@ -63,6 +63,7 @@ public class LocalClient extends Client {
 					break;
 
 				case NEW_ACTIVE_USER:
+					JOptionPane.showMessageDialog(null, this.networkManagerInformation.getUsername() + " is now online !");
 					break;
 
 				case USER_LEFT_NETWORK:
@@ -110,8 +111,8 @@ public class LocalClient extends Client {
 		if (username == null) {
 			JFrame frame = new JFrame();
 			do {
-				username = JOptionPane.showInputDialog(frame, "Please enter a username:");
-			} while(username == null || username.equals("") || !this.isUsernameAvailable(username));
+				username = JOptionPane.showInputDialog(frame, "Your current username is not valid\nPlease enter a new username:", "Username not valid", JOptionPane.INFORMATION_MESSAGE);
+			} while(username == null || username.equals("") || username.equals(this.mainUser.getFingerprint()) || !this.isUsernameAvailable(username));
 		}
 
 		this.mainUser.setUsername(username);

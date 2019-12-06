@@ -67,11 +67,22 @@ public class NetworkSignalListener extends Thread {
 		try { this.ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 	}
 
+
+
 	private void handleNewActiveClientSignal(String recipientFingerprint, InetAddress remoteAddress, int remotePort) {
 		/* Example of built packet : fingerprint:WE:243:USERNAME */
 		int currentActiveClientsNumber = this.master.getActiveClientsNumber();
 
-		String response = this.mainUser.getFingerprint() + ":" +
+		String response;
+		String mainUserUsername = this.mainUser.getUsername();
+
+		/* If the username has not been set yet in our side, its value becomes "undefined" so that the remote
+		 * client can understand the situation */
+		if (mainUserUsername.equals("") || mainUserUsername == null) {
+			mainUserUsername = "undefined";	
+		}
+
+		response = this.mainUser.getFingerprint() + ":" +
 			NetworkManagerInformation.WELCOME_STRING + ":" +
 			currentActiveClientsNumber + ":" +
 			this.mainUser.getUsername();
@@ -82,6 +93,8 @@ public class NetworkSignalListener extends Thread {
 
 		this.master.notifyNewActiveClient(recipientFingerprint, remoteAddress);
 	}
+	
+	
 
 	private void handleWelcomeSignal(String fingerprint, InetAddress remoteAddress, String username, int activeClientsTotal) {
 
@@ -95,12 +108,16 @@ public class NetworkSignalListener extends Thread {
 			this.activeClientsResponseToWaitFor--;
 		}
 
+		/* The NetworkManager will create a new user is it does not already exist */
 		this.master.notifyNewUsername(fingerprint, remoteAddress, username);
 
+		/* If we received the Welcome Signal from all the active clients */
 		if (this.activeClientsResponseToWaitFor == 0) {
 			this.master.notifyReadyToCheckUsername();
 		}
 	}
+
+
 
 	private void handleUsernameModificationSignal(String fingerprint, InetAddress remoteAddress, String new_username) {
 			this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
