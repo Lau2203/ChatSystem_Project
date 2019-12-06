@@ -29,14 +29,19 @@ import chatsystem.Client;
 
 public class MainWindow extends JFrame{
 
+	private Client master;
 
   	Color myBlue = new Color(24, 147, 248);
 	private JSplitPane s1;
 	private JSplitPane s2;
 
-	public MainWindow()  {  
+	private JLabel textName;
+
+	public MainWindow(Client master)  {  
 
 		super();   
+	
+		this.master = master;
       
 	  	this.setTitle("MailWindow");
 		this.setSize(900, 650); 				
@@ -67,10 +72,10 @@ public class MainWindow extends JFrame{
 		BoxAboutUs.add(image);
 		JLabel padding2		= new JLabel("\n");
 		BoxAboutUs.add(padding2);
-		JLabel textName 	= new JLabel("Paul Hochon");
-		textName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
-		textName.setAlignmentX(Component.CENTER_ALIGNMENT);
-		BoxAboutUs.add(textName);
+		this.textName 	= new JLabel(this.master.getMainUserUsername());
+		this.textName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
+		this.textName.setAlignmentX(Component.CENTER_ALIGNMENT);
+		BoxAboutUs.add(this.textName);
 		JLabel padding3 	= new JLabel("\n");
 		BoxAboutUs.add(padding3);
 
@@ -469,10 +474,14 @@ public class MainWindow extends JFrame{
 		
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 	}
+	
+	public synchronized void notifyNewMainUserUsername(String username) {
+		this.textName.setText(username);
+	}
 
 	public static void main(String[] args) {
-		MainWindow mw = new MainWindow();
-		mw.setVisible(true);
+		//MainWindow mw = new MainWindow();
+		//mw.setVisible(true);
 	}
 
 

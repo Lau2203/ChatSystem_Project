@@ -199,4 +199,8 @@ public abstract class Client extends Thread {
 
 		return true;
 	}
+
+	public synchronized String getMainUserUsername() {
+		return this.mainUser.getUsername();
+	}
 }

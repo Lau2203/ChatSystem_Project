@@ -19,6 +19,8 @@ import chatsystem.gui.MainWindow;
 
 public class LocalClient extends Client {
 
+	MainWindow mw;
+
 	public LocalClient(int port) {
 		super(port);
 	}
@@ -98,8 +100,8 @@ public class LocalClient extends Client {
 	}
 
 	private void runGUI() {
-		MainWindow mw = new MainWindow();
-		mw.setVisible(true);
+		this.mw = new MainWindow(this);
+		this.mw.setVisible(true);
 	}
 
 	/* Function for mandatory setting the username
@@ -119,6 +121,7 @@ public class LocalClient extends Client {
 		this.mainUser.setUsername(username);
 		this.notifyNewUsernameToBeSent();
 		ConfigParser.updateSetting("username", username);
+		this.mw.notifyNewMainUserUsername(username);
 	}
 
 	public static void main(String[] args) {
