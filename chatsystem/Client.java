@@ -29,11 +29,11 @@ public abstract class Client extends Thread {
 	protected EncryptionHandler 	encryptionHandler;
 	protected MessageHistoryManager messageHistoryManager;
 
-	private static final String DEFAULT_MESSAGE_HISTORY_FILE_PATH = "../history.mh";
-	private static final String DEFAULT_CONFIG_FILE_PATH = "../config.cfg";
-	private static final String DEFAULT_WITNESS_FILE_PATH = "../witness";
+	private static final String DEFAULT_MESSAGE_HISTORY_FILE_PATH 	= "../history.mh";
+	private static final String DEFAULT_CONFIG_FILE_PATH 		= "../config.cfg";
+	private static final String DEFAULT_WITNESS_FILE_PATH 		= "../witness";
 
-	private static int DEFAULT_CONNECTION_LISTENER_PORT = 5555;
+	private static int DEFAULT_CONNECTION_LISTENER_PORT 	= 5555;
 	private static int DEFAULT_NETWORK_SIGNAL_LISTENER_PORT = 54321;
 
 	protected ArrayList<ChatSession> activeChatSessionList;
