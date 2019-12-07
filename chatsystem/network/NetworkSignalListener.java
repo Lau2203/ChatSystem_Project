@@ -85,7 +85,7 @@ public class NetworkSignalListener extends Thread {
 		response = this.mainUser.getFingerprint() + ":" +
 			NetworkManagerInformation.WELCOME_STRING + ":" +
 			currentActiveClientsNumber + ":" +
-			this.mainUser.getUsername();
+			mainUserUsername;
 
 		DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
 
@@ -178,11 +178,10 @@ public class NetworkSignalListener extends Thread {
 
 		this.prepare();
 
-		this.tellOthersWeAreActive();
-
 		dp = new DatagramPacket(buffer, buffer.length);
 	
 		System.out.println("Signal listener listening on port " + this.listeningPort);
+		this.tellOthersWeAreActive();
 
 		while (true) {
 

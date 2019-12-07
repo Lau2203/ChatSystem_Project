@@ -95,26 +95,20 @@ public class NetworkManager extends Thread {
 	}
 
 	/* returns a copy of the Active Users List */
-	public ArrayList<User> getActiveUsersList() {
-		/* Needs coordination with the NetworkSignalListener, ConnectionListener and the ConnectionHandler */
-		synchronized(this.childrenLock) {
-			/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
-			 * activeUsersList */
-			synchronized(this.lock) {
-				return new ArrayList<User>(this.activeUsersList);
-			}
-		}
+	public synchronized ArrayList<User> getActiveUsersList() {
+		/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
+		 * activeUsersList */
+		//synchronized(this.lock) {
+			return new ArrayList<User>(this.activeUsersList);
+		//}
 	}
 
 	/* Do not forget to add +1 for us */
 	public int getActiveClientsNumber() { 
-		/* Needs coordination with the NetworkSignalListener, ConnectionListener and the ConnectionHandler */
-		synchronized(this.childrenLock) {
-			/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
-			 * activeUsersList */
-			synchronized(this.lock) {
-				return this.activeUsersList.size() + 1;
-			}
+		/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
+		 * activeUsersList */
+		synchronized(this.lock) {
+			return this.activeUsersList.size() + 1;
 		}
 	}
 
@@ -356,7 +350,9 @@ public class NetworkManager extends Thread {
 			usr.setAddress(remoteAddress);
 			usr.setUsername(username);
 		}	
-		/* If a client responded to us without a valid username yet, so we do not notify the main client process,
+
+		System.out.println("username set to '" + username + "'");
+		/* Happens when a client responded to us without a valid username yet, so we do not notify the main client process,
 		 * since we do not consider the remote user to be active when he hasn't a valid username yet */
 		if (username.equals("undefined")) {
 			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NONE);

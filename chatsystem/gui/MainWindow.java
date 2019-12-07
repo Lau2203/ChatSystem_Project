@@ -28,8 +28,8 @@ import java.awt.event.MouseEvent;
 
 import chatsystem.gui.UserBox;
 
-import chatsystem.MainUser;
 import chatsystem.Client;
+import chatsystem.User;
 
 @SuppressWarnings("serial")
 
@@ -48,8 +48,12 @@ public class MainWindow extends JFrame{
 	private JSplitPane s1;
 	private JSplitPane s2;
 
+	// User Box - SOUTH.LEFT
+   	private JPanel panUsers 		= new JPanel();
+
 	private JLabel textName;
 
+	/* Resources */
 	public static ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
 
 	public static Icon mouseEnteredM 	= new ImageIcon("../resources/images/MsgB2.png");
@@ -60,6 +64,12 @@ public class MainWindow extends JFrame{
 	public static Icon mouseExitedL		= new ImageIcon("../resources/images/14.png");
 	public static Icon mouseEnteredS	= new ImageIcon("../resources/images/16.png");
 	public static Icon mouseExitedS		= new ImageIcon("../resources/images/17.png");
+	// User Image
+	public static ImageIcon user 		= new ImageIcon("../resources/images/activet.png");
+
+	// Cursors
+	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
+   	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 
 	public MainWindow(Client master)  {  
 
@@ -74,9 +84,6 @@ public class MainWindow extends JFrame{
 		this.setResizable(false); 			
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
-		// Cursors
-		Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
-   		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
 		//About US - NORTH.LEFT
 		JPanel panUs 		= new JPanel();
@@ -122,13 +129,13 @@ public class MainWindow extends JFrame{
 			}
 			@Override
         		public void mouseEntered(MouseEvent e){
-				setCursor(handCursor);
+				setCursor(MainWindow.handCursor);
 				buttonM.setIcon(MainWindow.mouseEnteredM);
 				buttonM.setBorder(BorderFactory.createLineBorder(myBlue));
        			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setCursor(defaultCursor);
+				setCursor(MainWindow.defaultCursor);
 				buttonM.setIcon(MainWindow.mouseExitedM);
 				buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 			}
@@ -146,13 +153,13 @@ public class MainWindow extends JFrame{
 			}
 			@Override
         		public void mouseEntered(MouseEvent e){
-				setCursor(handCursor);
+				setCursor(MainWindow.handCursor);
 				buttonO.setIcon(MainWindow.mouseEnteredO);
 				buttonO.setBorder(BorderFactory.createLineBorder(myBlue));
        			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setCursor(defaultCursor);
+				setCursor(MainWindow.defaultCursor);
 				buttonO.setIcon(MainWindow.mouseExitedO);
 				buttonO.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 			}
@@ -164,9 +171,7 @@ public class MainWindow extends JFrame{
 		
 
 		
-		//User Box - SOUTH.LEFT
-   	 	JPanel panUsers 		= new JPanel();
-    		panUsers.setBackground(MainWindow.backgroundColor);
+    		this.panUsers.setBackground(MainWindow.backgroundColor);
         	
 
  		
@@ -209,67 +214,12 @@ public class MainWindow extends JFrame{
 		    }
 		});
 
-		panUsers.add(search);		
+		this.panUsers.add(search);		
 
 		/************************************TO BE DONE IN USER BOX CLASS***************************************/
 		/*********************************************************************************************************/
 		/******************* Create seven UB ****************************/
-		for (int i = 0 ; i < 7 ; i++) {	
-			Box mainBox = Box.createHorizontalBox();
-			mainBox.setBackground(MainWindow.backgroundColor);
-
-			Box rightBox = Box.createVerticalBox();
-			Border emptyBorder = BorderFactory.createEmptyBorder();
-			rightBox.setBorder(emptyBorder);
-		
-			JLabel userName 	= new JLabel("Paul Hémique");
-			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
-			rightBox.add(userName);
-			
-			JLabel lastMsg 		= new JLabel("I spoke to our IT manager abo..."); //get 29 letters + [...]
-			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
-			lastMsg.setForeground(Color.gray);	
-			rightBox.add(lastMsg);
-			
-			JLabel paddingUB2 	= new JLabel("  ");
-			
-			//User Image
-			ImageIcon user 		= new ImageIcon("../resources/images/activet.png");
-			JLabel userL 		= new JLabel(user); 
-			
-
-			mainBox.add(userL);
-			mainBox.add(paddingUB2);
-			mainBox.add(rightBox);
-			
-			JButton buttonUser1 	= new JButton();
-			buttonUser1.setBackground(MainWindow.backgroundColor);
-			buttonUser1.setBorderPainted(false);
-			buttonUser1.add(mainBox);
-
-			buttonUser1.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {}
-				@Override
-	     			public void mousePressed(MouseEvent e) {
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-				@Override
-				public void mouseEntered(MouseEvent e){
-					setCursor(handCursor);
-					userName.setForeground(myBlue);
-	       			}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					setCursor(defaultCursor);
-					userName.setForeground(MainWindow.foregroundColor);
-				}
-			});
-			
-			panUsers.add(buttonUser1,BorderLayout.WEST);
-		}
-		
+		this.displayUsersPanel();		
 		
 		/*********************************************************************************************************/
 		/*********************************************************************************************************/
@@ -481,7 +431,7 @@ public class MainWindow extends JFrame{
 		/************************************END OF MESSAGES PART*************************************************/
 		/*********************************************************************************************************/
 		//SPLITS
-    		s1 	= new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, panUsers);
+    		s1 	= new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, this.panUsers);
 		s1.setDividerSize(0);
 		s1.setDividerLocation(185);
  		s1.setEnabled(false);
@@ -493,6 +443,69 @@ public class MainWindow extends JFrame{
 
 		
     		this.getContentPane().add(s2, BorderLayout.CENTER);
+	}
+
+	private void displayUsersPanel() {
+		/* Retrieve all the current active users */
+		for (User usr : this.master.getActiveUsersList()) {	
+			
+			Box mainBox = Box.createHorizontalBox();
+			mainBox.setBackground(MainWindow.backgroundColor);
+
+			Box rightBox = Box.createVerticalBox();
+			Border emptyBorder = BorderFactory.createEmptyBorder();
+			rightBox.setBorder(emptyBorder);
+
+			JLabel userName 	= new JLabel(usr.getUsername());
+			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+			rightBox.add(userName);
+
+			JLabel lastMsg 		= new JLabel("I spoke to our IT manager abo..."); //get 29 letters + [...]
+			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
+			lastMsg.setForeground(Color.gray);	
+			rightBox.add(lastMsg);
+
+			JLabel paddingUB2 	= new JLabel("  ");
+
+			JLabel userL 		= new JLabel(MainWindow.user); 
+
+
+			mainBox.add(userL);
+			mainBox.add(paddingUB2);
+			mainBox.add(rightBox);
+
+			JButton buttonUser1 	= new JButton();
+			buttonUser1.setBackground(MainWindow.backgroundColor);
+			buttonUser1.setBorderPainted(false);
+			buttonUser1.add(mainBox);
+
+			buttonUser1.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {}
+					@Override
+					public void mousePressed(MouseEvent e) {
+					}
+					@Override
+					public void mouseReleased(MouseEvent e) {
+					}
+					@Override
+					public void mouseEntered(MouseEvent e){
+					setCursor(MainWindow.handCursor);
+					userName.setForeground(myBlue);
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+					setCursor(MainWindow.defaultCursor);
+					userName.setForeground(MainWindow.foregroundColor);
+					}
+					});
+
+			this.panUsers.add(buttonUser1,BorderLayout.WEST);
+		}
+	}
+
+	/* Whether a user just got online or offline, we need to update the users panel */
+	public synchronized void notifyUserActivityModification() {
+		this.displayUsersPanel();
 	}
 	
 	public synchronized void notifyNewMainUserUsername(String username) {

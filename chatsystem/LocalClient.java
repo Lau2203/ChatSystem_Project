@@ -62,10 +62,12 @@ public class LocalClient extends Client {
 					break;
 
 				case USERNAME_MODIFICATION:
+					this.mw.notifyUserActivityModification();
 					break;
 
 				case NEW_ACTIVE_USER:
 					JOptionPane.showMessageDialog(null, this.networkManagerInformation.getUsername() + " is now online !");
+					this.mw.notifyUserActivityModification();
 					break;
 
 				case USER_LEFT_NETWORK:
