@@ -446,6 +446,7 @@ public class MainWindow extends JFrame{
 	}
 
 	private void displayUsersPanel() {
+		/* Clean the whole panel */
 		this.panUsers.removeAll();
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getActiveUsersList()) {	
@@ -503,6 +504,7 @@ public class MainWindow extends JFrame{
 			this.panUsers.add(buttonUser1,BorderLayout.WEST);
 		}
 
+		/* Draw the panel again */
 		this.panUsers.revalidate();
 		this.panUsers.repaint();
 	}
