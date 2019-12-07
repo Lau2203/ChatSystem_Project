@@ -33,8 +33,8 @@ public abstract class Client extends Thread {
 	private static final String DEFAULT_CONFIG_FILE_PATH 		= "../config.cfg";
 	private static final String DEFAULT_WITNESS_FILE_PATH 		= "../witness";
 
-	private static int DEFAULT_CONNECTION_LISTENER_PORT 	= 5555;
-	private static int DEFAULT_NETWORK_SIGNAL_LISTENER_PORT = 54321;
+	private static final int DEFAULT_CONNECTION_LISTENER_PORT 	= 5555;
+	private static final int DEFAULT_NETWORK_SIGNAL_LISTENER_PORT 	= 54321;
 
 	protected ArrayList<ChatSession> activeChatSessionList;
 
