@@ -446,6 +446,7 @@ public class MainWindow extends JFrame{
 	}
 
 	private void displayUsersPanel() {
+		this.panUsers.removeAll();
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getActiveUsersList()) {	
 			
@@ -501,6 +502,9 @@ public class MainWindow extends JFrame{
 
 			this.panUsers.add(buttonUser1,BorderLayout.WEST);
 		}
+
+		this.panUsers.revalidate();
+		this.panUsers.repaint();
 	}
 
 	/* Whether a user just got online or offline, we need to update the users panel */
