@@ -116,12 +116,18 @@ public class LocalClient extends Client {
 			JFrame frame = new JFrame();
 			do {
 				username = JOptionPane.showInputDialog(frame, "Your current username is not valid\nPlease enter a new username:", "Username not valid", JOptionPane.INFORMATION_MESSAGE);
-			} while(username == null || username.equals("") || username.equals(this.mainUser.getFingerprint()) || !this.isUsernameAvailable(username));
+			} while(username == null
+				|| username.equals("")
+				|| username.equals(this.mainUser.getFingerprint())
+				|| !this.isUsernameAvailable(username));
 		}
 
 		this.mainUser.setUsername(username);
+		/* Notify all current active clients that we changed our username */
 		this.notifyNewUsernameToBeSent();
+		/* Add or update the 'username' setting in the confiuration file */
 		ConfigParser.updateSetting("username", username);
+		/* Update the GUI */
 		this.mw.notifyNewMainUserUsername(username);
 	}
 

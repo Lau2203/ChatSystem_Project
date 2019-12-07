@@ -25,15 +25,11 @@ public class ConfigParser {
 
 	private static Hashtable<String, String> configBindings;
 
-	/* In number of bytes */
-	private static final int DEFAULT_FINGERPRINT_SIZE = 256;
-	private static final int DEFAULT_NETWORK_SIGNAL_INFORMATION_SIZE = 2;
-
 	private static void init(String cfp) {
-		ConfigParser.configFilePath = cfp;
+		ConfigParser.configFilePath 	= cfp;
 		ConfigParser.hasBeenInitialized = true;
-		ConfigParser.hasBeenParsed = false;
-		ConfigParser.configBindings = new Hashtable<String, String>();
+		ConfigParser.hasBeenParsed 	= false;
+		ConfigParser.configBindings 	= new Hashtable<String, String>();
 	}
 
 	private static void open() throws FileNotFoundException {

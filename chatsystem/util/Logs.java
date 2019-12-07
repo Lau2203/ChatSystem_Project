@@ -1,7 +1,6 @@
 package chatsystem.util;
 
 import java.io.IOException;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -58,9 +57,9 @@ public class Logs {
 	public synchronized static void printerro(String s) { if (Logs.isERROEnabled) { Logs.println("[x] " + s); }}
 
 	public synchronized static void println(String instance, String s) 	{ Logs.println("[+] [" + instance + "] " + s); }
-	public synchronized static void printinfo(String instance, String s) { if (Logs.isINFOEnabled) { Logs.println("[+] [" + instance + "] " + s); }}
-	public synchronized static void printwarn(String instance, String s) { if (Logs.isWARNEnabled) { Logs.println("[!] [" + instance + "] " + s); }}
-	public synchronized static void printerro(String instance, String s) { if (Logs.isERROEnabled) { Logs.println("[x] [" + instance + "] " + s); }}
+	public synchronized static void printinfo(String instance, String s) 	{ if (Logs.isINFOEnabled) { Logs.println("[+] [" + instance + "] " + s); }}
+	public synchronized static void printwarn(String instance, String s) 	{ if (Logs.isWARNEnabled) { Logs.println("[!] [" + instance + "] " + s); }}
+	public synchronized static void printerro(String instance, String s) 	{ if (Logs.isERROEnabled) { Logs.println("[x] [" + instance + "] " + s); }}
 
 	public synchronized static void readLogs() {
 
