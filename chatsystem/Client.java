@@ -26,35 +26,42 @@ public abstract class Client extends Thread {
 
 	protected NetworkManagerInformation networkManagerInformation;
 
-	protected EncryptionHandler encryptionHandler;
+	protected EncryptionHandler 	encryptionHandler;
 	protected MessageHistoryManager messageHistoryManager;
 
-	protected static final String DEFAULT_MESSAGE_HISTORY_FILE_PATH = "../history.mh";
-	protected static final String DEFAULT_CONFIG_FILE_PATH = "../config.cfg";
-	protected static final String DEFAULT_WITNESS_FILE_PATH = "../witness";
+	private static final String DEFAULT_MESSAGE_HISTORY_FILE_PATH = "../history.mh";
+	private static final String DEFAULT_CONFIG_FILE_PATH = "../config.cfg";
+	private static final String DEFAULT_WITNESS_FILE_PATH = "../witness";
+
+	private static int DEFAULT_CONNECTION_LISTENER_PORT = 5555;
+	private static int DEFAULT_NETWORK_SIGNAL_LISTENER_PORT = 54321;
 
 	protected ArrayList<ChatSession> activeChatSessionList;
 
 	protected boolean isLogEnabled;
 
-	protected String logFilePath;
-	protected String witnessFilePath;
-	protected String messageHistoryFilePath;
+	private String logFilePath;
+	private String witnessFilePath;
+	private String messageHistoryFilePath;
+
+	private int connectionListenerPort;
+	private int networkSignalListenerPort;
 
 	protected String instanceName = "Client";
 
-	protected String lock = new String();
-	protected String childrenLock = new String();
+	/* Lock objects for synchronized operationis */
+	protected String lock 		= new String();
+	protected String childrenLock 	= new String();
 
 	protected Semaphore semaphore = new Semaphore(0, true);
 
-	protected Client(int connectionListenerPort) {
+	protected Client() {
 
 		this.initWithConfigFile();
 
 		this.mainUser 			= new MainUser();
 
-		this.netmanager 		= new NetworkManager(this, this.mainUser, connectionListenerPort);
+		this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort);
 
 		this.networkManagerInformation	= new NetworkManagerInformation();
 
@@ -67,13 +74,19 @@ public abstract class Client extends Thread {
 	private void initWithConfigFile() {
 
 		String isLogEnabledString;
+		String clp, nslp;
 
 		this.parseConfigFile();
+
+		isLogEnabledString		= ConfigParser.get("log-filling");
 
 		this.logFilePath 		= ConfigParser.get("logfile");	
 		this.messageHistoryFilePath 	= ConfigParser.get("message-history-path");	
 		this.witnessFilePath 		= ConfigParser.get("witness-file-path");
-		isLogEnabledString		= ConfigParser.get("log-filling");
+
+		/* Fetch the ConnectionListener port and the NetworkSignalListener port */
+		clp 	= ConfigParser.get("server-port");
+		nslp 	= ConfigParser.get("nsl-port");
 
 
 		if (this.witnessFilePath == null)
@@ -81,6 +94,18 @@ public abstract class Client extends Thread {
 
 		if (this.messageHistoryFilePath == null)
 			this.messageHistoryFilePath = DEFAULT_MESSAGE_HISTORY_FILE_PATH;
+
+		if (clp == null) {
+			this.connectionListenerPort = DEFAULT_CONNECTION_LISTENER_PORT;
+		} else {
+			this.connectionListenerPort = Integer.parseInt(clp);
+		}
+
+		if (nslp == null) {
+			this.networkSignalListenerPort = DEFAULT_NETWORK_SIGNAL_LISTENER_PORT;
+		} else {
+			this.networkSignalListenerPort = Integer.parseInt(nslp);
+		}
 
 		if (isLogEnabledString == null || !isLogEnabledString.equals("true")) {
 			this.isLogEnabled = false;

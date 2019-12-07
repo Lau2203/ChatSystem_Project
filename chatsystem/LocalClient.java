@@ -21,8 +21,8 @@ public class LocalClient extends Client {
 
 	MainWindow mw;
 
-	public LocalClient(int port) {
-		super(port);
+	public LocalClient() {
+		super();
 	}
 
 	public void run() {
@@ -126,6 +126,6 @@ public class LocalClient extends Client {
 	}
 
 	public static void main(String[] args) {
-		(new LocalClient(5555)).start();
+		(new LocalClient()).start();
 	}
 }

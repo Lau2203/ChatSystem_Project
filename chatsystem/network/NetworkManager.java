@@ -64,11 +64,9 @@ public class NetworkManager extends Thread {
 
 	private Semaphore semaphore = new Semaphore(0, true);
 
-	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort) {
+	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort, int listeningUDPPort) {
 
-		/* ====================== CAREFULL ======================= */
-		int networkSignalListenerListeningPort 	= Integer.parseInt(ConfigParser.get("nsl-port"));
-		this.networkSignalListenerListeningPort = networkSignalListenerListeningPort;
+		this.networkSignalListenerListeningPort = listeningUDPPort;
 
 		this.connectionListenerListeningPort = listeningTCPPort;
 
