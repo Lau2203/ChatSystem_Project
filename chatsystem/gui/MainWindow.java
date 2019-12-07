@@ -30,6 +30,7 @@ import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
 import chatsystem.User;
+import chatsystem.Message;
 
 @SuppressWarnings("serial")
 
@@ -49,7 +50,8 @@ public class MainWindow extends JFrame{
 	private JSplitPane s2;
 
 	// User Box - SOUTH.LEFT
-   	private JPanel panUsers 		= new JPanel();
+   	private JPanel panUsers 	= new JPanel();
+   	private JPanel panMsg 		= new JPanel();
 
 	private JLabel textName;
 
@@ -226,14 +228,13 @@ public class MainWindow extends JFrame{
 
 		/*********************************************************************************************************/
 		/**************************************Messages***********************************************************/
-		//Messages
-   	 	JPanel panMsg 		= new JPanel();
-    		panMsg.setBackground(MainWindow.backgroundColor); 
+
+    		this.panMsg.setBackground(MainWindow.backgroundColor); 
 
 		//Main Box
 		Box mainBoxM = Box.createVerticalBox();
 		mainBoxM.setBackground(MainWindow.backgroundColor);
-		panMsg.add(mainBoxM);
+		this.panMsg.add(mainBoxM);
 		
 		
 		//NameBox
@@ -458,6 +459,7 @@ public class MainWindow extends JFrame{
 			Border emptyBorder = BorderFactory.createEmptyBorder();
 			rightBox.setBorder(emptyBorder);
 
+			/* Retrieve the user's username */
 			JLabel userName 	= new JLabel(usr.getUsername());
 			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 			rightBox.add(userName);
@@ -482,7 +484,9 @@ public class MainWindow extends JFrame{
 			buttonUser1.add(mainBox);
 
 			buttonUser1.addMouseListener(new MouseListener() {
-					public void mouseClicked(MouseEvent e) {}
+					public void mouseClicked(MouseEvent e) {
+						updateConversationPanel(usr);
+					}
 					@Override
 					public void mousePressed(MouseEvent e) {
 					}
@@ -509,6 +513,10 @@ public class MainWindow extends JFrame{
 		this.panUsers.repaint();
 	}
 
+	private void updateConversationPanel(User user) {
+		System.out.println("NEED TO UPDATE CONVERSATION PANEL !");
+	}
+
 	/* Whether a user just got online or offline, we need to update the users panel */
 	public synchronized void notifyUserActivityModification() {
 		this.displayUsersPanel();
@@ -516,6 +524,19 @@ public class MainWindow extends JFrame{
 	
 	public synchronized void notifyNewMainUserUsername(String username) {
 		this.textName.setText(username);
+	}
+
+	public synchronized void notifyNewUserUsername() {
+		/* It will fetch the new username while redrawing the whole panel */
+		this.displayUsersPanel();
+		/* TODO */
+		/* If we are focused on the conversation of the user which has changed its 
+		 * username we need to update the title of the conversation with its new 
+		 * username */
+	}
+
+	public synchronized void notifyNewMessage(User recipient, Message msg) {
+		
 	}
 
 	public static void main(String[] args) {
