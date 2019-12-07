@@ -9,6 +9,7 @@ import java.lang.Thread;
 import java.io.IOException;
 
 import chatsystem.MainUser;
+import chatsystem.MessageHistoryManager;
 
 import chatsystem.network.NetworkManager;
 import chatsystem.network.NetworkManagerInformation;
@@ -26,15 +27,19 @@ public abstract class Client extends Thread {
 	protected NetworkManagerInformation networkManagerInformation;
 
 	protected EncryptionHandler encryptionHandler;
+	protected MessageHistoryManager messageHistoryManager;
 
+	protected static final String DEFAULT_MESSAGE_HISTORY_FILE_PATH = "../history.mh";
 	protected static final String DEFAULT_CONFIG_FILE_PATH = "../config.cfg";
 	protected static final String DEFAULT_WITNESS_FILE_PATH = "../witness";
 
 	protected ArrayList<ChatSession> activeChatSessionList;
 
+	protected boolean isLogEnabled;
+
 	protected String logFilePath;
 	protected String witnessFilePath;
-	protected boolean isLogEnabled;
+	protected String messageHistoryFilePath;
 
 	protected String instanceName = "Client";
 
@@ -56,6 +61,7 @@ public abstract class Client extends Thread {
 		this.activeChatSessionList 	= new ArrayList<ChatSession>();
 
 		this.encryptionHandler 		= new EncryptionHandler(this.witnessFilePath);
+		this.messageHistoryManager	= new MessageHistoryManager(this.messageHistoryFilePath);
 	}
 
 	private void initWithConfigFile() {
@@ -64,13 +70,17 @@ public abstract class Client extends Thread {
 
 		this.parseConfigFile();
 
-		this.logFilePath 	= ConfigParser.get("logfile");	
-		this.witnessFilePath 	= ConfigParser.get("witness-file-path");
-		isLogEnabledString	= ConfigParser.get("log-filling");
+		this.logFilePath 		= ConfigParser.get("logfile");	
+		this.messageHistoryFilePath 	= ConfigParser.get("message-history-path");	
+		this.witnessFilePath 		= ConfigParser.get("witness-file-path");
+		isLogEnabledString		= ConfigParser.get("log-filling");
 
 
 		if (this.witnessFilePath == null)
 			this.witnessFilePath = DEFAULT_WITNESS_FILE_PATH;
+
+		if (this.messageHistoryFilePath == null)
+			this.messageHistoryFilePath = DEFAULT_MESSAGE_HISTORY_FILE_PATH;
 
 		if (isLogEnabledString == null || !isLogEnabledString.equals("true")) {
 			this.isLogEnabled = false;

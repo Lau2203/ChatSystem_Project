@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class MessageHistoryManager {
 
-	private static String MESSAGE_HISTORY_PATH;
+	private String messageHistoryPath;
 
 	private ArrayList<MessageHistory> messageHistoryList;
 
 	public MessageHistoryManager(String messageHistoryPath) {
-		MessageHistoryManager.MESSAGE_HISTORY_PATH = messageHistoryPath;
+		this.messageHistoryPath = messageHistoryPath;
 		this.messageHistoryList = new ArrayList<MessageHistory>();
 	}
 
@@ -18,19 +18,25 @@ public class MessageHistoryManager {
 
 	}
 
-	public MessageHistory getMessageHistory(User recipientUser) {
+	public synchronized MessageHistory getMessageHistory(User recipientUser) {
+		for (MessageHistory mh: this.messageHistoryList) {
+			if (mh.getRecipientUser().equals(recipientUser)) {
+				return mh;
+			}
+		}
+
 		return null;
 	}
 
-	public void addMessage(User recipientUser, Message msg) {
+	public synchronized void addMessage(User recipientUser, Message msg) {
 
 	}
 
-	public void fetchMessageHistory() {
+	public synchronized void fetchMessageHistory() {
 
 	}
 
-	public void updateMessageHistory() {
+	public synchronized void updateMessageHistory() {
 
 	}
 }

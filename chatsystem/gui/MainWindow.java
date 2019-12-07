@@ -24,19 +24,23 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 
 import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
 import chatsystem.User;
 import chatsystem.Message;
+import chatsystem.MessageHistoryManager;
 
 @SuppressWarnings("serial")
 
 public class MainWindow extends JFrame{
 
 	private Client master;
+	private MessageHistoryManager messageHistoryManager;
 
 	public static final int WIDTH 	= 900;
 	public static final int HEIGHT 	= 650;
@@ -73,11 +77,12 @@ public class MainWindow extends JFrame{
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 
-	public MainWindow(Client master)  {  
+	public MainWindow(Client master, MessageHistoryManager mhm)  {  
 
 		super();   
 	
 		this.master = master;
+		this.messageHistoryManager = mhm;
       
 	  	this.setTitle("Aura - Chat System");
 		this.setSize(MainWindow.WIDTH, MainWindow.HEIGHT); 				
@@ -379,6 +384,18 @@ public class MainWindow extends JFrame{
 		    }
 		});	
 
+		writeMsg.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					e.consume();
+					sendMessage();
+				}
+			}
+			public void keyTyped(KeyEvent e) {}
+			public void keyReleased(KeyEvent e) {}
+		});
+
 		//Do not split words
 		writeMsg.setWrapStyleWord(true);
 		writeMsg.setLineWrap(true);
@@ -408,7 +425,9 @@ public class MainWindow extends JFrame{
 				}
 			});
 		sendButton.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {}
+				public void mouseClicked(MouseEvent e) {
+					sendMessage();
+				}
 				@Override
 	     			public void mousePressed(MouseEvent e) {
 				}
@@ -537,6 +556,10 @@ public class MainWindow extends JFrame{
 
 	public synchronized void notifyNewMessage(User recipient, Message msg) {
 		
+	}
+
+	private void sendMessage() {
+		System.out.println("NEED TO SEND MESSAGE RIGHT NOW !");		
 	}
 
 	public static void main(String[] args) {

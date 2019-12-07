@@ -101,7 +101,7 @@ public class LocalClient extends Client {
 	}
 
 	private void runGUI() {
-		this.mw = new MainWindow(this);
+		this.mw = new MainWindow(this, this.messageHistoryManager);
 		this.mw.setVisible(true);
 	}
 
