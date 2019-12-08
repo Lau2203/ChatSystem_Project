@@ -61,6 +61,7 @@ public class MainWindow extends JFrame{
 
 	private Box search;
 	private boolean isSearchBarEmpty = true;
+	private boolean isMsgBarEmpty = true;
 
 	private JLabel textName;
 
@@ -218,12 +219,7 @@ public class MainWindow extends JFrame{
 				textField.setBorder(borderB);
 			}          
 		    	@Override
-		    	public void mouseClicked(MouseEvent e) {
-					//JTextField texteField = ((JTextField)e.getSource());
-					//textField.setText("");
-					//textField.getFont().deriveFont(Font.PLAIN);
-					//textField.setForeground(MainWindow.foregroundColor);
-		    }
+		    	public void mouseClicked(MouseEvent e) {}
 		});
 
 		textField.addFocusListener(new FocusListener() {
@@ -231,7 +227,6 @@ public class MainWindow extends JFrame{
 			public void focusGained(FocusEvent e) {
 				if (isSearchBarEmpty) {
 					textField.setText("");
-				} else {
 					textField.setForeground(MainWindow.foregroundColor);
 				}
 			}
@@ -402,13 +397,33 @@ public class MainWindow extends JFrame{
 			}          
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
-					JTextArea writeMsg = ((JTextArea)e.getSource());
-					writeMsg.setText("");
-					writeMsg.getFont().deriveFont(Font.PLAIN);
-					writeMsg.setFont(new Font("CALIBRI", Font.PLAIN, 13));
-					writeMsg.setForeground(MainWindow.foregroundColor);
+					//JTextArea writeMsg = ((JTextArea)e.getSource());
+					//writeMsg.setText("");
+					//writeMsg.getFont().deriveFont(Font.PLAIN);
+					//writeMsg.setFont(new Font("CALIBRI", Font.PLAIN, 13));
+					//writeMsg.setForeground(MainWindow.foregroundColor);
 		    }
 		});	
+
+		writeMsg.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (isMsgBarEmpty) {
+					writeMsg.setText("");
+					writeMsg.setForeground(MainWindow.foregroundColor);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (writeMsg.getText().equals("")) {
+					isMsgBarEmpty = true;
+					writeMsg.setText("Write your message...");
+					writeMsg.setForeground(Color.gray);
+				} else {
+					isMsgBarEmpty = false;
+				}
+			}
+		});
 
 		writeMsg.addKeyListener(new KeyListener() {
 			@Override
