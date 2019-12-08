@@ -244,7 +244,7 @@ public abstract class Client extends Thread {
 
 	/* Returns whether or not it was able to set that new username */
 	public boolean setNewUsername(String username) {
-		if (!this.isUsernameAvailable(username))	
+		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username))	
 			return false;
 
 		this.mainUser.setUsername(username);

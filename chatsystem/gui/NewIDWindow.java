@@ -27,14 +27,18 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 
-import chatsystem.LocalClient;
+import chatsystem.Client;
 
 @SuppressWarnings("serial")
 public class NewIDWindow extends JFrame {
 
-	public NewIDWindow()  {    
+	private Client master;
+
+	public NewIDWindow(Client master)  {    
 
 		super();         
+
+		this.master = master;
 
 		Color myBlue = new Color(24, 147, 248);
 
@@ -143,6 +147,7 @@ public class NewIDWindow extends JFrame {
 		button.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				setUsername(new String(newIDF.getText()));
 			}
 			@Override
      			public void mousePressed(MouseEvent e) {
@@ -168,6 +173,7 @@ public class NewIDWindow extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					e.consume();
 					button.doClick();
+					setUsername(new String(newIDF.getText()));
 				}
 			}
 			public void keyTyped(KeyEvent e) {}
@@ -180,10 +186,16 @@ public class NewIDWindow extends JFrame {
 		this.add(mainBox);
 	}
 			
-		
-	public static void main(String[] args) {
-		NewIDWindow niw = new NewIDWindow();
-		niw.setVisible(true);
+
+	private void setUsername(String username) {
+
+		boolean hasBeenSet = false;
+
+		if (this.master.setNewUsername(username)) {
+			this.setVisible(false);
+			this.master.wakeUp();
+			this.dispose();
+		}
 	}
 }
 

@@ -22,12 +22,17 @@ import java.awt.Cursor;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
+
 import java.awt.event.MouseListener;
 import java.awt.event.KeyListener;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowAdapter;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowEvent;
 
 import chatsystem.gui.UserBox;
 
@@ -95,7 +100,13 @@ public class MainWindow extends JFrame{
 		this.setLocationRelativeTo(null); 
 		this.getContentPane().setBackground(MainWindow.backgroundColor);
 		this.setResizable(false); 			
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				shutdown();
+			}
+		});
 		
 	
 		//About US - NORTH.LEFT
@@ -531,7 +542,6 @@ public class MainWindow extends JFrame{
 		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		msgBox.add(rightBox, BorderLayout.EAST);
 
-
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
 		
 		if (mh == null) {
@@ -605,8 +615,8 @@ public class MainWindow extends JFrame{
 		this.displayUsersPanel();
 	}
 	
-	public synchronized void notifyNewMainUserUsername(String username) {
-		this.textName.setText(username);
+	public synchronized void notifyNewMainUserUsername() {
+		this.textName.setText(this.master.getMainUser().getUsername());
 	}
 
 	public synchronized void notifyNewUserUsername() {
@@ -627,6 +637,11 @@ public class MainWindow extends JFrame{
 
 	private void sendMessage() {
 		System.out.println("NEED TO SEND MESSAGE RIGHT NOW !");		
+	}
+
+	private void shutdown() {
+		System.out.println("CLOSING");
+		System.exit(1);
 	}
 
 	public static void main(String[] args) {

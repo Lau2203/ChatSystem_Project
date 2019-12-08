@@ -16,6 +16,7 @@ import chatsystem.util.ConfigParser;
 
 import chatsystem.gui.ConnectionWindow;
 import chatsystem.gui.MainWindow;
+import chatsystem.gui.NewIDWindow;
 
 public class LocalClient extends Client {
 
@@ -133,32 +134,31 @@ public class LocalClient extends Client {
 	/* Function for mandatory setting the username
 	 * Open JOptionPane until a valid username is entered */
 	private void mandatorySetUsername() {
+
 		boolean usernameWasModified = false;
 		String username = ConfigParser.get("username");
 
-		/* Main user's username needs to be set */
-		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username)) {
-			JFrame frame = new JFrame();
-			do {
-				username = JOptionPane.showInputDialog(frame,
-									"Your current username is not valid\nPlease enter a new username:",
-									"Username not valid",
-									JOptionPane.INFORMATION_MESSAGE);
-			} while(username == null
-				|| username.equals("")
-				|| username.equals(this.mainUser.getFingerprint())
-				|| !this.isUsernameAvailable(username));
+		/* If the Main User's username need to be set */
+		if (!this.setNewUsername(username)) {
+			this.mw.setVisible(false);
+
+			NewIDWindow nidw = new NewIDWindow(this);
+			nidw.setVisible(true);
+
+			/* Wait for the connection window to confirm the user is now connected */
+			synchronized(this.lock) {
+				try {
+					this.lock.wait();
+				} catch (InterruptedException ie) {ie.printStackTrace();}
+			}
+
+			this.mw.setVisible(true);
 		}
 
-		this.mainUser.setUsername(username);
-		/* Notify all current active clients that we changed our username */
-		this.notifyNewUsernameToBeSent();
-		/* Add or update the 'username' setting in the confiuration file */
-		ConfigParser.updateSetting("username", username);
-		/* Update the GUI */
-		this.mw.notifyNewMainUserUsername(username);
+		this.mw.notifyNewMainUserUsername();
 	}
 
+	/* Update the GUI */
 	public static void main(String[] args) {
 		(new LocalClient()).start();
 	}
