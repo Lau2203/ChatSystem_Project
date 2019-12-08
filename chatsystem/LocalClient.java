@@ -109,6 +109,9 @@ public class LocalClient extends Client {
 					user.getMessageHistory().addMessage(msg);
 
 					this.netmanager.notifyNewMessageToBeSent(user, msg);
+
+					this.mw.notifyNewMessage(user);
+
 					break;
 
 				default: break;

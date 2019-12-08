@@ -359,7 +359,7 @@ public class NetworkManager extends Thread {
 				return;
 			}
 
-			remote = new ConnectionHandler(clientConnection);	
+			remote = new ConnectionHandler(usr, clientConnection);	
 
 			this.connectionHandlers.add(remote);
 
@@ -372,6 +372,7 @@ public class NetworkManager extends Thread {
 		}
 
 		out.println(stringPacket);
+		out.flush();
 	}
 
 	/* Once it's been waken up, the NetworkManager needs to understand why
