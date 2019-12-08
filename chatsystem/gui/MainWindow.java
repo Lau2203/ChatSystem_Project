@@ -69,6 +69,7 @@ public class MainWindow extends JFrame{
 	private boolean isMsgBarEmpty = true;
 
 	private JLabel textName;
+	private JLabel userNameC;
 
 	/* Resources */
 	public static ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
@@ -278,7 +279,7 @@ public class MainWindow extends JFrame{
 		Box nameBox = Box.createHorizontalBox();
 		mainBoxM.add(nameBox);
 	
-		JLabel userNameC	= new JLabel("Paula Roïd ");
+		this.userNameC	= new JLabel("");
 		userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
 		JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
 		lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
@@ -605,7 +606,7 @@ public class MainWindow extends JFrame{
 	}
 
 	private void updateConversationPanel(User user) {
-		System.out.println("NEED TO UPDATE CONVERSATION PANEL !");
+		this.userNameC.setText(user.getUsername());
 		this.currentRecipient = user;
 		this.displayConversation();
 	}
@@ -640,7 +641,7 @@ public class MainWindow extends JFrame{
 	}
 
 	private void shutdown() {
-		System.out.println("CLOSING");
+		this.master.shutdown();
 		System.exit(1);
 	}
 

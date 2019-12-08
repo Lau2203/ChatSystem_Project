@@ -69,7 +69,9 @@ public class ConnectionListener extends Thread {
 					this.master.notifyNewConnection(clientSocket);
 				//}
 
-			} catch (IOException ioe) {ioe.printStackTrace();}
+			} catch (IOException ioe) {
+				/* Probably the NetworkManager trying to shutdown */
+			}
 		}
 	}
 

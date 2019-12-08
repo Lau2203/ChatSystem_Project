@@ -160,21 +160,23 @@ public class NetworkManager extends Thread {
 	/* Can only be called by the main client process */
 	public synchronized void shutdown() {
 
-		ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
+		synchronized(this.lock) {
+			ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
 
-		Logs.printinfo(this.instanceName, "Shutting down all the ConnectionHandlers...");
-		for (ConnectionHandler s: subs) {
+			Logs.printinfo(this.instanceName, "Shutting down all the ConnectionHandlers...");
+			for (ConnectionHandler s: subs) {
 
-			s.shutdown();
-		}		
+				s.shutdown();
+			}		
 
-		Logs.printinfo(this.instanceName, "Shutting down the ConnectionListener...");
-		try {
-			this.connectionListener.shutdown();
-			Logs.printinfo(this.instanceName, "All has been shot down successfully.");
-		} catch (IOException ioe) {
-			Logs.printerro(this.instanceName, "Issue while shutting down the connection listener, aborted.");
-			System.exit(1);
+			Logs.printinfo(this.instanceName, "Shutting down the ConnectionListener...");
+			try {
+				this.connectionListener.shutdown();
+				Logs.printinfo(this.instanceName, "All has been shot down successfully.");
+			} catch (IOException ioe) {
+				Logs.printerro(this.instanceName, "Issue while shutting down the connection listener, aborted.");
+				System.exit(1);
+			}
 		}
 	}
 

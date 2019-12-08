@@ -132,9 +132,9 @@ public abstract class Client extends Thread {
 		}
 	}
 
-	protected void command(String cmd) {
-		if 	(cmd.equals("quit")) { this.netmanager.shutdown(); System.exit(0); }
-		else if (cmd.equals("logs")) { Logs.readLogs(); }
+	public synchronized void shutdown() {
+		this.netmanager.shutdown();
+		System.exit(1);
 	}
 
 	public void notifyFromNetworkManager(NetworkManagerInformation ni) {
