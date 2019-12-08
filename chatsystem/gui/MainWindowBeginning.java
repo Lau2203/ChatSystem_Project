@@ -269,12 +269,22 @@ public class MainWindowBeginning extends JFrame{
 		imageLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		boxMsg.add(imageLogo);
 
+		ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsFinal1.png");
+		JLabel aboutUsFinal		= new JLabel(logo2); 
+
 		JLabel paddingT1 		= new JLabel(" ");
 		paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
 		boxMsg.add(paddingT1);
 		//About Us
 		Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs2.png");
 		Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs1.png");
+		
+		//Back
+		Icon backA		= new ImageIcon("../resources/images/back1.png");
+		Icon backB 		= new ImageIcon("../resources/images/back2.png");
+		
+		JButton backAButton	= new JButton(backA);
+		backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
 		
 		JButton buttonAU 	= new JButton(mouseExitedAU);
 		buttonAU.setBorder(BorderFactory.createLineBorder(Color.white));
@@ -283,7 +293,13 @@ public class MainWindowBeginning extends JFrame{
 			public void mouseClicked(MouseEvent e) {}
 			@Override
      			public void mousePressed(MouseEvent e) {
-				
+				panelMsg.removeAll();
+				backAButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+				panelMsg.add(backAButton);
+				aboutUsFinal.setAlignmentX(Component.CENTER_ALIGNMENT);
+				panelMsg.add(aboutUsFinal);
+				panelMsg.revalidate();
+				panelMsg.repaint();
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
@@ -301,6 +317,31 @@ public class MainWindowBeginning extends JFrame{
 				
 			}
 		});
+
+		backAButton.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {}
+			@Override
+     			public void mousePressed(MouseEvent e) {
+				
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
+				
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				backAButton.setIcon(backB);
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+				backAButton.setIcon(backA);
+				
+			}
+		});
+
+
 		boxMsg.add(buttonAU, BorderLayout.CENTER);
 
 		//Texte
