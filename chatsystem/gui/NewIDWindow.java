@@ -56,6 +56,9 @@ public class NewIDWindow extends JFrame {
 		// Logo
 		ImageIcon icon 		= new ImageIcon("../resources/images/Aura3.jpg");
 		JLabel image 		= new JLabel(icon); 
+
+		ImageIcon cross1 		= new ImageIcon("../resources/images/Cross.png");
+		JLabel cross 		= new JLabel(cross1); 
 		/* End of basic resources */ 
 
 		
@@ -73,11 +76,18 @@ public class NewIDWindow extends JFrame {
 		textLabelPadding.setForeground(Color.white);
 		textLabelPadding.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
 		JLabel textLabel	= new JLabel("Your last username is unavailable, please enter a new one.");
-		textLabel.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,17));
-		textLabel.setForeground(myBlue);
+		textLabel.setFont(new java.awt.Font("CALIBRI",Font.BOLD,13));
+		textLabel.setForeground(Color.red);
 		textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		cross.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		JLabel textLabelPadding2 = new JLabel("padding");
+		textLabelPadding2.setForeground(Color.white);
+		textLabelPadding2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
 		texte.add(textLabelPadding);
+		texte.add(cross);
 		texte.add(textLabel);
+		texte.add(textLabelPadding2);
 		mainBox.add(texte);
 
 		JTextField newIDF = new JTextField("Enter your new username...", 30);
