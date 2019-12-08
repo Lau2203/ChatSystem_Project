@@ -57,6 +57,8 @@ public class MainWindow extends JFrame{
    	private JPanel panUsers 	= new JPanel();
    	private JPanel panMsg 		= new JPanel();
 
+	private Box search;
+
 	private JLabel textName;
 
 	/* Resources */
@@ -183,7 +185,7 @@ public class MainWindow extends JFrame{
 
  		
 		//Search Bar
-		Box search = Box.createVerticalBox();
+		this.search = Box.createVerticalBox();
 		search.setBackground(MainWindow.backgroundColor);
 		
 
@@ -221,7 +223,7 @@ public class MainWindow extends JFrame{
 		    }
 		});
 
-		this.panUsers.add(search);		
+		this.panUsers.add(this.search);		
 
 		/************************************TO BE DONE IN USER BOX CLASS***************************************/
 		/*********************************************************************************************************/
@@ -468,6 +470,8 @@ public class MainWindow extends JFrame{
 	private void displayUsersPanel() {
 		/* Clean the whole panel */
 		this.panUsers.removeAll();
+		/* Do not forget to add the search bar back */
+		this.panUsers.add(this.search);
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getActiveUsersList()) {	
 			
