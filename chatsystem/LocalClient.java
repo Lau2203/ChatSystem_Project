@@ -72,7 +72,7 @@ public class LocalClient extends Client {
 	
 					/* If the user just got a valid username and didn't have one before */
 					if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
-						this.mw.notifyNewUserUsername();
+						this.mw.notifyNewUserUsername(usr);
 					}
 					break;
 
@@ -100,6 +100,15 @@ public class LocalClient extends Client {
 					recipient.getMessageHistory().addMessage(this.networkManagerInformation.getMessage());
 
 					this.mw.notifyNewMessage(recipient);
+					break;
+
+				case NEW_MESSAGE_TO_BE_SENT:
+					User user = this.networkManagerInformation.getRecipientUser();
+					Message msg = this.networkManagerInformation.getMessage();
+
+					user.getMessageHistory().addMessage(msg);
+
+					this.netmanager.notifyNewMessageToBeSent(user, msg);
 					break;
 
 				default: break;

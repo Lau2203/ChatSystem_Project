@@ -8,11 +8,8 @@ import java.lang.Thread;
 
 import java.io.IOException;
 
-import java.sql.Timestamp;
-
 import chatsystem.User;
 import chatsystem.MainUser;
-import chatsystem.MessageString;
 import chatsystem.MessageHistoryManager;
 
 import chatsystem.network.NetworkManager;
@@ -141,21 +138,6 @@ public abstract class Client extends Thread {
 		System.exit(1);
 	}
 
-	public void notifyNewMessageToBeSent(String content, User recipient) {
-		synchronized(this.childrenLock) {
-			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE_TO_BE_SENT);
-
-			MessageString msg = new MessageString(recipient, new Timestamp(System.currentTimeMillis()), false);
-			msg.setContent(content);
-
-			this.networkManagerInformation.setRecipientUser(recipient);
-			this.networkManagerInformation.setMessage(msg);
-			this.wakeUp();
-		}
-	}
-
 	public void notifyFromNetworkManager(NetworkManagerInformation ni) {
 		synchronized(this.childrenLock) {
 			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
@@ -279,5 +261,8 @@ public abstract class Client extends Thread {
 
 	public synchronized User getMainUser() {
 		return this.mainUser;
+	}
+
+	public synchronized void sendMessage() {
 	}
 }

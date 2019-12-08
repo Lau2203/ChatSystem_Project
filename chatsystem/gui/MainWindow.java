@@ -364,7 +364,7 @@ public class MainWindow extends JFrame{
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					e.consume();
-					sendMessage();
+					sendMessage(writeMsg.getText());
 				}
 			}
 			public void keyTyped(KeyEvent e) {}
@@ -401,7 +401,7 @@ public class MainWindow extends JFrame{
 			});
 		sendButton.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent e) {
-					sendMessage();
+					sendMessage(writeMsg.getText());
 				}
 				@Override
 	     			public void mousePressed(MouseEvent e) {
@@ -620,24 +620,26 @@ public class MainWindow extends JFrame{
 		this.textName.setText(this.master.getMainUser().getUsername());
 	}
 
-	public synchronized void notifyNewUserUsername() {
+	public synchronized void notifyNewUserUsername(User usr) {
 		/* It will fetch the new username while redrawing the whole panel */
 		this.displayUsersPanel();
-		/* TODO */
-		/* If we are focused on the conversation of the user which has changed its 
-		 * username we need to update the title of the conversation with its new 
-		 * username */
+		if (this.currentRecipient.equals(usr)) {
+			this.updateConversationPanel(usr);
+		}
 	}
 
 	public synchronized void notifyNewMessage(User recipient) {
-		/* TODO */	
-		/* Verify if the currently displayed conversation is with 'recipient' user.
-		 * if so, we need to update the conversation and fetch the recipient.getMessageHistory();
-		 * in order to display it  */
+		if (this.currentRecipient.equals(recipient)) {
+			displayConversation();
+		}
 	}
 
-	private void sendMessage() {
-		System.out.println("NEED TO SEND MESSAGE RIGHT NOW !");		
+	private void sendMessage(String content) {
+		if (content == null || content.equals("")) {
+			return;
+		}
+	
+		this.master.notifyNewMessageToBeSent(content, this.currentRecipient);
 	}
 
 	private void shutdown() {
