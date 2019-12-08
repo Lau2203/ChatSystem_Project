@@ -103,7 +103,6 @@ public class ConnectionWindow extends JFrame {
            	button.setBorder(BorderFactory.createLineBorder(Color.white));
 		paneltext.add(button);
 
-		//Changer bouton passage de la souris
 		button.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
