@@ -25,8 +25,10 @@ import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.awt.event.KeyListener;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.FocusEvent;
 
 import chatsystem.gui.UserBox;
 
@@ -58,6 +60,7 @@ public class MainWindow extends JFrame{
    	private JPanel panMsg 		= new JPanel();
 
 	private Box search;
+	private boolean isSearchBarEmpty = true;
 
 	private JLabel textName;
 
@@ -216,11 +219,32 @@ public class MainWindow extends JFrame{
 			}          
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
-					JTextField texteField = ((JTextField)e.getSource());
-					textField.setText("");
-					textField.getFont().deriveFont(Font.PLAIN);
-					textField.setForeground(MainWindow.foregroundColor);
+					//JTextField texteField = ((JTextField)e.getSource());
+					//textField.setText("");
+					//textField.getFont().deriveFont(Font.PLAIN);
+					//textField.setForeground(MainWindow.foregroundColor);
 		    }
+		});
+
+		textField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (isSearchBarEmpty) {
+					textField.setText("");
+				} else {
+					textField.setForeground(MainWindow.foregroundColor);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (textField.getText().equals("")) {
+					isSearchBarEmpty = true;
+					textField.setText(" Search something ? ...               ");
+					textField.setForeground(Color.gray);
+				} else {
+					isSearchBarEmpty = false;
+				}
+			}
 		});
 
 		this.panUsers.add(this.search);		
