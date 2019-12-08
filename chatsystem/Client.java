@@ -67,11 +67,11 @@ public abstract class Client extends Thread {
 		this.networkManagerInformation	= new NetworkManagerInformation();
 
 		this.encryptionHandler 		= new EncryptionHandler(this.witnessFilePath);
-		this.messageHistoryManager	= new MessageHistoryManager(this.messageHistoryFilePath);
-
-		this.messageHistoryManager.fetchMessageHistory();
+		this.messageHistoryManager	= new MessageHistoryManager(this, this.messageHistoryFilePath);
 
 		this.userList = new ArrayList<User>();
+
+		this.messageHistoryManager.fetchMessageHistory();
 	}
 
 	private void initWithConfigFile() {

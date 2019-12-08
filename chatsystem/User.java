@@ -2,11 +2,15 @@ package chatsystem;
 
 import java.net.InetAddress;
 
+import chatsystem.MessageHistory;
+
 public class User {
 
 	private String fingerprint;
 	private String username;
 	private InetAddress address;
+
+	private MessageHistory messageHistory;
 
 	private boolean isActive;
 
@@ -14,8 +18,9 @@ public class User {
 		this.fingerprint = new String();
 		this.username = new String();
 		this.address = null;
-
 		this.isActive = false;
+
+		this.messageHistory = null;
 	}
 
 	public User(String fingerprint) {
@@ -23,6 +28,8 @@ public class User {
 		this.username = null;
 		this.address = null;
 		this.isActive = false;
+
+		this.messageHistory = null;
 	}
 
 	public User(String fingerprint, String username) {
@@ -30,6 +37,8 @@ public class User {
 		this.username = username;
 		this.address = null;
 		this.isActive = false;
+
+		this.messageHistory = null;
 	}
 
 	public User(String fingerprint, String username, InetAddress address) {
@@ -37,6 +46,8 @@ public class User {
 		this.username = username;
 		this.address = address;
 		this.isActive = false;
+
+		this.messageHistory = null;
 	}
 
 	public synchronized String getFingerprint() {
@@ -55,6 +66,10 @@ public class User {
 		return this.isActive;
 	}
 
+	public synchronized MessageHistory getMessageHistory() {
+		return this.messageHistory;
+	}
+
 	public synchronized void setFingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
 	}
@@ -69,5 +84,9 @@ public class User {
 
 	public synchronized void setActive(boolean active) {
 		this.isActive = active;
+	}
+
+	public synchronized void setMessageHistory(MessageHistory mh) {
+		this.messageHistory = mh;
 	}
 }

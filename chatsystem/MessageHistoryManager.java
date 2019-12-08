@@ -15,11 +15,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import chatsystem.Client;
 import chatsystem.Message;
 import chatsystem.util.Logs;
 
 /* extends DefaultHandler for xml parsing */
 public class MessageHistoryManager extends DefaultHandler {
+
+	private Client master;
 
 	private String messageHistoryPath;
 
@@ -27,7 +30,8 @@ public class MessageHistoryManager extends DefaultHandler {
 
 	private String instanceName = "MessageHistoryManager";
 
-	public MessageHistoryManager(String messageHistoryPath) {
+	public MessageHistoryManager(Client master, String messageHistoryPath) {
+		this.master = master;
 		this.messageHistoryPath = messageHistoryPath;
 		this.messageHistoryList = new ArrayList<MessageHistory>();
 	}
@@ -53,7 +57,7 @@ public class MessageHistoryManager extends DefaultHandler {
 	public synchronized void fetchMessageHistory() {
 
 		File xmlFile;
-		MessageHistoryXMLParser mhxmlp = new MessageHistoryXMLParser();
+		MessageHistoryXMLParser mhxmlp = new MessageHistoryXMLParser(this.master);
 
 		try {
 			xmlFile = new File(this.messageHistoryPath);
@@ -104,11 +108,5 @@ public class MessageHistoryManager extends DefaultHandler {
 
 		out.flush();
 		out.close();
-	}
-
-	public static void main(String[] args) {
-		MessageHistoryManager mhm = new MessageHistoryManager("../history.mh");
-		mhm.fetchMessageHistory();
-		mhm.saveMessageHistory();
 	}
 }

@@ -11,6 +11,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import chatsystem.Client;
 import chatsystem.User;
 import chatsystem.Message;
 import chatsystem.MessageString;
@@ -18,14 +19,18 @@ import chatsystem.MessageHistory;
 
 public class MessageHistoryXMLParser extends DefaultHandler {
 
+	private Client master;
+
 	private ArrayList<MessageHistory> messageHistoryList;
 
 	private MessageHistory currentMessageHistory;
 	private MessageString currentMessage;
+	private User currentRecipient;
 
 	private boolean isInMessage = false;
 
-	public MessageHistoryXMLParser() {
+	public MessageHistoryXMLParser(Client master) {
+		this.master = master;
 		this.messageHistoryList = new ArrayList<MessageHistory>();
 	}
 
@@ -40,9 +45,10 @@ public class MessageHistoryXMLParser extends DefaultHandler {
 		if (qName.equalsIgnoreCase("recipient")) {
 			String fingerprint = attributes.getValue("fingerprint");
 
-			this.currentMessageHistory = new MessageHistory(new User(fingerprint));
-			System.out.println("AFTER");
-			System.out.flush();
+			/* Fetch the user in the maintained user list of the main client process */
+			this.currentRecipient = this.master.getUser(fingerprint);
+
+			this.currentMessageHistory = new MessageHistory(this.currentRecipient);
 
 		} else if (qName.equalsIgnoreCase("message")) {
 			Timestamp ts = Timestamp.valueOf(attributes.getValue("timestamp"));
@@ -63,10 +69,10 @@ public class MessageHistoryXMLParser extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equalsIgnoreCase("recipient")) {
 			this.messageHistoryList.add(this.currentMessageHistory);
+			this.currentRecipient.setMessageHistory(this.currentMessageHistory);
 
 		} else if (qName.equalsIgnoreCase("message")) {
 			this.currentMessageHistory.addMessage(this.currentMessage);
-			System.out.println(this.currentMessage.getContent());
 			this.isInMessage = false;
 		}
 	}
