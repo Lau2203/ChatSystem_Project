@@ -1,13 +1,31 @@
 
 package chatsystem;
 
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.File;
+
 import java.util.ArrayList;
 
-public class MessageHistoryManager {
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import chatsystem.Message;
+import chatsystem.util.Logs;
+
+/* extends DefaultHandler for xml parsing */
+public class MessageHistoryManager extends DefaultHandler {
 
 	private String messageHistoryPath;
 
 	private ArrayList<MessageHistory> messageHistoryList;
+
+	private String instanceName = "MessageHistoryManager";
 
 	public MessageHistoryManager(String messageHistoryPath) {
 		this.messageHistoryPath = messageHistoryPath;
@@ -34,9 +52,63 @@ public class MessageHistoryManager {
 
 	public synchronized void fetchMessageHistory() {
 
+		File xmlFile;
+		MessageHistoryXMLParser mhxmlp = new MessageHistoryXMLParser();
+
+		try {
+			xmlFile = new File(this.messageHistoryPath);
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser saxParser = factory.newSAXParser();
+			saxParser.parse(xmlFile, mhxmlp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		this.messageHistoryList = mhxmlp.getMessageHistoryList();
 	}
 
 	public synchronized void updateMessageHistory() {
 
+	}
+
+	public synchronized void saveMessageHistory() {
+
+		PrintWriter out;
+
+		try {
+			out = new PrintWriter(new FileWriter(this.messageHistoryPath));	
+		} catch (IOException ioe) {
+			Logs.printerro(this.instanceName, "Could not write in file");
+			return;
+		}
+
+		out.println("<?xml version=\"1.0\"?>");
+
+		for (MessageHistory mh: this.messageHistoryList) {
+
+			out.println("<recipient fingerprint=\"" + mh.getRecipientUser().getFingerprint() + "\">");
+
+			for (Message msg: mh.getMessageList()) {
+				if (msg.getHasBeenSentByRecipient()) {
+					out.print("<message from=\"him\" timestamp=\"" + msg.getTimestamp() + "\">");
+				} else {
+					out.print("<message from=\"me\" timestamp=\"" + msg.getTimestamp() + "\">");
+				}
+
+				out.print(msg.getContent());
+				out.println("</message>");	
+			}
+
+			out.println("</recipient>");
+		}
+
+		out.flush();
+		out.close();
+	}
+
+	public static void main(String[] args) {
+		MessageHistoryManager mhm = new MessageHistoryManager("../history.mh");
+		mhm.fetchMessageHistory();
+		mhm.saveMessageHistory();
 	}
 }

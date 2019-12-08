@@ -18,8 +18,7 @@ import java.lang.Thread;
 import java.sql.Timestamp;
 
 /* Creating a new user when there is a new active client */
-import chatsystem.User;
-/* Reference to the main user, only for NetworkSignalListener, in order
+import chatsystem.User; /* Reference to the main user, only for NetworkSignalListener, in order
  * for him to be able to directly respond to request with the main user's username */
 import chatsystem.MainUser;
 import chatsystem.Client;
@@ -243,16 +242,17 @@ public class NetworkManager extends Thread {
 		}
 	}
 	/* Can only be called by the NetworkSignalListener */
-	protected void notifyNewActiveClient(String fingerprint, InetAddress address) {
+	protected void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
 
 		synchronized(this.childrenLock) {
 
 			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
 
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
 
 			this.networkManagerInformation.setFingerprint(fingerprint);
 			this.networkManagerInformation.setAddress(address);
+			this.networkManagerInformation.setUsername(username);
 
 			this.wakeUp();
 		}
@@ -310,50 +310,6 @@ public class NetworkManager extends Thread {
 			this.networkManagerInformation.setMessage(msg);
 
 			this.wakeUp();
-		}
-	}
-
-	private void handleNewActiveClient(String fingerprint, InetAddress remoteAddress) {
-
-		System.out.println(this.instanceName + " : CREATION OF NEW USER with fingerprint " + this.networkManagerInformation.getFingerprint());
-		System.out.flush();
-
-		User new_usr = new User();
-		new_usr.setFingerprint(fingerprint);
-		new_usr.setAddress(remoteAddress);
-
-		this.activeUsersList.add(new_usr);	
-	}
-
-	private void handleUsernameModification(String fingerprint, InetAddress remoteAddress, String username) {
-
-		User usr = this.getUser(fingerprint);
-		if (usr == null) {
-			usr = new User();
-			usr.setFingerprint(fingerprint);
-			usr.setAddress(remoteAddress);
-			usr.setUsername(username);
-
-			this.activeUsersList.add(usr);
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
-		} else {
-			/* Happens when a client was active but had not a valid username yet, and now it updates
-			 * its username */
-			if (usr.getUsername().equals("undefined")) {
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);						
-			}
-
-			usr.setFingerprint(fingerprint);
-			usr.setAddress(remoteAddress);
-			usr.setUsername(username);
-		}	
-
-		System.out.println("username set to '" + username + "'");
-		/* Happens when a client responded to us without a valid username yet, so we do not notify the main client process,
-		 * since we do not consider the remote user to be active when he hasn't a valid username yet */
-		if (username.equals("undefined")) {
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NONE);
 		}
 	}
 
@@ -431,8 +387,6 @@ public class NetworkManager extends Thread {
 			 * is now able fill its active users list and thus get a valid representation of
 			 * what usernames aren't available. */
 			case NEW_ACTIVE_CLIENT:
-				this.handleNewActiveClient(this.networkManagerInformation.getFingerprint(),
-								this.networkManagerInformation.getAddress());
 				break;
 
 			/* 2 Possibilities:
@@ -446,9 +400,6 @@ public class NetworkManager extends Thread {
 
 			 * - 	An online user basically changed its username. */
 			case USERNAME_MODIFICATION:
-				this.handleUsernameModification(this.networkManagerInformation.getFingerprint(),
-								this.networkManagerInformation.getAddress(),
-								this.networkManagerInformation.getUsername());
 				break;
 
 			case READY_TO_CHECK_USERNAME:
@@ -472,6 +423,7 @@ public class NetworkManager extends Thread {
 			case NEW_MESSAGE_TO_BE_SENT:
 				this.handleNewMessageToBeSent(this.networkManagerInformation.getRecipientUser(),
 								this.networkManagerInformation.getMessage());
+				notifierIsMainClientProcess = true;
 				break;
 
 			default: break;

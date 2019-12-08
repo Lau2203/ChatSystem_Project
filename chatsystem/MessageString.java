@@ -15,6 +15,10 @@ public class MessageString extends Message {
 		super(recipientUser, timestamp);
 	}
 
+	public MessageString (User recipientUser, Timestamp timestamp, boolean hasBeenSentByRecipient) {
+		super(recipientUser, timestamp, hasBeenSentByRecipient);
+	}
+
 	@Override
 	public String getContent() {
 		return this.content;

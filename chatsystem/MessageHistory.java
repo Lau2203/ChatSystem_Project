@@ -3,6 +3,9 @@ package chatsystem;
 import java.util.Iterator;
 import java.util.ArrayList;
 
+import chatsystem.User;
+import chatsystem.Message;
+
 public class MessageHistory implements Iterable<Message> {
 
 	private User recipientUser;
@@ -12,6 +15,13 @@ public class MessageHistory implements Iterable<Message> {
 
 	public MessageHistory() {
 		this.recipientUser = new User();
+		this.messageList = new ArrayList<Message>();
+
+		this.lastMessage = null;
+	}
+
+	public MessageHistory(User user) {
+		this.recipientUser = user;
 		this.messageList = new ArrayList<Message>();
 
 		this.lastMessage = null;

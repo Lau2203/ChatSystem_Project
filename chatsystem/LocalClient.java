@@ -62,11 +62,30 @@ public class LocalClient extends Client {
 					break;
 
 				case USERNAME_MODIFICATION:
-					this.mw.notifyNewUserUsername();
+					User usr = this.getUser(this.networkManagerInformation.getFingerprint());
+					String previousUsername = usr.getUsername();
+					String newUsername = this.networkManagerInformation.getUsername();
+
+					usr.setUsername(newUsername);
+					usr.setAddress(this.networkManagerInformation.getAddress());
+	
+					/* If the user just got a valid username and didn't have one before */
+					if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
+						this.mw.notifyNewUserUsername();
+					}
 					break;
 
 				case NEW_ACTIVE_USER:
-					this.mw.notifyUserActivityModification();
+					User active = this.getUser(this.networkManagerInformation.getFingerprint());
+
+					active.setActive(true);
+					active.setFingerprint(this.networkManagerInformation.getFingerprint());
+					active.setUsername(this.networkManagerInformation.getUsername());
+					active.setAddress(this.networkManagerInformation.getAddress());
+
+					/* No need to notify the GUI since its username is not defined yet */
+					/* Notify the GUI */
+					//this.mw.notifyUserActivityModification();
 					break;
 
 				case USER_LEFT_NETWORK:
@@ -115,7 +134,10 @@ public class LocalClient extends Client {
 		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username)) {
 			JFrame frame = new JFrame();
 			do {
-				username = JOptionPane.showInputDialog(frame, "Your current username is not valid\nPlease enter a new username:", "Username not valid", JOptionPane.INFORMATION_MESSAGE);
+				username = JOptionPane.showInputDialog(frame,
+									"Your current username is not valid\nPlease enter a new username:",
+									"Username not valid",
+									JOptionPane.INFORMATION_MESSAGE);
 			} while(username == null
 				|| username.equals("")
 				|| username.equals(this.mainUser.getFingerprint())

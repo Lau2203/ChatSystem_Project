@@ -512,7 +512,7 @@ public class MainWindow extends JFrame{
 		/* Do not forget to add the search bar back */
 		this.panUsers.add(this.search);
 		/* Retrieve all the current active users */
-		for (User usr : this.master.getActiveUsersList()) {	
+		for (User usr : this.master.getUserList()) {	
 			
 			Box mainBox = Box.createHorizontalBox();
 			mainBox.setBackground(MainWindow.backgroundColor);

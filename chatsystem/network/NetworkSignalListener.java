@@ -91,7 +91,7 @@ public class NetworkSignalListener extends Thread {
 
 		try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
 
-		this.master.notifyNewActiveClient(recipientFingerprint, remoteAddress);
+		this.master.notifyNewActiveUser(recipientFingerprint, remoteAddress, "undefined");
 	}
 	
 	
@@ -108,6 +108,7 @@ public class NetworkSignalListener extends Thread {
 			this.activeClientsResponseToWaitFor--;
 		}
 
+		this.master.notifyNewActiveUser(fingerprint, remoteAddress, username);
 		/* The NetworkManager will create a new user is it does not already exist */
 		this.master.notifyNewUsername(fingerprint, remoteAddress, username);
 

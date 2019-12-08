@@ -8,22 +8,35 @@ public class User {
 	private String username;
 	private InetAddress address;
 
+	private boolean isActive;
+
 	public User() {
 		this.fingerprint = new String();
 		this.username = new String();
 		this.address = null;
+
+		this.isActive = false;
+	}
+
+	public User(String fingerprint) {
+		this.fingerprint = fingerprint;
+		this.username = null;
+		this.address = null;
+		this.isActive = false;
 	}
 
 	public User(String fingerprint, String username) {
 		this.fingerprint = fingerprint;
 		this.username = username;
 		this.address = null;
+		this.isActive = false;
 	}
 
 	public User(String fingerprint, String username, InetAddress address) {
 		this.fingerprint = fingerprint;
 		this.username = username;
 		this.address = address;
+		this.isActive = false;
 	}
 
 	public synchronized String getFingerprint() {
@@ -38,6 +51,10 @@ public class User {
 		return this.address;
 	}
 
+	public synchronized boolean isActive() {
+		return this.isActive;
+	}
+
 	public synchronized void setFingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
 	}
@@ -48,5 +65,9 @@ public class User {
 
 	public synchronized void setAddress(InetAddress address) {
 		this.address = address;
+	}
+
+	public synchronized void setActive(boolean active) {
+		this.isActive = active;
 	}
 }

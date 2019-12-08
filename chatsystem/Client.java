@@ -8,6 +8,7 @@ import java.lang.Thread;
 
 import java.io.IOException;
 
+import chatsystem.User;
 import chatsystem.MainUser;
 import chatsystem.MessageHistoryManager;
 
@@ -19,6 +20,8 @@ import chatsystem.util.ConfigParser;
 import chatsystem.util.EncryptionHandler;
 
 public abstract class Client extends Thread {
+
+	protected ArrayList<User> userList;
 
 	protected MainUser mainUser;
 
@@ -35,8 +38,6 @@ public abstract class Client extends Thread {
 
 	private static final int DEFAULT_CONNECTION_LISTENER_PORT 	= 5555;
 	private static final int DEFAULT_NETWORK_SIGNAL_LISTENER_PORT 	= 54321;
-
-	protected ArrayList<ChatSession> activeChatSessionList;
 
 	protected boolean isLogEnabled;
 
@@ -65,10 +66,12 @@ public abstract class Client extends Thread {
 
 		this.networkManagerInformation	= new NetworkManagerInformation();
 
-		this.activeChatSessionList 	= new ArrayList<ChatSession>();
-
 		this.encryptionHandler 		= new EncryptionHandler(this.witnessFilePath);
 		this.messageHistoryManager	= new MessageHistoryManager(this.messageHistoryFilePath);
+
+		this.messageHistoryManager.fetchMessageHistory();
+
+		this.userList = new ArrayList<User>();
 	}
 
 	private void initWithConfigFile() {
@@ -212,9 +215,25 @@ public abstract class Client extends Thread {
 		return this.netmanager.getActiveUsersList();
 	}
 
+	public synchronized ArrayList<User> getUserList() {
+		return new ArrayList<User>(this.userList);
+	}
+
+	public synchronized User getUser(String fingerprint) {
+		/* Find an existing one */
+		for (User usr: this.userList) {
+			if (usr.getFingerprint().equals(fingerprint)) {
+				return usr;
+			}	
+		}
+		/* Otherwise create a new one */	
+		User newUser = new User(fingerprint);
+		this.userList.add(newUser);
+		return newUser;
+	}
+
 	public boolean isUsernameAvailable(String username) {
-		ArrayList<User> users = this.getActiveUsersList();
-		for (User user: users) {
+		for (User user: this.getUserList()) {
 			System.out.println("\t\tUSER : '" + user.getUsername() + "'");
 			if (user.getUsername().equals(username)) {
 				return false;
