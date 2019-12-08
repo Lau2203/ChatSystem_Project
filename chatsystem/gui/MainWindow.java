@@ -18,8 +18,7 @@ import javax.swing.border.Border;
 
 import java.awt.Component;
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.BorderLayout;
+import java.awt.Cursor; 
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
@@ -35,14 +34,14 @@ import chatsystem.gui.UserBox;
 import chatsystem.Client;
 import chatsystem.User;
 import chatsystem.Message;
-import chatsystem.MessageHistoryManager;
+import chatsystem.MessageHistory;
 
 @SuppressWarnings("serial")
 
 public class MainWindow extends JFrame{
 
 	private Client master;
-	private MessageHistoryManager messageHistoryManager;
+	private User currentRecipient;
 
 	public static final int WIDTH 	= 900;
 	public static final int HEIGHT 	= 650;
@@ -58,6 +57,7 @@ public class MainWindow extends JFrame{
 	// User Box - SOUTH.LEFT
    	private JPanel panUsers 	= new JPanel();
    	private JPanel panMsg 		= new JPanel();
+	private JPanel msgBoxPanel 	= new JPanel();
 
 	private Box search;
 	private boolean isSearchBarEmpty = true;
@@ -83,12 +83,12 @@ public class MainWindow extends JFrame{
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 
-	public MainWindow(Client master, MessageHistoryManager mhm)  {  
+	public MainWindow(Client master)  {  
 
 		super();   
 	
 		this.master = master;
-		this.messageHistoryManager = mhm;
+		this.currentRecipient = this.master.getMainUser();
       
 	  	this.setTitle("Aura - Chat System");
 		this.setSize(MainWindow.WIDTH, MainWindow.HEIGHT); 				
@@ -279,86 +279,13 @@ public class MainWindow extends JFrame{
 		
 		
 		/*********************************************Conversation*********************************************/
-		JPanel msgBoxPanel = new JPanel();
+
 		//mainBoxM.add(msgBoxPanel);
-		msgBoxPanel.setPreferredSize(new Dimension(275, 547)); //OK
-		mainBoxM.add(msgBoxPanel);
-		msgBoxPanel.setBackground(MainWindow.backgroundColor);
+		this.msgBoxPanel.setPreferredSize(new Dimension(275, 547)); //OK
+		mainBoxM.add(this.msgBoxPanel);
+		this.msgBoxPanel.setBackground(MainWindow.backgroundColor);
 
-		//Messages Box
-		Box msgBox = Box.createHorizontalBox();
-		msgBox.setOpaque(true);
-		msgBox.setBackground(MainWindow.backgroundColor);
-		msgBox.add((Box.createRigidArea(new Dimension(60, 0))));
-		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollMsg.setPreferredSize(new Dimension(585,532)); //NE MARCHE PAS
-		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
-		
-		
-		msgBoxPanel.add(scrollMsg);
-		
-		Box leftBox = Box.createVerticalBox();
-		leftBox.setBackground(MainWindow.backgroundColor);
-		leftBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		msgBox.add(leftBox, BorderLayout.WEST);
-
-		//RIGID AREA BETWEEN LEFT AND RIHGT
-		Box paddingBox = Box.createHorizontalBox();
-		paddingBox.add((Box.createRigidArea(new Dimension(5, 0))));
-		paddingBox.setForeground(MainWindow.backgroundColor);
-		paddingBox.setOpaque(true);
-		msgBox.add(paddingBox);
-		
-		Box rightBox = Box.createVerticalBox();
-		rightBox.setBackground(MainWindow.backgroundColor);
-		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		msgBox.add(rightBox, BorderLayout.EAST);
-		
-		for (int i=0 ; i<40; i++){
-			//For each new message sent -- rightBoxUs
-			Box boxS 	= Box.createVerticalBox();
-			boxS.setBackground(MainWindow.backgroundColor);
-			rightBox.add(boxS);
-			JTextArea myMsg 	= new JTextArea("Good Morning, is Sarah Crôche in your office ?", 2, 20);
-			myMsg.setForeground(MainWindow.foregroundColor);
-			myMsg.setBackground(MainWindow.backgroundColor);
-			myMsg.setWrapStyleWord(true);
-			myMsg.setLineWrap(true);
-			myMsg.setEditable(false);
-			//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
-			//myMsg.setOpaque(false)
-			boxS.add(myMsg);
-
-			//For each new message received -- leftBox
-			//White Message
-			Box boxLabelMsgReceived 	= Box.createVerticalBox();
-			boxLabelMsgReceived.setBackground(MainWindow.backgroundColor);
-			leftBox.add(boxLabelMsgReceived);
-			boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-			JTextArea myMsgWhite = new JTextArea("MY MESSAGE WHITE", 2, 20);
-			myMsgWhite.setForeground(MainWindow.backgroundColor);
-			myMsgWhite.setBackground(MainWindow.backgroundColor);
-			myMsgWhite.setWrapStyleWord(true);
-			myMsgWhite.setLineWrap(true);
-			myMsgWhite.setEditable(false);
-			//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
-			//myMsg.setOpaque(false)
-			boxLabelMsgReceived.add(myMsgWhite);
-
-			Box boxR 	= Box.createVerticalBox();
-			boxR.setBackground(MainWindow.backgroundColor);
-			leftBox.add(boxR);
-			JTextArea theirMsg 	= new JTextArea("I'm sorry but she is in a meeting now, if you give me your number, I'll ask her to call you back", 2, 20);
-			theirMsg.setWrapStyleWord(true);
-			theirMsg.setLineWrap(true);
-			theirMsg.setForeground(myBlue);
-			theirMsg.setBackground(MainWindow.backgroundColor);
-			theirMsg.setEditable(false);
-			//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
-			//theirMsg.setOpaque(false);
-			boxR.add(theirMsg);
-		}
+		this.displayConversation();		
 
 		
 		/***********************************End of Code about Conversation**************************************/
@@ -397,11 +324,6 @@ public class MainWindow extends JFrame{
 			}          
 		    	@Override
 		    	public void mouseClicked(MouseEvent e) {
-					//JTextArea writeMsg = ((JTextArea)e.getSource());
-					//writeMsg.setText("");
-					//writeMsg.getFont().deriveFont(Font.PLAIN);
-					//writeMsg.setFont(new Font("CALIBRI", Font.PLAIN, 13));
-					//writeMsg.setForeground(MainWindow.foregroundColor);
 		    }
 		});	
 
@@ -575,8 +497,107 @@ public class MainWindow extends JFrame{
 		this.panUsers.repaint();
 	}
 
+	private void displayConversation() {
+
+		this.msgBoxPanel.removeAll();
+
+		//Messages Box
+		Box msgBox = Box.createHorizontalBox();
+		msgBox.setOpaque(true);
+		msgBox.setBackground(MainWindow.backgroundColor);
+		msgBox.add((Box.createRigidArea(new Dimension(60, 0))));
+		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollMsg.setPreferredSize(new Dimension(585,532)); //NE MARCHE PAS
+		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
+		
+		
+		this.msgBoxPanel.add(scrollMsg);
+		
+		Box leftBox = Box.createVerticalBox();
+		leftBox.setBackground(MainWindow.backgroundColor);
+		leftBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		msgBox.add(leftBox, BorderLayout.WEST);
+
+		//RIGID AREA BETWEEN LEFT AND RIHGT
+		Box paddingBox = Box.createHorizontalBox();
+		paddingBox.add((Box.createRigidArea(new Dimension(5, 0))));
+		paddingBox.setForeground(MainWindow.backgroundColor);
+		paddingBox.setOpaque(true);
+		msgBox.add(paddingBox);
+		
+		Box rightBox = Box.createVerticalBox();
+		rightBox.setBackground(MainWindow.backgroundColor);
+		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		msgBox.add(rightBox, BorderLayout.EAST);
+
+
+		MessageHistory mh = this.currentRecipient.getMessageHistory();
+		
+		if (mh == null) {
+			/* What to do if there is no conversation yet with the recipient user */
+		} else {
+			for (Message msg: this.currentRecipient.getMessageHistory().getMessageList()) {
+				/* If the message comes from the recipient user */
+				if (msg.getHasBeenSentByRecipient()) {
+
+					//For each new message received -- leftBox
+					//White Message
+					Box boxLabelMsgReceived 	= Box.createVerticalBox();
+					boxLabelMsgReceived.setBackground(MainWindow.backgroundColor);
+					leftBox.add(boxLabelMsgReceived);
+					boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+					JTextArea myMsgWhite = new JTextArea("", 2, 20);
+					myMsgWhite.setForeground(MainWindow.backgroundColor);
+					myMsgWhite.setBackground(MainWindow.backgroundColor);
+					myMsgWhite.setWrapStyleWord(true);
+					myMsgWhite.setLineWrap(true);
+					myMsgWhite.setEditable(false);
+					//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
+					//myMsg.setOpaque(false)
+					boxLabelMsgReceived.add(myMsgWhite);
+
+					Box boxR 	= Box.createVerticalBox();
+					boxR.setBackground(MainWindow.backgroundColor);
+					leftBox.add(boxR);
+					JTextArea theirMsg 	= new JTextArea(msg.getContent(), 2, 20);
+					theirMsg.setWrapStyleWord(true);
+					theirMsg.setLineWrap(true);
+					theirMsg.setForeground(myBlue);
+					theirMsg.setBackground(MainWindow.backgroundColor);
+					theirMsg.setEditable(false);
+					//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
+					//theirMsg.setOpaque(false);
+					boxR.add(theirMsg);
+				}
+				/* If we are the one who sent the message */
+				else {
+					//For each new message sent -- rightBoxUs
+					Box boxS 	= Box.createVerticalBox();
+					boxS.setBackground(MainWindow.backgroundColor);
+					rightBox.add(boxS);
+					JTextArea myMsg 	= new JTextArea(msg.getContent(), 2, 20);
+					myMsg.setForeground(MainWindow.foregroundColor);
+					myMsg.setBackground(MainWindow.backgroundColor);
+					myMsg.setWrapStyleWord(true);
+					myMsg.setLineWrap(true);
+					myMsg.setEditable(false);
+					//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
+					//myMsg.setOpaque(false)
+					boxS.add(myMsg);
+
+				}
+			}
+		}
+
+		this.msgBoxPanel.revalidate();
+		this.msgBoxPanel.repaint();
+	}
+
 	private void updateConversationPanel(User user) {
 		System.out.println("NEED TO UPDATE CONVERSATION PANEL !");
+		this.currentRecipient = user;
+		this.displayConversation();
 	}
 
 	/* Whether a user just got online or offline, we need to update the users panel */
@@ -597,8 +618,11 @@ public class MainWindow extends JFrame{
 		 * username */
 	}
 
-	public synchronized void notifyNewMessage(User recipient, Message msg) {
-		
+	public synchronized void notifyNewMessage(User recipient) {
+		/* TODO */	
+		/* Verify if the currently displayed conversation is with 'recipient' user.
+		 * if so, we need to update the conversation and fetch the recipient.getMessageHistory();
+		 * in order to display it  */
 	}
 
 	private void sendMessage() {

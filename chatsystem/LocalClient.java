@@ -93,6 +93,12 @@ public class LocalClient extends Client {
 
 				case NEW_MESSAGE:
 					System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
+
+					User recipient = this.getUser(this.networkManagerInformation.getFingerprint());
+
+					recipient.getMessageHistory().addMessage(this.networkManagerInformation.getMessage());
+
+					this.mw.notifyNewMessage(recipient);
 					break;
 
 				default: break;
@@ -120,7 +126,7 @@ public class LocalClient extends Client {
 	}
 
 	private void runGUI() {
-		this.mw = new MainWindow(this, this.messageHistoryManager);
+		this.mw = new MainWindow(this);
 		this.mw.setVisible(true);
 	}
 

@@ -257,4 +257,8 @@ public abstract class Client extends Thread {
 	public synchronized String getMainUserUsername() {
 		return this.mainUser.getUsername();
 	}
+
+	public synchronized User getMainUser() {
+		return this.mainUser;
+	}
 }
