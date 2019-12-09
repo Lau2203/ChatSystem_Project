@@ -189,8 +189,6 @@ public class NewIDWindow extends JFrame {
 
 	private void setUsername(String username) {
 
-		boolean hasBeenSet = false;
-
 		if (this.master.setNewUsername(username)) {
 			this.setVisible(false);
 			this.master.notifyNewUsernameToBeSent();

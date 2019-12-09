@@ -42,13 +42,6 @@ public class LocalClient extends Client {
 		 * the correct password */
 		ConnectionWindow cw = new ConnectionWindow(this);
 		cw.setVisible(true);	
-
-		/* Wait for the connection window to confirm the user is now connected */
-		synchronized(this.lock) {
-			try {
-				this.lock.wait();
-			} catch (InterruptedException ie) {ie.printStackTrace();}
-		}
 	}
 	/* Called when first time lauching */
 	private void setup() {
@@ -74,17 +67,9 @@ public class LocalClient extends Client {
 			NewIDWindow nidw = new NewIDWindow(this);
 			nidw.setVisible(true);
 
-			/* Wait for the connection window to confirm the user is now connected */
-			synchronized(this.lock) {
-				try {
-					this.lock.wait();
-				} catch (InterruptedException ie) {ie.printStackTrace();}
-			}
-
-			this.mw.setVisible(true);
 		}
 
-		this.mw.notifyNewMainUserUsername();
+		this.notifyNewUsernameToBeSent();
 	}
 
 
@@ -107,7 +92,7 @@ public class LocalClient extends Client {
 	public void notifyNewMessage(User recipient, Message msg) {
 		System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
 
-		User recipient = this.getUser(this.networkManagerInformation.getFingerprint());
+		//User recipient = this.getUser(fingerprint);
 
 		recipient.getMessageHistory().addMessage(this.networkManagerInformation.getMessage());
 

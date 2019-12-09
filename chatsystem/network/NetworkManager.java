@@ -22,6 +22,7 @@ import chatsystem.User; /* Reference to the main user, only for NetworkSignalLis
  * for him to be able to directly respond to request with the main user's username */
 import chatsystem.MainUser;
 import chatsystem.Client;
+import chatsystem.LocalClient;
 import chatsystem.NotifyInformation;
 import chatsystem.Message;
 import chatsystem.MessageString;
@@ -35,7 +36,7 @@ public class NetworkManager {
 	/* The main client process we will wake up once we've been waken up by
 	 * several available notifications (for instance a new connection,
 	 * new message, new active user on the network). */
-	private LocalClient master;
+	private Client master;
 	/* The TCP listener waiting for new connections to arise.
 	 * Once it happens, it notify the NetworkManager, which then creates a ConnectionHandler
 	 * in order to give it the control of that connection. */
@@ -82,7 +83,7 @@ public class NetworkManager {
 		this.activeUsersList 		= new ArrayList<User>();
 	}
 
-	private synchronized User getUser(String fingerprint) {
+	private User getUser(String fingerprint) {
 		for (User usr: this.activeUsersList) {
 			if (usr.getFingerprint().equals(fingerprint))
 				return usr;
@@ -92,16 +93,16 @@ public class NetworkManager {
 	}
 
 	/* returns a copy of the Active Users List */
-	public synchronized ArrayList<User> getActiveUsersList() {
+	public ArrayList<User> getActiveUsersList() {
 		return new ArrayList<User>(this.activeUsersList);
 	}
 
 	/* Do not forget to add +1 for us */
-	public synchronized int getActiveClientsNumber() { 
+	public int getActiveClientsNumber() { 
 		return this.activeUsersList.size() + 1;
 	}
 
-	private synchronized ConnectionHandler getConnectionHandler(InetAddress remoteAddress) {
+	private ConnectionHandler getConnectionHandler(InetAddress remoteAddress) {
 		for (ConnectionHandler ch: this.connectionHandlers) {
 			if (ch.getRemoteAddress().equals(remoteAddress)) {	
 				return ch;
@@ -128,7 +129,7 @@ public class NetworkManager {
 	}
 
 	/* Can only be called by the main client process */
-	public synchronized void shutdown() {
+	public void shutdown() {
 
 		synchronized(this.lock) {
 			ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
@@ -150,7 +151,7 @@ public class NetworkManager {
 		}
 	}
 
-	private synchronized ArrayList<ConnectionHandler> getConnectionHandlers() { return this.connectionHandlers; }
+	private ArrayList<ConnectionHandler> getConnectionHandlers() { return this.connectionHandlers; }
 
 
 	/* Notification methods called either by the ConnectionListener, ConnectionHandlers or the NetworkSignalListener
@@ -189,8 +190,8 @@ public class NetworkManager {
 		this.master.notifyNewActiveUser(fingerprint, address, username);
 	}
 
-	protected void notifyNewUsername(String fingerprint, InetAddress address, String username) {
-		this.master.notifyNewUsername(fingerprint, address, username);
+	protected void notifyNewUsername(String fingerprint, String username) {
+		this.master.notifyNewUsername(fingerprint, username);
 	}
 
 	protected void notifyReadyToCheckUsername() {
@@ -235,13 +236,13 @@ public class NetworkManager {
 		else {
 			Socket clientConnection;
 			try {
-				clientConnection = new Socket(usr.getAddress(), this.connectionListenerListeningPort);
+				clientConnection = new Socket(user.getAddress(), this.connectionListenerListeningPort);
 			} catch (Exception e) {
 				Logs.printerro(this.instanceName, "Could not create socket to send new message");
 				return;
 			}
 
-			remote = new ConnectionHandler(usr, clientConnection);	
+			remote = new ConnectionHandler(user, clientConnection);	
 
 			synchronized (this) {
 				this.connectionHandlers.add(remote);
@@ -258,73 +259,6 @@ public class NetworkManager {
 		out.println(stringPacket);
 		out.flush();
 	}
-
-	/* Once it's been waken up, the NetworkManager needs to understand why
-	 * and act consequently */
-	private void handleNewInformation() {
-
-		boolean notifierIsMainClientProcess = false;
-
-		switch (this.networkManagerInformation.getNotifyInformation()) {
-
-			/* Happens when a new client appears on the network.
-			 * The NetworkSignalListener welcomes the new client by telling him
-			 * our main user's fingerprint and username, the current number of active clients 
-			 * and inherently providing our address. With every client doing so, that client 
-			 * is now able fill its active users list and thus get a valid representation of
-			 * what usernames aren't available. */
-			case NEW_ACTIVE_CLIENT:
-				break;
-
-			/* 2 Possibilities:
-				
-			 * - 	As a reaction to NEW_ACTIVE_CLIENT, the new active client received all the welcoming
-			 * 	responses from all the current active clients online (he knows that since he got the number of
-			 * 	active clients to wait for in each welcoming packet). He can now tell whether or not its username
-			 * 	is available by looking at its active users list. He might be forced to ask the user to choose
-			 * 	a different username. Once he get an available username, he needs to informa all the clients online,
-			 * 	thus intercepting this USERNAME_MODIFICATION from the NetworkSignalListener.
-
-			 * - 	An online user basically changed its username. */
-			case USERNAME_MODIFICATION:
-				break;
-
-			case READY_TO_CHECK_USERNAME:
-				break;
-
-			case NEW_CONNECTION:
-				break;
-
-			case END_OF_CONNECTION:
-				break;
-
-			case USER_LEFT_NETWORK:
-				break;
-
-			case NEW_USERNAME_TO_BE_SENT:
-				this.handleNewUsernameToBeSent(this.networkManagerInformation.getFingerprint(),
-								this.networkManagerInformation.getUsername());
-				notifierIsMainClientProcess = true;
-				break;
-
-			case NEW_MESSAGE_TO_BE_SENT:
-				this.handleNewMessageToBeSent(this.networkManagerInformation.getRecipientUser(),
-								this.networkManagerInformation.getMessage());
-				notifierIsMainClientProcess = true;
-				break;
-
-			default: break;
-		}
-
-		/* If the notification does not come from the main client process, then
-		 * it comes from either the ConnectionListener, ConnectionHandler or 
-		 * NetworkSignalListener and we need to notify the main client process */
-		if (notifierIsMainClientProcess == false) {
-			/* We relay the information to the main client process */
-			this.master.notifyFromNetworkManager(this.networkManagerInformation);
-		}
-	}
-
 
 	/* The whole process is here */
 	public void run() {

@@ -107,7 +107,7 @@ public class NetworkSignalListener extends Thread {
 
 		this.master.notifyNewActiveUser(fingerprint, remoteAddress, username);
 		/* The NetworkManager will create a new user is it does not already exist */
-		this.master.notifyNewUsername(fingerprint, remoteAddress, username);
+		this.master.notifyNewUsername(fingerprint, username);
 
 		/* If we received the Welcome Signal from all the active clients */
 		if (this.activeClientsResponseToWaitFor == 0) {
@@ -118,7 +118,7 @@ public class NetworkSignalListener extends Thread {
 
 
 	private void handleUsernameModificationSignal(String fingerprint, InetAddress remoteAddress, String new_username) {
-			this.master.notifyNewUsername(fingerprint, remoteAddress, new_username);
+			this.master.notifyNewUsername(fingerprint, new_username);
 	}
 
 	/* UDP Packets will at least have this shape : fingerprint:signal */

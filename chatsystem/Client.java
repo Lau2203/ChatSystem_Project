@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
+import java.net.InetAddress;
+
 import java.lang.Thread;
 
 import java.io.IOException;
@@ -143,48 +145,6 @@ public abstract class Client extends Thread {
 		this.networkManagerInformation.setMessage(msg);
 	}
 
-	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
-		/* Make a copy */
-		switch (ni.getNotifyInformation()) {
-			case NEW_CONNECTION:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
-				break;
-			case END_OF_CONNECTION:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
-				break;
-			case NEW_ACTIVE_CLIENT:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
-				break;
-			case READY_TO_CHECK_USERNAME:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
-				break;
-			case USERNAME_MODIFICATION:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
-				break;
-			case NEW_ACTIVE_USER:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
-				break;
-			case USER_LEFT_NETWORK:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USER_LEFT_NETWORK);
-				break;
-			case NEW_MESSAGE:
-				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
-				break;
-			default: break;
-		}
-
-		this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
-		this.networkManagerInformation.setFingerprint(ni.getFingerprint());
-		this.networkManagerInformation.setUsername(ni.getUsername());
-		this.networkManagerInformation.setAddress(ni.getAddress());
-		this.networkManagerInformation.setMessage(ni.getMessage());
-
-		this.handleNewInformation();
-	}
-
-	public synchronized void notifyNewUsernameToBeSent() {
-		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
-	}
 
 	public synchronized boolean login(String input) {
 		boolean loggedin = false;
@@ -253,7 +213,6 @@ public abstract class Client extends Thread {
 		}
 
 		this.mainUser.setUsername(username);
-		this.notifyNewUsernameToBeSent();
 		ConfigParser.updateSetting("username", username);
 
 		return true;
@@ -267,5 +226,9 @@ public abstract class Client extends Thread {
 		return this.mainUser;
 	}
 
-	protected abstract void handleNewInformation();
+	public void notifyNewUsername(String fingerprint, String newUsername) {}
+	public void notifyReadyToCheckUsername() {}
+	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {}
+	public void notifyNewMessage(User recipient, Message msg) {}
+	public void notifyNewUsernameToBeSent() {}
 }

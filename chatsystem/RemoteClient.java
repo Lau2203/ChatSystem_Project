@@ -7,7 +7,6 @@ public class RemoteClient extends Client {
 		super();
 	}
 
-	@Override
 	protected void handleNewInformation() {
 	}
 }
