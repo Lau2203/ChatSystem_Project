@@ -646,11 +646,4 @@ public class MainWindow extends JFrame{
 		this.master.shutdown();
 		System.exit(1);
 	}
-
-	public static void main(String[] args) {
-		//MainWindow mw = new MainWindow();
-		//mw.setVisible(true);
-	}
-
-
 }

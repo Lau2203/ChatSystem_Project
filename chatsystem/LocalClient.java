@@ -7,6 +7,8 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import java.net.InetAddress;
+
 import chatsystem.network.NetworkManagerInformation;
 
 import chatsystem.NotifyInformation;
@@ -27,103 +29,12 @@ public class LocalClient extends Client {
 	}
 
 	public void run() {
-
-		/* Show Login window until successfully logged in */
 		this.askLogin();
-		/* User logged in successfully */
+	}
 
-		System.out.println("Successfully logged in!");
-
-		synchronized(this.lock) {
-			this.startNetworkManager();
-		}
-
+	public synchronized void notifyLoginSuccessful() {
+		this.startNetworkManager();
 		this.runGUI();
-
-		while (true) {
-			synchronized(this.lock) {
-				this.semaphore.release();
-				try {
-					this.lock.wait();
-				} catch (InterruptedException ie) {}
-			}
-
-			switch (this.networkManagerInformation.getNotifyInformation()) {
-
-				case NEW_CONNECTION:
-					System.out.println("RECEIVED SIGNAL FROM NETWORK MANAGER - NEW CONNECTION");
-					break;
-
-				case END_OF_CONNECTION:
-					Logs.println("RECEIVED SIGNAL FROM NETWORK MANAGER - END OF CONNECTION");
-					break;
-
-				case READY_TO_CHECK_USERNAME:
-					this.mandatorySetUsername();
-					break;
-
-				case USERNAME_MODIFICATION:
-					User usr = this.getUser(this.networkManagerInformation.getFingerprint());
-					String previousUsername = usr.getUsername();
-					String newUsername = this.networkManagerInformation.getUsername();
-
-					usr.setUsername(newUsername);
-					usr.setAddress(this.networkManagerInformation.getAddress());
-	
-					/* If the user just got a valid username and didn't have one before */
-					if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
-						this.mw.notifyNewUserUsername(usr);
-					}
-					break;
-
-				case NEW_ACTIVE_USER:
-					User active = this.getUser(this.networkManagerInformation.getFingerprint());
-
-					active.setActive(true);
-					active.setFingerprint(this.networkManagerInformation.getFingerprint());
-					active.setUsername(this.networkManagerInformation.getUsername());
-					active.setAddress(this.networkManagerInformation.getAddress());
-
-					/* No need to notify the GUI since its username is not defined yet */
-					/* Notify the GUI */
-					//this.mw.notifyUserActivityModification();
-					break;
-
-				case USER_LEFT_NETWORK:
-					break;
-
-				case NEW_MESSAGE:
-					System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
-
-					User recipient = this.getUser(this.networkManagerInformation.getFingerprint());
-
-					recipient.getMessageHistory().addMessage(this.networkManagerInformation.getMessage());
-
-					this.mw.notifyNewMessage(recipient);
-					break;
-
-				case NEW_MESSAGE_TO_BE_SENT:
-					User user = this.networkManagerInformation.getRecipientUser();
-					Message msg = this.networkManagerInformation.getMessage();
-
-					user.getMessageHistory().addMessage(msg);
-
-					this.netmanager.notifyNewMessageToBeSent(user, msg);
-
-					this.mw.notifyNewMessage(user);
-
-					break;
-
-				case NEW_USERNAME_TO_BE_SENT:
-					this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
-					this.mw.setVisible(true);
-					this.mw.notifyNewMainUserUsername();
-					break;
-
-				default: break;
-			}
-			Logs.println("LOCAL CLIENT : RECEIVED '" + this.networkManagerInformation.getNotifyInformation() + "' signal");
-		}
 	}
 
 	private void askLogin() {
@@ -164,7 +75,6 @@ public class LocalClient extends Client {
 			nidw.setVisible(true);
 
 			/* Wait for the connection window to confirm the user is now connected */
-			/*
 			synchronized(this.lock) {
 				try {
 					this.lock.wait();
@@ -172,12 +82,61 @@ public class LocalClient extends Client {
 			}
 
 			this.mw.setVisible(true);
-			*/
 		}
-		/*
 
 		this.mw.notifyNewMainUserUsername();
-		*/
+	}
+
+
+	public void notifyNewUsernameToBeSent() {
+		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+		this.mw.setVisible(true);
+		this.mw.notifyNewMainUserUsername();
+	}
+
+	public void notifyNewMessageToBeSent(User recipient, Message msg) {
+		User user = recipient;
+
+		user.getMessageHistory().addMessage(msg);
+
+		this.netmanager.notifyNewMessageToBeSent(user, msg);
+
+		this.mw.notifyNewMessage(user);
+	}
+
+	public void notifyNewMessage(User recipient, Message msg) {
+		System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
+
+		User recipient = this.getUser(this.networkManagerInformation.getFingerprint());
+
+		recipient.getMessageHistory().addMessage(this.networkManagerInformation.getMessage());
+
+		this.mw.notifyNewMessage(recipient);
+	}
+
+	public void notifyReadyToCheckUsername() {
+		this.mandatorySetUsername();
+	}
+
+	public void notifyNewUsername(String fingerprint, String newUsername) {
+		User usr = this.getUser(fingerprint);
+		String previousUsername = usr.getUsername();
+
+		usr.setUsername(newUsername);
+
+		/* If the user just got a valid username and didn't have one before */
+		if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
+			this.mw.notifyNewUserUsername(usr);
+		}
+	}
+
+	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
+		User active = this.getUser(fingerprint);
+
+		active.setActive(true);
+		active.setFingerprint(fingerprint);
+		active.setUsername(username);
+		active.setAddress(address);
 	}
 
 	/* Update the GUI */

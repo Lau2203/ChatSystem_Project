@@ -118,26 +118,15 @@ public class ConnectionHandler extends Thread {
 	}
 
 	private void die() {
-		//synchronized(ConnectionHandler.master) {
-			ConnectionHandler.master.notifyDeathOfConnectionHandler(this);
-			/*
-			try {
-				this.wait();
-			} catch (InterruptedException ie) {}
-			*/
-		//}
+		ConnectionHandler.master.notifyDeathOfConnectionHandler(this);
 	}
 
-	private void interruptSubServer() {
-		synchronized(this) {
-			this.isInterrupted = true;
-		}
+	private synchronized void interruptSubServer() {
+		this.isInterrupted = true;
 	}
 
-	private boolean isSubServerInterrupted() {
-		synchronized(this) {
-			return this.isInterrupted;
-		}
+	private synchronized boolean isSubServerInterrupted() {
+		return this.isInterrupted;
 	}
 
 	protected void shutdown() {
@@ -172,14 +161,7 @@ public class ConnectionHandler extends Thread {
 				break;
 			}
 
-			//synchronized(ConnectionHandler.master) {
-			synchronized(this) {
-				ConnectionHandler.master.notifyNewMessage(this, userInput);
-				try {
-					this.wait();
-				} catch (InterruptedException ie) {}
-			}
-			//}
+			ConnectionHandler.master.notifyNewMessage(this, userInput);
 
 			Logs.println(this.instanceName, "Received '" + userInput + "'");
 

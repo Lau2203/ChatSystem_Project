@@ -33,22 +33,17 @@ public class ConnectionListener extends Thread {
 	}
 
 	private void prepareServer() throws IOException {
-		synchronized (this.master) {
-			try {
-				this.ssocket = new ServerSocket(this.port);
-			} catch (IllegalArgumentException iae) {
-				Logs.printerro(this.instanceName, "Invalid port number, aborted");
-				System.exit(1);
-			}
-
-			if (this.port == 0)
-				this.port = this.ssocket.getLocalPort();
-
-			System.out.println("Server listening on port " + this.port);
-
-			/* Notify the NetworkManager that the server is now listening */
-			this.master.wakeUp();
+		try {
+			this.ssocket = new ServerSocket(this.port);
+		} catch (IllegalArgumentException iae) {
+			Logs.printerro(this.instanceName, "Invalid port number, aborted");
+			System.exit(1);
 		}
+
+		if (this.port == 0)
+			this.port = this.ssocket.getLocalPort();
+
+		System.out.println("Server listening on port " + this.port);
 	}
 	/* Can only be called by the NetworkManager when itself is shutting down */
 	protected void shutdown() throws IOException {
@@ -65,9 +60,7 @@ public class ConnectionListener extends Thread {
 			try {
 				clientSocket = this.ssocket.accept();
 				/* We now notify the NetworkManager that a new connection arised */
-				//synchronized(this.master) {
-					this.master.notifyNewConnection(clientSocket);
-				//}
+				this.master.notifyNewConnection(clientSocket);
 
 			} catch (IOException ioe) {
 				/* Probably the NetworkManager trying to shutdown */

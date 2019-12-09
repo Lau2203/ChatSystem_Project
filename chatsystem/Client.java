@@ -123,16 +123,7 @@ public abstract class Client extends Thread {
 	}
 
 	protected void startNetworkManager() {
-		synchronized(this.lock) {
-			this.netmanager.start();
-			try { this.lock.wait(); } catch (InterruptedException ie) {ie.printStackTrace();}
-		}
-	}
-
-	public synchronized void wakeUp() {
-		synchronized(this.lock) {
-			this.lock.notify();
-		}
+		this.netmanager.run();
 	}
 
 	public synchronized void shutdown() {
@@ -141,77 +132,61 @@ public abstract class Client extends Thread {
 		System.exit(1);
 	}
 
-	public void notifyNewUsernameToBeSent() {
-		synchronized(this.childrenLock) {
-			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
+	public synchronized void notifyNewMessageToBeSent(String content, User recipient) {
 
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_USERNAME_TO_BE_SENT);
+		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE_TO_BE_SENT);
 
-			this.wakeUp();
-		}
+		MessageString msg = new MessageString(recipient, new Timestamp(System.currentTimeMillis()), false);
+		msg.setContent(content);
+
+		this.networkManagerInformation.setRecipientUser(recipient);
+		this.networkManagerInformation.setMessage(msg);
 	}
 
-	public void notifyNewMessageToBeSent(String content, User recipient) {
-		synchronized(this.childrenLock) {
-			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE_TO_BE_SENT);
-
-			MessageString msg = new MessageString(recipient, new Timestamp(System.currentTimeMillis()), false);
-			msg.setContent(content);
-
-			this.networkManagerInformation.setRecipientUser(recipient);
-			this.networkManagerInformation.setMessage(msg);
-			this.wakeUp();
+	public synchronized void notifyFromNetworkManager(NetworkManagerInformation ni) {
+		/* Make a copy */
+		switch (ni.getNotifyInformation()) {
+			case NEW_CONNECTION:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
+				break;
+			case END_OF_CONNECTION:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
+				break;
+			case NEW_ACTIVE_CLIENT:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
+				break;
+			case READY_TO_CHECK_USERNAME:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
+				break;
+			case USERNAME_MODIFICATION:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
+				break;
+			case NEW_ACTIVE_USER:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
+				break;
+			case USER_LEFT_NETWORK:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.USER_LEFT_NETWORK);
+				break;
+			case NEW_MESSAGE:
+				this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
+				break;
+			default: break;
 		}
+
+		this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
+		this.networkManagerInformation.setFingerprint(ni.getFingerprint());
+		this.networkManagerInformation.setUsername(ni.getUsername());
+		this.networkManagerInformation.setAddress(ni.getAddress());
+		this.networkManagerInformation.setMessage(ni.getMessage());
+
+		this.handleNewInformation();
 	}
 
-	public void notifyFromNetworkManager(NetworkManagerInformation ni) {
-		synchronized(this.childrenLock) {
-			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
-			/* Make a copy */
-			switch (ni.getNotifyInformation()) {
-				case NEW_CONNECTION:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
-					break;
-				case END_OF_CONNECTION:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
-					break;
-				case NEW_ACTIVE_CLIENT:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_CLIENT);
-					break;
-				case READY_TO_CHECK_USERNAME:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
-					break;
-				case USERNAME_MODIFICATION:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
-					break;
-				case NEW_ACTIVE_USER:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
-					break;
-				case USER_LEFT_NETWORK:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.USER_LEFT_NETWORK);
-					break;
-				case NEW_MESSAGE:
-					this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
-					break;
-				default: break;
-			}
-
-			this.networkManagerInformation.setRecipientUser(ni.getRecipientUser());
-			this.networkManagerInformation.setFingerprint(ni.getFingerprint());
-			this.networkManagerInformation.setUsername(ni.getUsername());
-			this.networkManagerInformation.setAddress(ni.getAddress());
-			this.networkManagerInformation.setMessage(ni.getMessage());
-			this.wakeUp();
-		}
+	public synchronized void notifyNewUsernameToBeSent() {
+		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
 	}
 
-//	public void notifyNewUsernameToBeSent() {
-//		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
-//	}
-
-	public boolean login(String input) {
+	public synchronized boolean login(String input) {
 		boolean loggedin = false;
 		synchronized(this.childrenLock) {
 			this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
@@ -272,13 +247,12 @@ public abstract class Client extends Thread {
 	}
 
 	/* Returns whether or not it was able to set that new username */
-	public boolean setNewUsername(String username) {
+	public synchronized boolean setNewUsername(String username) {
 		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username)) {
 			return false;
 		}
 
 		this.mainUser.setUsername(username);
-		//this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
 		this.notifyNewUsernameToBeSent();
 		ConfigParser.updateSetting("username", username);
 
@@ -292,4 +266,6 @@ public abstract class Client extends Thread {
 	public synchronized User getMainUser() {
 		return this.mainUser;
 	}
+
+	protected abstract void handleNewInformation();
 }

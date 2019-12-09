@@ -30,12 +30,12 @@ import chatsystem.util.Logs;
 /* FOR TESTING ONLY */
 import chatsystem.util.ConfigParser;
 
-public class NetworkManager extends Thread {
+public class NetworkManager {
 
 	/* The main client process we will wake up once we've been waken up by
 	 * several available notifications (for instance a new connection,
 	 * new message, new active user on the network). */
-	private Client master;
+	private LocalClient master;
 	/* The TCP listener waiting for new connections to arise.
 	 * Once it happens, it notify the NetworkManager, which then creates a ConnectionHandler
 	 * in order to give it the control of that connection. */
@@ -82,7 +82,7 @@ public class NetworkManager extends Thread {
 		this.activeUsersList 		= new ArrayList<User>();
 	}
 
-	private User getUser(String fingerprint) {
+	private synchronized User getUser(String fingerprint) {
 		for (User usr: this.activeUsersList) {
 			if (usr.getFingerprint().equals(fingerprint))
 				return usr;
@@ -93,28 +93,18 @@ public class NetworkManager extends Thread {
 
 	/* returns a copy of the Active Users List */
 	public synchronized ArrayList<User> getActiveUsersList() {
-		/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
-		 * activeUsersList */
-		//synchronized(this.lock) {
-			return new ArrayList<User>(this.activeUsersList);
-		//}
+		return new ArrayList<User>(this.activeUsersList);
 	}
 
 	/* Do not forget to add +1 for us */
-	public int getActiveClientsNumber() { 
-		/* Needs coordination with the NetworkManager, since it is the one that is modifying the 
-		 * activeUsersList */
-		synchronized(this.lock) {
-			return this.activeUsersList.size() + 1;
-		}
+	public synchronized int getActiveClientsNumber() { 
+		return this.activeUsersList.size() + 1;
 	}
 
-	public ConnectionHandler getConnectionHandler(InetAddress remoteAddress) {
-		synchronized(this.lock) {
-			for (ConnectionHandler ch: this.connectionHandlers) {
-				if (ch.getRemoteAddress().equals(remoteAddress)) {	
-					return ch;
-				}
+	private synchronized ConnectionHandler getConnectionHandler(InetAddress remoteAddress) {
+		for (ConnectionHandler ch: this.connectionHandlers) {
+			if (ch.getRemoteAddress().equals(remoteAddress)) {	
+				return ch;
 			}
 		}
 		return null;
@@ -125,36 +115,16 @@ public class NetworkManager extends Thread {
 	}
 
 	public void startAll() {
-		/* Once the ConnectionListener and the NetworkSignalListener are started,
-		 * We want to notify the main client process */
-		synchronized(this.master) {
-			this.startConnectionListener();
-			this.startNetworkSignalListener();
-			this.master.wakeUp();
-		}
+		this.startConnectionListener();
+		this.startNetworkSignalListener();
 	}
 
 	private void startConnectionListener() {
-		/* We wait for the ConnectionListener to wake us up, meaning that it started successfully */
-		synchronized(this.lock) {
-			this.connectionListener.start();
-			try { this.lock.wait(); } catch (InterruptedException ie) {ie.printStackTrace();}
-		}
+		this.connectionListener.start();
 	}
 
 	private void startNetworkSignalListener() {
-		synchronized(this.lock) {
-			this.nsl.start();
-			try { this.lock.wait(); } catch (InterruptedException ie) {ie.printStackTrace();}
-		}
-	}
-
-	public void wakeUp() {
-		synchronized(this.childrenLock) {
-			synchronized(this.lock) {
-				this.lock.notify();
-			}
-		}
+		this.nsl.start();
 	}
 
 	/* Can only be called by the main client process */
@@ -189,133 +159,45 @@ public class NetworkManager extends Thread {
 
 	/* Can only be called by a ConnectionHandler */
 	/* Meaning that a User-to-User connection has ended */
-	protected void notifyDeathOfConnectionHandler(ConnectionHandler ch) {
-
-		synchronized(this.childrenLock) {
-
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.connectionHandlers.remove(ch);
-			/* Put information for the NetworkManager to handle it */
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.END_OF_CONNECTION);
-			this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
-			/* Wake up the NetworkManager to handle the death of the connection handler
-			 * and tell the client too */
-			this.wakeUp();
-		}
+	protected synchronized void notifyDeathOfConnectionHandler(ConnectionHandler ch) {
+		this.connectionHandlers.remove(ch);
 	}
 	/* Can only be called by a ConnectionHandler, since we must be connected to the remote client first */
-	protected void notifyNewMessage(ConnectionHandler ch, String content) {
+	protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
 
-		synchronized(this.childrenLock) {
+		MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
 
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
+		msg.setContent(content);
 
-			MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
-
-			msg.setContent(content);
-
-			/* Put information for the NetworkManager to handle it */
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE);
-			this.networkManagerInformation.setRecipientUser(ch.getRecipientUser());
-			this.networkManagerInformation.setMessage(msg);
-			/* Wake up the NetworkManager to handle the death of the connection handler
-			 * and tell the client too */
-			this.wakeUp();
-		}
+		this.master.notifyNewMessage(ch.getRecipientUser(), msg);
 	}
+
 	/* Can only be called by the ConnectionListener */
 	protected void notifyNewConnection(Socket clientConnection) {
 
-		synchronized(this.childrenLock) {
+		ConnectionHandler ch = new ConnectionHandler(clientConnection);	
 
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			ConnectionHandler ch = new ConnectionHandler(clientConnection);	
-
+		synchronized(this) {
 			this.connectionHandlers.add(ch);
-			/* Put information for the NetworkManager to handle it */
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_CONNECTION);
-
-			ch.start();
-			/* Wake up the NetworkManager to handle the death of the connection handler
-			 * and tell the client too */
-			this.wakeUp();	
 		}
+
+		ch.start();
 	}
+
 	/* Can only be called by the NetworkSignalListener */
-	protected void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
-
-		synchronized(this.childrenLock) {
-
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_ACTIVE_USER);
-
-			this.networkManagerInformation.setFingerprint(fingerprint);
-			this.networkManagerInformation.setAddress(address);
-			this.networkManagerInformation.setUsername(username);
-
-			this.wakeUp();
-		}
+	protected synchronized void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
+		this.master.notifyNewActiveUser(fingerprint, address, username);
 	}
-	/* Can only be called by the NetworkSignalListener */
+
 	protected void notifyNewUsername(String fingerprint, InetAddress address, String username) {
-
-		synchronized(this.childrenLock) {
-
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.USERNAME_MODIFICATION);
-
-			this.networkManagerInformation.setFingerprint(fingerprint);
-			this.networkManagerInformation.setAddress(address);
-			this.networkManagerInformation.setUsername(username);
-
-			this.wakeUp();
-		}
+		this.master.notifyNewUsername(fingerprint, address, username);
 	}
-	/* Can only be called by the NetworkSignalListener */
+
 	protected void notifyReadyToCheckUsername() {
-
-		synchronized(this.childrenLock) {
-
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.READY_TO_CHECK_USERNAME);
-
-			this.wakeUp();
-		}
+		this.master.notifyReadyToCheckUsername();
 	}
 
 	public void notifyNewUsernameToBeSent(String fingerprint, String username) {
-		synchronized(this.childrenLock) {
-			
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_USERNAME_TO_BE_SENT);
-			this.networkManagerInformation.setFingerprint(fingerprint);
-			this.networkManagerInformation.setUsername(username);
-
-			this.wakeUp();
-		}
-
-	}
-
-	public void notifyNewMessageToBeSent(User user, Message msg) {
-		synchronized(this.childrenLock) {
-
-			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
-
-			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE_TO_BE_SENT);
-			this.networkManagerInformation.setRecipientUser(user);
-			this.networkManagerInformation.setMessage(msg);
-
-			this.wakeUp();
-		}
-	}
-
-	private void handleNewUsernameToBeSent(String fingerprint, String username) {
 
 		String request = fingerprint + ":" + NetworkManagerInformation.USERNAME_MODIFICATION_STRING + ":" + username;
 
@@ -337,14 +219,14 @@ public class NetworkManager extends Thread {
 		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 	}
 
-	private void handleNewMessageToBeSent(User usr, Message msg) {
+	public void notifyNewMessageToBeSent(User user, Message msg) {
 
 		PrintWriter out = null;
 		String stringPacket;
 
 		stringPacket = msg.getContent();
 
-		ConnectionHandler remote = this.getConnectionHandler(usr);
+		ConnectionHandler remote = this.getConnectionHandler(user);
 		
 		if (remote != null) {
 			out = remote.getWriter();
@@ -361,7 +243,9 @@ public class NetworkManager extends Thread {
 
 			remote = new ConnectionHandler(usr, clientConnection);	
 
-			this.connectionHandlers.add(remote);
+			synchronized (this) {
+				this.connectionHandlers.add(remote);
+			}
 
 			remote.start();
 			/* wait for the connectionHandler to start properly and 
@@ -452,21 +336,6 @@ public class NetworkManager extends Thread {
 		this.startAll();
 		Logs.printinfo(this.instanceName, "Network Manager successfully started !");
 
-		while (true) {
-			/* We constantly wait for a signal from either the ConnectionListener,
-			 * the ConnectionHandlers or the NetworkSignalListener */
-			synchronized(this.lock) {
-				this.semaphore.release();
-
-				try { 
-					this.lock.wait();
-				} catch (InterruptedException ie) {ie.printStackTrace();}
-				//try { this.semaphore.acquire(); } catch(InterruptedException ie) {ie.printStackTrace();}
-			}
-			/* Once we've been waken up, we now need to know why,
-			 * and we need to process that information */
-			this.handleNewInformation();
-		}
 	}
 }
 

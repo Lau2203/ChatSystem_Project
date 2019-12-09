@@ -40,17 +40,14 @@ public class NetworkSignalListener extends Thread {
 	}	
 
 	private void prepare() {
-		synchronized(this.master) {
-			try {
-				this.ds = new DatagramSocket(this.listeningPort);	
-			} catch (SocketException se) {
-				Logs.printerro(this.instanceName, "Could not create datagram socket, aborted");
-				System.exit(1);
-				/* return statement to avoid compiler warning : "ds variable might not be initialized" */
-				return;
-			}
+		try {
+			this.ds = new DatagramSocket(this.listeningPort);	
 
-			this.master.wakeUp();
+		} catch (SocketException se) {
+			Logs.printerro(this.instanceName, "Could not create datagram socket, aborted");
+			System.exit(1);
+			/* return statement to avoid compiler warning : "ds variable might not be initialized" */
+			return;
 		}
 	}
 

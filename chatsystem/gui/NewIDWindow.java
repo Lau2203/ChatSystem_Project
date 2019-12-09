@@ -193,7 +193,7 @@ public class NewIDWindow extends JFrame {
 
 		if (this.master.setNewUsername(username)) {
 			this.setVisible(false);
-			this.master.wakeUp();
+			this.master.notifyNewUsernameToBeSent();
 			this.dispose();
 		}
 	}

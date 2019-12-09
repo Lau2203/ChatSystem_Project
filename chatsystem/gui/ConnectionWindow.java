@@ -27,9 +27,13 @@ import chatsystem.LocalClient;
 @SuppressWarnings("serial")
 public class ConnectionWindow extends JFrame {
 
+	LocalClient master;
+
 	public ConnectionWindow(LocalClient master)  {    
 
 		super();         
+
+		this.master = master;
 
 		Color myBlue = new Color(24, 147, 248);
 
@@ -178,7 +182,7 @@ public class ConnectionWindow extends JFrame {
 
 			this.setVisible(false);
 
-			master.wakeUp();
+			this.master.notifyLoginSuccessful();
 
 			this.dispose();
 		} else {
