@@ -141,6 +141,16 @@ public abstract class Client extends Thread {
 		System.exit(1);
 	}
 
+	public void notifyNewUsernameToBeSent() {
+		synchronized(this.childrenLock) {
+			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
+
+			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_USERNAME_TO_BE_SENT);
+
+			this.wakeUp();
+		}
+	}
+
 	public void notifyNewMessageToBeSent(String content, User recipient) {
 		synchronized(this.childrenLock) {
 			try {this.semaphore.acquire();} catch (InterruptedException ie) {ie.printStackTrace();}
@@ -197,9 +207,9 @@ public abstract class Client extends Thread {
 		}
 	}
 
-	public void notifyNewUsernameToBeSent() {
-		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
-	}
+//	public void notifyNewUsernameToBeSent() {
+//		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+//	}
 
 	public boolean login(String input) {
 		boolean loggedin = false;
@@ -268,7 +278,8 @@ public abstract class Client extends Thread {
 		}
 
 		this.mainUser.setUsername(username);
-		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+		//this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+		this.notifyNewUsernameToBeSent();
 		ConfigParser.updateSetting("username", username);
 
 		return true;

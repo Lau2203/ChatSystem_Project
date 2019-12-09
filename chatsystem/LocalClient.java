@@ -114,6 +114,12 @@ public class LocalClient extends Client {
 
 					break;
 
+				case NEW_USERNAME_TO_BE_SENT:
+					this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+					this.mw.setVisible(true);
+					this.mw.notifyNewMainUserUsername();
+					break;
+
 				default: break;
 			}
 			Logs.println("LOCAL CLIENT : RECEIVED '" + this.networkManagerInformation.getNotifyInformation() + "' signal");
@@ -158,6 +164,7 @@ public class LocalClient extends Client {
 			nidw.setVisible(true);
 
 			/* Wait for the connection window to confirm the user is now connected */
+			/*
 			synchronized(this.lock) {
 				try {
 					this.lock.wait();
@@ -165,9 +172,12 @@ public class LocalClient extends Client {
 			}
 
 			this.mw.setVisible(true);
+			*/
 		}
+		/*
 
 		this.mw.notifyNewMainUserUsername();
+		*/
 	}
 
 	/* Update the GUI */
