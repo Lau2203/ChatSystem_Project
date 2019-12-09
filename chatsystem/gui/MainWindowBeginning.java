@@ -49,6 +49,10 @@ public class MainWindowBeginning extends JFrame{
 		Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
+		
+		Icon mouseEnteredValidate 	= new ImageIcon("../resources/images/Validate2.png");
+		Icon mouseExitedValidate 	= new ImageIcon("../resources/images/Validate1.png");
+
 		//About US - NORTH.LEFT
 		JPanel panUs 		= new JPanel();
 		panUs.setBackground(Color.BLUE); 
@@ -85,57 +89,7 @@ public class MainWindowBeginning extends JFrame{
 		JButton buttonM 	= new JButton(mouseExitedM);
 		buttonM.setBorder(BorderFactory.createLineBorder(Color.white));
 		buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
-		
-		buttonM.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {}
-			@Override
-     			public void mousePressed(MouseEvent e) {
-				//buttonM.setIcon(mouseEnteredM);
-			}
-			@Override
-        		public void mouseReleased(MouseEvent e) {
-				//buttonM.setIcon(mouseExitedM);
-			}
-			@Override
-        		public void mouseEntered(MouseEvent e){
-				setCursor(handCursor);
-				buttonM.setIcon(mouseEnteredM);
-				buttonM.setBorder(BorderFactory.createLineBorder(myBlue));
-       			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				setCursor(defaultCursor);
-				buttonM.setIcon(mouseExitedM);
-				buttonM.setBorder(BorderFactory.createLineBorder(Color.white));
-			}
-		});
-
-		buttonO.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {}
-			@Override
-     			public void mousePressed(MouseEvent e) {
-				//buttonO.setIcon(mouseEnteredO);
-			}
-			@Override
-        		public void mouseReleased(MouseEvent e) {
-				//buttonO.setIcon(mouseExitedO);
-			}
-			@Override
-        		public void mouseEntered(MouseEvent e){
-				setCursor(handCursor);
-				buttonO.setIcon(mouseEnteredO);
-				buttonO.setBorder(BorderFactory.createLineBorder(myBlue));
-       			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				setCursor(defaultCursor);
-				buttonO.setIcon(mouseExitedO);
-				buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
-			}
-		});
-
-		BoxAboutUs2.add(buttonO);
-		BoxAboutUs2.add(buttonM);
+	
 		//END of About US - NORTH.LEFT 
 		
 
@@ -259,7 +213,7 @@ public class MainWindowBeginning extends JFrame{
     		panelMsg.setBackground(Color.white);
 		
 		Box boxMsg = Box.createVerticalBox();
-		boxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//boxMsg.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		panelMsg.add(boxMsg);
 
 
@@ -286,8 +240,7 @@ public class MainWindowBeginning extends JFrame{
 		JButton backAButton	= new JButton(backA);
 		backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
 
-	
-	
+
 		
 		JButton buttonAU 	= new JButton(mouseExitedAU);
 		buttonAU.setBorder(BorderFactory.createLineBorder(Color.white));
@@ -298,9 +251,10 @@ public class MainWindowBeginning extends JFrame{
 			@Override
      			public void mousePressed(MouseEvent e) {
 				panelMsg.removeAll();
+				panelMsg.setLayout(new FlowLayout(FlowLayout.LEFT));
 				panelMsg.add(backAButton);
-				panelMsg.add(aboutUsFinal);
 				panelMsg.revalidate();
+				panelMsg.add(aboutUsFinal);
 				panelMsg.repaint();
 				buttonAU.setIcon(mouseExitedAU);
 			}
@@ -345,6 +299,7 @@ public class MainWindowBeginning extends JFrame{
 				panelMsg.revalidate();
 				panelMsg.repaint();
 				backAButton.setIcon(backA);
+				panelMsg.setLayout(new FlowLayout(FlowLayout.CENTER));
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
@@ -369,6 +324,133 @@ public class MainWindowBeginning extends JFrame{
 	
 
 		/************************************END OF MESSAGES PART*************************************************/
+
+
+		/*****************Buttons New and Option**********************************/
+		BoxAboutUs2.add(buttonO);
+		BoxAboutUs2.add(buttonM);
+
+		buttonO.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				panelMsg.removeAll();
+				panelMsg.setLayout(new FlowLayout(FlowLayout.LEFT));
+				Box mainBoxMsg = Box.createVerticalBox();
+				panelMsg.add(mainBoxMsg);
+				mainBoxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+				
+				mainBoxMsg.add(backAButton);
+	
+				
+				Box title = Box.createVerticalBox();
+				mainBoxMsg.add(title);
+				JLabel titleOption = new JLabel("Option");
+				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+				titleOption.setForeground(myBlue);
+				title.add(titleOption);
+
+				//Change UserName
+				Box UserN = Box.createVerticalBox();
+				mainBoxMsg.add(UserN);
+				JLabel textOption1 = new JLabel("Set Username");
+				textOption1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				textOption1.setForeground(myBlue);
+				UserN.add(textOption1);
+				JLabel textOption2 = new JLabel("You can change your username. This username is how all the connected users will see you.");
+				//textOption2.setPreferredSize(new Dimension(100,20));
+				textOption2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textOption2.setForeground(Color.gray);
+				UserN.add(textOption2);
+				
+				Box set = Box.createHorizontalBox();
+				set.setBackground(Color.white);
+				mainBoxMsg.add(set);
+				Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
+				Border downBlue = BorderFactory.createMatteBorder(0, 0, 1, 0, myBlue);
+				Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.white);
+				Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
+				Border borderTextField2 = BorderFactory.createCompoundBorder(downBlue, borderW);
+				
+				JTextArea newUserName = new JTextArea("Write your new username...");
+				newUserName.setFont(new Font("CALIBRI", Font.PLAIN, 13));
+				newUserName.getFont().deriveFont(Font.ITALIC);
+				newUserName.setForeground(Color.gray);
+				newUserName.setBorder(borderTextField);
+				set.add(newUserName);
+					newUserName.addMouseListener(new MouseListener() {
+							public void mouseClicked(MouseEvent e) {}
+							@Override
+				     			public void mousePressed(MouseEvent e) {}
+							@Override
+							public void mouseReleased(MouseEvent e) {}
+							@Override
+							public void mouseEntered(MouseEvent e){
+								setCursor(handCursor);
+								newUserName.setBorder(borderTextField2);
+				       			}
+							@Override
+							public void mouseExited(MouseEvent e) {
+								setCursor(defaultCursor);
+								newUserName.setBorder(borderTextField);
+					
+							}
+					});
+
+				JButton buttonGo = new JButton(mouseExitedValidate);
+				set.add(buttonGo);
+				Border emptyBorderButton = BorderFactory.createEmptyBorder();
+				buttonGo.setBorder(emptyBorderButton);
+				
+
+					buttonGo.addMouseListener(new MouseListener() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+							}
+							@Override
+				     			public void mousePressed(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseReleased(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseEntered(MouseEvent e){
+								setCursor(handCursor);
+								buttonGo.setIcon(mouseEnteredValidate);
+				       			}
+							@Override
+							public void mouseExited(MouseEvent e) {
+								setCursor(defaultCursor);
+								buttonGo.setIcon(mouseExitedValidate);
+							}
+					});
+						
+
+				panelMsg.revalidate();
+				panelMsg.repaint();
+				} //end of mouse clicked on Option
+			@Override
+     			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				buttonO.setIcon(mouseEnteredO);
+				buttonO.setBorder(BorderFactory.createLineBorder(myBlue));
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+				buttonO.setIcon(mouseExitedO);
+				buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
+			}	
+			
+				
+		});
+
+		
+	
 		/*********************************************************************************************************/
 		//SPLITS
     		s1 	= new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, panUsers);
