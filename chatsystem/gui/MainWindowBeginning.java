@@ -269,7 +269,7 @@ public class MainWindowBeginning extends JFrame{
 		imageLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		boxMsg.add(imageLogo);
 
-		ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsFinal1.png");
+		ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsFinal.png");
 		JLabel aboutUsFinal		= new JLabel(logo2); 
 
 		JLabel paddingT1 		= new JLabel(" ");
@@ -285,21 +285,24 @@ public class MainWindowBeginning extends JFrame{
 		
 		JButton backAButton	= new JButton(backA);
 		backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
+
+	
+	
 		
 		JButton buttonAU 	= new JButton(mouseExitedAU);
 		buttonAU.setBorder(BorderFactory.createLineBorder(Color.white));
 		buttonAU.setAlignmentX(Component.CENTER_ALIGNMENT);
+		boxMsg.add(buttonAU, BorderLayout.CENTER);
 		buttonAU.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {}
 			@Override
      			public void mousePressed(MouseEvent e) {
 				panelMsg.removeAll();
-				backAButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
 				panelMsg.add(backAButton);
-				aboutUsFinal.setAlignmentX(Component.CENTER_ALIGNMENT);
 				panelMsg.add(aboutUsFinal);
 				panelMsg.revalidate();
 				panelMsg.repaint();
+				buttonAU.setIcon(mouseExitedAU);
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
@@ -317,12 +320,31 @@ public class MainWindowBeginning extends JFrame{
 				
 			}
 		});
+		
+		//Texte
+		JLabel paddingT2 		= new JLabel(" ");
+		paddingT2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+		JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session.");
+		sendTextMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
+		sendTextMsg.setForeground(Color.gray);
+		sendTextMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+		boxMsg.add(paddingT2, BorderLayout.CENTER);
+		boxMsg.add(sendTextMsg, BorderLayout.CENTER);
 
 		backAButton.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {}
 			@Override
      			public void mousePressed(MouseEvent e) {
-				
+				panelMsg.removeAll();
+				panelMsg.add(boxMsg);
+				boxMsg.add(imageLogo);
+				boxMsg.add(paddingT1);
+				boxMsg.add(buttonAU, BorderLayout.CENTER);
+				boxMsg.add(paddingT2, BorderLayout.CENTER);
+				boxMsg.add(sendTextMsg, BorderLayout.CENTER);
+				panelMsg.revalidate();
+				panelMsg.repaint();
+				backAButton.setIcon(backA);
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
@@ -342,17 +364,8 @@ public class MainWindowBeginning extends JFrame{
 		});
 
 
-		boxMsg.add(buttonAU, BorderLayout.CENTER);
+		
 
-		//Texte
-		JLabel paddingT2 		= new JLabel(" ");
-		paddingT2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
-		JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session.");
-		sendTextMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
-		sendTextMsg.setForeground(Color.gray);
-		sendTextMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
-		boxMsg.add(paddingT2, BorderLayout.CENTER);
-		boxMsg.add(sendTextMsg, BorderLayout.CENTER);
 	
 
 		/************************************END OF MESSAGES PART*************************************************/
