@@ -164,8 +164,6 @@ public class ConnectionHandler extends Thread {
 			ConnectionHandler.master.notifyNewMessage(this, userInput);
 
 			Logs.println(this.instanceName, "Received '" + userInput + "'");
-
-			this.writeln("'userInput' : " + userInput.length());
 		}
 
 		/* 2 Possibilities 

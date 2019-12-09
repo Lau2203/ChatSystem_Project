@@ -134,16 +134,6 @@ public abstract class Client extends Thread {
 		System.exit(1);
 	}
 
-	public synchronized void notifyNewMessageToBeSent(String content, User recipient) {
-
-		this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_MESSAGE_TO_BE_SENT);
-
-		MessageString msg = new MessageString(recipient, new Timestamp(System.currentTimeMillis()), false);
-		msg.setContent(content);
-
-		this.networkManagerInformation.setRecipientUser(recipient);
-		this.networkManagerInformation.setMessage(msg);
-	}
 
 
 	public synchronized boolean login(String input) {
@@ -181,6 +171,22 @@ public abstract class Client extends Thread {
 
 	public synchronized ArrayList<User> getUserList() {
 		return new ArrayList<User>(this.userList);
+	}
+
+	public synchronized User getUserByAddress(InetAddress address) {
+		/* Find an existing one */
+		for (User usr: this.userList) {
+			if (usr.getAddress().equals(address)) {
+				return usr;
+			}	
+		}
+		/* Otherwise create a new one */	
+		/*
+		User newUser = new User(fingerprint);
+		this.userList.add(newUser);
+		return newUser;
+		*/
+		return null;
 	}
 
 	public synchronized User getUser(String fingerprint) {
@@ -231,4 +237,5 @@ public abstract class Client extends Thread {
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {}
 	public void notifyNewMessage(User recipient, Message msg) {}
 	public void notifyNewUsernameToBeSent() {}
+	public void notifyNewMessageToBeSent(String content, User recipient) {}
 }

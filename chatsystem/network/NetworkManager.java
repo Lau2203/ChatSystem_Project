@@ -166,7 +166,7 @@ public class NetworkManager {
 	/* Can only be called by a ConnectionHandler, since we must be connected to the remote client first */
 	protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
 
-		MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()));
+		MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()), true);
 
 		msg.setContent(content);
 
@@ -176,7 +176,13 @@ public class NetworkManager {
 	/* Can only be called by the ConnectionListener */
 	protected void notifyNewConnection(Socket clientConnection) {
 
-		ConnectionHandler ch = new ConnectionHandler(clientConnection);	
+		User recipient = this.master.getUserByAddress(clientConnection.getInetAddress());
+		if (recipient == null) {
+			Logs.printerro(this.instanceName, "Received a connection from a unknown user, aborting the connection");
+			return;
+		}
+
+		ConnectionHandler ch = new ConnectionHandler(recipient, clientConnection);	
 
 		synchronized(this) {
 			this.connectionHandlers.add(ch);
@@ -228,7 +234,7 @@ public class NetworkManager {
 		stringPacket = msg.getContent();
 
 		ConnectionHandler remote = this.getConnectionHandler(user);
-		
+
 		if (remote != null) {
 			out = remote.getWriter();
 		}

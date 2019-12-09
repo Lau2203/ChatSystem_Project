@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 
 import java.net.InetAddress;
 
+import java.sql.Timestamp;
+
 import chatsystem.network.NetworkManagerInformation;
 
 import chatsystem.NotifyInformation;
@@ -79,22 +81,23 @@ public class LocalClient extends Client {
 		this.mw.notifyNewMainUserUsername();
 	}
 
-	public void notifyNewMessageToBeSent(User recipient, Message msg) {
-		User user = recipient;
+	public void notifyNewMessageToBeSent(String content, User recipient) {
 
-		user.getMessageHistory().addMessage(msg);
+		MessageString msg = new MessageString(recipient, new Timestamp(System.currentTimeMillis()), false);
 
-		this.netmanager.notifyNewMessageToBeSent(user, msg);
+		msg.setContent(content);
 
-		this.mw.notifyNewMessage(user);
+		recipient.getMessageHistory().addMessage(msg);
+
+		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
+
+		this.mw.notifyNewMessage(recipient);
 	}
 
 	public void notifyNewMessage(User recipient, Message msg) {
-		System.out.println("NEW MESSAGE : '" + this.networkManagerInformation.getMessage().getContent() + "'");
+		System.out.println("NEW MESSAGE : '" + msg.getContent() + "'");
 
-		//User recipient = this.getUser(fingerprint);
-
-		recipient.getMessageHistory().addMessage(this.networkManagerInformation.getMessage());
+		recipient.getMessageHistory().addMessage(msg);
 
 		this.mw.notifyNewMessage(recipient);
 	}
@@ -126,6 +129,6 @@ public class LocalClient extends Client {
 
 	/* Update the GUI */
 	public static void main(String[] args) {
-		(new LocalClient()).start();
+		(new LocalClient()).run();
 	}
 }
