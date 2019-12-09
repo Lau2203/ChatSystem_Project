@@ -290,7 +290,7 @@ public class NetworkManager extends Thread {
 
 	public void notifyNewUsernameToBeSent(String fingerprint, String username) {
 		synchronized(this.childrenLock) {
-
+			
 			try { this.semaphore.acquire(); } catch (InterruptedException ie) {ie.printStackTrace();}
 
 			this.networkManagerInformation.setNotifyInformation(NotifyInformation.NEW_USERNAME_TO_BE_SENT);

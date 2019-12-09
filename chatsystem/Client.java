@@ -263,11 +263,12 @@ public abstract class Client extends Thread {
 
 	/* Returns whether or not it was able to set that new username */
 	public boolean setNewUsername(String username) {
-		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username))	
+		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username)) {
 			return false;
+		}
 
 		this.mainUser.setUsername(username);
-		this.notifyNewUsernameToBeSent();
+		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
 		ConfigParser.updateSetting("username", username);
 
 		return true;
