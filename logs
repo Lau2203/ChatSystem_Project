@@ -1,7 +1,0 @@
-[+] [NetworkManager] Starting the Network Manager...
-[+] [ConnectionListener] Starting the ConnectionListener...
-[+] [ConnectionListener] ConnectionListener successfully started.
-[+] [NetworkManager] Network Manager successfully started !
-LOCAL CLIENT : RECEIVED 'NEW_ACTIVE_USER' signal
-LOCAL CLIENT : RECEIVED 'NEW_ACTIVE_USER' signal
-LOCAL CLIENT : RECEIVED 'USERNAME_MODIFICATION' signal
