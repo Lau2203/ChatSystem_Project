@@ -365,6 +365,7 @@ public class MainWindow extends JFrame{
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					e.consume();
 					sendMessage(writeMsg.getText());
+					writeMsg.setText("");
 				}
 			}
 			public void keyTyped(KeyEvent e) {}
