@@ -9,10 +9,6 @@
 <message from="me" timestamp="2019-02-28 12:33:56.0">I thought about sth</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">Don't you have a brother ?</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">I'm looking for someone to get my car driven by a professional</message>
-<message from="me" timestamp="2019-12-09 21:01:50.36">hi there</message>
-<message from="him" timestamp="2019-12-09 21:01:50.373">hi there</message>
-<message from="me" timestamp="2019-12-09 21:01:52.889">it's me</message>
-<message from="him" timestamp="2019-12-09 21:01:52.89">it's me</message>
-<message from="me" timestamp="2019-12-09 21:01:57.398">not you I guess</message>
-<message from="him" timestamp="2019-12-09 21:01:57.398">not you I guess</message>
+<message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
+<message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
 </recipient>

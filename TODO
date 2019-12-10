@@ -1,3 +1,7 @@
 
 Encrypt the config file too ?
 
+Differentiate active users of non active users in MainWindow users panel. Indeeed, we also display the users which we had a conversation with in the past, whether these users are now active or not.
+
+When quitting the application, we need to send in broadcast the fact that we are leaving, and in UDP listener we need to be able to interpret such signal.
+
