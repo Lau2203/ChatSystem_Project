@@ -447,7 +447,11 @@ public class MainWindow extends JFrame{
 		this.panUsers.add(this.search);
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getUserList()) {	
-			
+
+			/*TO CHECK **************************************************************** Scroll Bar on Users Panel*/
+			JScrollPane scrollUser 	= new JScrollPane(panUsers, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			this.add(scrollUser);						
+	
 			Box mainBox = Box.createHorizontalBox();
 			mainBox.setBackground(MainWindow.backgroundColor);
 
