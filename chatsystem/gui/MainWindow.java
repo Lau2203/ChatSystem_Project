@@ -22,6 +22,7 @@ import java.awt.Cursor;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import java.awt.event.MouseListener;
 import java.awt.event.KeyListener;
@@ -201,20 +202,36 @@ public class MainWindow extends JFrame{
 
  		
 		//Search Bar
-		this.search = Box.createVerticalBox();
+		this.search = Box.createHorizontalBox();
 		search.setBackground(MainWindow.backgroundColor);
 		
 
-		JTextField textField 		= new JTextField(" Search something ? ...               "); //padding to be done
+		JTextField textField 		= new JTextField(" Search something ? ...                  "); 
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 15));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
 		textField.setBackground(MainWindow.backgroundColor);
+
 		
+		Border borderWhite = BorderFactory.createLineBorder(Color.white, 0);
+		JTextField paddingSearchBar1 = new JTextField("");
+		//paddingSearchBar1.setFont(new Font("CALIBRI", Font.PLAIN, 6));
+		paddingSearchBar1.setBorder(borderWhite);
+		paddingSearchBar1.setEditable(false); 
+		paddingSearchBar1.setBackground(MainWindow.backgroundColor);
+
+		JTextField paddingSearchBar2 = new JTextField("");
+		//paddingSearchBar2.setFont(new Font("CALIBRI", Font.PLAIN, 6));
+		paddingSearchBar2.setBorder(borderWhite);
+		paddingSearchBar2.setEditable(false);
+		paddingSearchBar2.setBackground(MainWindow.backgroundColor);
+
 		Border borderG = BorderFactory.createLineBorder(Color.gray, 2);
 		Border borderB = BorderFactory.createLineBorder(myBlue, 2);
 		textField.setBorder(borderG);
+		search.add(paddingSearchBar1);
 		search.add(textField);
+		search.add(paddingSearchBar2);
 		
 
 		textField.addMouseListener(new MouseListener() {           
@@ -445,11 +462,25 @@ public class MainWindow extends JFrame{
 		/* Clean the whole panel */
 		this.panUsers.removeAll();
 		/* Do not forget to add the search bar back */
-		this.panUsers.add(this.search);
+		panUsers.setLayout(new BorderLayout());
+		this.panUsers.add(this.search, BorderLayout.NORTH);
+
+	
+
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getUserList()) {	
+				
 
-							
+			/*JScroll the Panel Users*/ //TO DO Maybe we could put the UserBox on the left side
+			JPanel testScroll = new JPanel();
+			testScroll.setBackground(Color.white);
+			
+			testScroll.setLayout(new BorderLayout());
+			JScrollPane scrollMsg 	= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			scrollMsg.setBackground(Color.white);
+			scrollMsg.setBorder(BorderFactory.createLineBorder(Color.white));
+			panUsers.add(scrollMsg, BorderLayout.CENTER);	
+			/*End of JScrollCode*/		
 	
 			Box mainBox = Box.createHorizontalBox();
 			mainBox.setBackground(MainWindow.backgroundColor);
@@ -463,7 +494,7 @@ public class MainWindow extends JFrame{
 			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 			rightBox.add(userName);
 
-			JLabel lastMsg 		= new JLabel("I spoke to our IT manager abo..."); //get 29 letters + [...]
+			JLabel lastMsg 		= new JLabel("I spoke to our IT manage..."); //get  29 letters + [...]
 			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
 			lastMsg.setForeground(Color.gray);	
 			rightBox.add(lastMsg);
@@ -472,15 +503,17 @@ public class MainWindow extends JFrame{
 
 			JLabel userL 		= new JLabel(MainWindow.user); 
 
-
+			userL.setAlignmentX(Component.RIGHT_ALIGNMENT);
 			mainBox.add(userL);
 			mainBox.add(paddingUB2);
 			mainBox.add(rightBox);
 
 			JButton buttonUser1 	= new JButton();
+			testScroll.add(buttonUser1,BorderLayout.NORTH);
 			buttonUser1.setBackground(MainWindow.backgroundColor);
 			buttonUser1.setBorderPainted(false);
-			buttonUser1.add(mainBox);
+			buttonUser1.setLayout(new BorderLayout());
+			buttonUser1.add(mainBox, BorderLayout.WEST);
 
 			buttonUser1.addMouseListener(new MouseListener() {
 					public void mouseClicked(MouseEvent e) {
@@ -503,8 +536,7 @@ public class MainWindow extends JFrame{
 					userName.setForeground(MainWindow.foregroundColor);
 					}
 					});
-
-			this.panUsers.add(buttonUser1,BorderLayout.WEST);
+			
 		}
 
 		/* Draw the panel again */
