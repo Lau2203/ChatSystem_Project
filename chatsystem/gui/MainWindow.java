@@ -441,7 +441,7 @@ public class MainWindow extends JFrame{
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 	}
 
-	private void displayUsersPanel() {
+	private synchronized void displayUsersPanel() {
 		/* Clean the whole panel */
 		this.panUsers.removeAll();
 		/* Do not forget to add the search bar back */
@@ -512,7 +512,7 @@ public class MainWindow extends JFrame{
 		this.panUsers.repaint();
 	}
 
-	private void displayConversation() {
+	private synchronized void displayConversation() {
 
 		this.msgBoxPanel.removeAll();
 
@@ -608,7 +608,7 @@ public class MainWindow extends JFrame{
 		this.msgBoxPanel.repaint();
 	}
 
-	private void updateConversationPanel(User user) {
+	private synchronized void updateConversationPanel(User user) {
 		this.userNameC.setText(user.getUsername());
 		this.currentRecipient = user;
 		this.displayConversation();
@@ -637,7 +637,7 @@ public class MainWindow extends JFrame{
 		}
 	}
 
-	private void sendMessage(String content) {
+	private synchronized void sendMessage(String content) {
 		if (content == null || content.equals("")) {
 			return;
 		}
@@ -645,7 +645,7 @@ public class MainWindow extends JFrame{
 		this.master.notifyNewMessageToBeSent(content, this.currentRecipient);
 	}
 
-	private void shutdown() {
+	private synchronized void shutdown() {
 		this.master.shutdown();
 		System.exit(1);
 	}

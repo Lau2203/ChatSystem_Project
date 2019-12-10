@@ -27,24 +27,24 @@ public class MessageHistory implements Iterable<Message> {
 		this.lastMessage = null;
 	}
 
-	public User getRecipientUser() {
+	public synchronized User getRecipientUser() {
 		return this.recipientUser;
 	}
 
-	public ArrayList<Message> getMessageList() {
+	public synchronized ArrayList<Message> getMessageList() {
 		return this.messageList;
 	}
 
 	@Override
-	public Iterator<Message> iterator() {
+	public synchronized Iterator<Message> iterator() {
 		return this.messageList.iterator();
 	}
 
-	public void addMessage(Message msg){
+	public synchronized void addMessage(Message msg){
 		this.messageList.add(msg);
 	}
 
-	public void setLastMessage(int length) {
+	public synchronized void setLastMessage(int length) {
 		String lastMessage = this.messageList.get(this.messageList.size() - 1).getContent();
 		try {
 			this.lastMessage = lastMessage.substring(0, length);
