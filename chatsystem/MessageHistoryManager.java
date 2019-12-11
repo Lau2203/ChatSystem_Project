@@ -87,10 +87,11 @@ public class MessageHistoryManager extends DefaultHandler {
 		}
 
 		out.println("<?xml version=\"1.0\"?>");
+		out.println("<history>");
 
 		for (MessageHistory mh: this.messageHistoryList) {
 
-			out.println("<recipient fingerprint=\"" + mh.getRecipientUser().getFingerprint() + "\">");
+			out.println("<recipient fingerprint=\"" + mh.getRecipientUser().getFingerprint() + "\" username=\"" + mh.getRecipientUser().getUsername() + "\">");
 
 			for (Message msg: mh.getMessageList()) {
 				if (msg.getHasBeenSentByRecipient()) {
@@ -105,6 +106,8 @@ public class MessageHistoryManager extends DefaultHandler {
 
 			out.println("</recipient>");
 		}
+
+		out.println("</history>");
 
 		out.flush();
 		out.close();

@@ -204,8 +204,7 @@ public abstract class Client extends Thread {
 
 	public boolean isUsernameAvailable(String username) {
 		for (User user: this.getUserList()) {
-			System.out.println("\t\tUSER : '" + user.getUsername() + "'");
-			if (user.getUsername().equals(username)) {
+			if (user.isActive() && user.getUsername() != null && user.getUsername().equals(username)) {
 				return false;
 			}
 		}

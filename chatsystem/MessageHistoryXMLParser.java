@@ -44,9 +44,14 @@ public class MessageHistoryXMLParser extends DefaultHandler {
 
 		if (qName.equalsIgnoreCase("recipient")) {
 			String fingerprint = attributes.getValue("fingerprint");
+			String username = attributes.getValue("username");
 
 			/* Fetch the user in the maintained user list of the main client process */
 			this.currentRecipient = this.master.getUser(fingerprint);
+	
+			if (!this.currentRecipient.isActive()) {
+				this.currentRecipient.setUsername(username);
+			}
 
 			this.currentMessageHistory = new MessageHistory(this.currentRecipient);
 
@@ -70,6 +75,7 @@ public class MessageHistoryXMLParser extends DefaultHandler {
 		if (qName.equalsIgnoreCase("recipient")) {
 			this.messageHistoryList.add(this.currentMessageHistory);
 			this.currentRecipient.setMessageHistory(this.currentMessageHistory);
+			this.currentMessageHistory.setLastMessage(29);
 
 		} else if (qName.equalsIgnoreCase("message")) {
 			this.currentMessageHistory.addMessage(this.currentMessage);

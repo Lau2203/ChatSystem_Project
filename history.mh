@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==">
+<history>
+<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Barton">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">Hi</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">How are you ?</message>
@@ -11,6 +12,26 @@
 <message from="me" timestamp="2019-02-28 12:33:56.0">I'm looking for someone to get my car driven by a professional</message>
 <message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
 <message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
-<message from="me" timestamp="2019-12-10 21:23:46.534">Kak tibia zavout ?</message>
-<message from="him" timestamp="2019-12-10 21:23:46.584">Kak tibia zavout ?</message>
+<message from="me" timestamp="2019-12-11 09:03:04.093">hello</message>
+<message from="him" timestamp="2019-12-11 09:03:04.12">hello</message>
+<message from="me" timestamp="2019-12-11 09:03:07.761">yes</message>
+<message from="him" timestamp="2019-12-11 09:03:07.761">yes</message>
+<message from="me" timestamp="2019-12-11 09:08:16.076">hey</message>
+<message from="him" timestamp="2019-12-11 09:08:16.09">hey</message>
+<message from="me" timestamp="2019-12-11 09:08:19.982">it's me</message>
+<message from="him" timestamp="2019-12-11 09:08:19.983">it's me</message>
 </recipient>
+<recipient fingerprint="pcpA8Ha81Qg7Pc8Nd6PmJQ==" username="null">
+<message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
+<message from="me" timestamp="2019-02-28 12:33:56.0">Hi</message>
+<message from="me" timestamp="2019-02-28 12:33:56.0">How are you ?</message>
+<message from="him" timestamp="2019-02-28 12:33:56.0">Fine, thanks</message>
+<message from="him" timestamp="2019-02-28 12:33:56.0">Hbu ?</message>
+<message from="me" timestamp="2019-02-28 12:33:56.0">Great.</message>
+<message from="me" timestamp="2019-02-28 12:33:56.0">I thought about sth</message>
+<message from="me" timestamp="2019-02-28 12:33:56.0">Don't you have a brother ?</message>
+<message from="me" timestamp="2019-02-28 12:33:56.0">I'm looking for someone to get my car driven by a professional</message>
+<message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
+<message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
+</recipient>
+</history>

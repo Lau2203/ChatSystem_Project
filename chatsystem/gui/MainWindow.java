@@ -85,6 +85,7 @@ public class MainWindow extends JFrame{
 	public static Icon mouseExitedS		= new ImageIcon("../resources/images/17.png");
 	// User Image
 	public static ImageIcon user 		= new ImageIcon("../resources/images/activet.png");
+	public static ImageIcon inactiveUser 	= new ImageIcon("../resources/images/unactive.png");
 
 	// Cursors
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
@@ -501,7 +502,12 @@ public class MainWindow extends JFrame{
 
 			JLabel paddingUB2 	= new JLabel("  ");
 
-			JLabel userL 		= new JLabel(MainWindow.user); 
+			JLabel userL;
+			if (usr.isActive()) {
+				userL 		= new JLabel(MainWindow.user); 
+			} else {
+				userL 		= new JLabel(MainWindow.inactiveUser); 
+			}
 
 			userL.setAlignmentX(Component.RIGHT_ALIGNMENT);
 			mainBox.add(userL);
