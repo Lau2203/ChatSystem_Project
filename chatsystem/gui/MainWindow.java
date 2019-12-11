@@ -474,6 +474,7 @@ public class MainWindow extends JFrame{
 
 	
 		int i = 0;
+		int j = 0;
 
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getUserList()) {	
@@ -529,11 +530,16 @@ public class MainWindow extends JFrame{
 			mainBox.add(userL);
 			mainBox.add(paddingUB2);
 			mainBox.add(rightBox);
+			
+			if (i>5){
+				j=1; // if there are more than 5 users on the list, we must add rows in the GridLayout
+			}
 
 			JButton buttonUser1 	= new JButton();
 			buttonUser1.setPreferredSize(new Dimension(305,70));
-			testScroll.setLayout(new GridLayout(5, 1)); //5 users displayed max, scroll pane after
+			testScroll.setLayout(new GridLayout(5+j, 1)); //5 users displayed max, scroll pane after
 			testScroll.add(buttonUser1, i, 0); //TODO
+			testScroll.add(buttonUser1);
 			buttonUser1.setBackground(MainWindow.backgroundColor);
 			buttonUser1.setBorderPainted(false);
 			buttonUser1.setLayout(new BorderLayout());
@@ -560,9 +566,9 @@ public class MainWindow extends JFrame{
 					userName.setForeground(MainWindow.foregroundColor);
 					}
 					});
-
-			
 		}
+			
+
 
 		/* Draw the panel again */
 		this.panUsers.revalidate();
