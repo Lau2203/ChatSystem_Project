@@ -17,14 +17,14 @@ public class MessageHistory implements Iterable<Message> {
 		this.recipientUser = new User();
 		this.messageList = new ArrayList<Message>();
 
-		this.lastMessage = null;
+		this.lastMessage = "";
 	}
 
 	public MessageHistory(User user) {
 		this.recipientUser = user;
 		this.messageList = new ArrayList<Message>();
 
-		this.lastMessage = null;
+		this.lastMessage = "";
 	}
 
 	public synchronized User getRecipientUser() {
@@ -42,6 +42,10 @@ public class MessageHistory implements Iterable<Message> {
 
 	public synchronized void addMessage(Message msg){
 		this.messageList.add(msg);
+	}
+
+	public synchronized String getLastMessage() {
+		return this.lastMessage;
 	}
 
 	public synchronized void setLastMessage(int length) {

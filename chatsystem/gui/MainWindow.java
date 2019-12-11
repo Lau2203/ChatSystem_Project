@@ -73,6 +73,8 @@ public class MainWindow extends JFrame{
 	private JLabel textName;
 	private JLabel userNameC;
 
+	private JTextArea writeMsg 	= new JTextArea("Write your message...", 0, 43); //padding to be done
+
 	/* Resources */
 	public static ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
 
@@ -328,7 +330,6 @@ public class MainWindow extends JFrame{
 		Box textBox = Box.createHorizontalBox();
 		textBox.setBackground(MainWindow.backgroundColor);
 
-		JTextArea writeMsg		= new JTextArea("Write your message...", 0, 43); //padding to be done
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 13));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
@@ -342,9 +343,9 @@ public class MainWindow extends JFrame{
 		Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
 		
 		scrollMsg2.setBorder(borderTextField);
-		writeMsg.setBorder(borderW);	
+		this.writeMsg.setBorder(borderW);	
 
-		writeMsg.addMouseListener(new MouseListener() {           
+		this.writeMsg.addMouseListener(new MouseListener() {           
 			@Override
 		   	public void mouseReleased(MouseEvent e) {}         
 		   	@Override
@@ -472,11 +473,12 @@ public class MainWindow extends JFrame{
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
 	
-		int i = 1;
+		int i = 0;
 
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getUserList()) {	
 				
+			i++;
 
 			System.out.println("DISPLAY USER : " + usr.getUsername());
 			System.out.flush();
@@ -504,7 +506,12 @@ public class MainWindow extends JFrame{
 			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 			rightBox.add(userName);
 
-			JLabel lastMsg 		= new JLabel("I spoke to our IT manage..."); //get  29 letters + [...]
+			JLabel lastMsg;
+			if (usr.getMessageHistory() != null) {
+				lastMsg = new JLabel(usr.getMessageHistory().getLastMessage()); //get  29 letters + [...]
+			} else {
+				lastMsg = new JLabel("You haven't started a chat yet"); //get  29 letters + [...]
+			}
 			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
 			lastMsg.setForeground(Color.gray);	
 			rightBox.add(lastMsg);
@@ -554,7 +561,6 @@ public class MainWindow extends JFrame{
 					}
 					});
 
-			i++;
 			
 		}
 
@@ -662,6 +668,12 @@ public class MainWindow extends JFrame{
 
 				}
 			}
+		}
+
+		if (!this.currentRecipient.isActive()) {
+			this.writeMsg.setEnabled(false);
+		} else {
+			this.writeMsg.setEnabled(true);
 		}
 
 		this.msgBoxPanel.revalidate();

@@ -35,11 +35,11 @@ public class LocalClient extends Client {
 	}
 
 	public synchronized void notifyLoginSuccessful() {
-		this.startNetworkManager();
 		this.runGUI();
+		this.startNetworkManager();
 	}
 
-	private void askLogin() {
+	private synchronized void askLogin() {
 		/* This window will call Client.login() to check whether the user entered
 		 * the correct password */
 		ConnectionWindow cw = new ConnectionWindow(this);
