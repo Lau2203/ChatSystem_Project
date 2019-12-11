@@ -476,6 +476,9 @@ public class MainWindow extends JFrame{
 		for (User usr : this.master.getUserList()) {	
 				
 
+			System.out.println("DISPLAY USER : " + usr.getUsername());
+			System.out.flush();
+
 			/*JScroll the Panel Users*/ //TO DO Maybe we could put the UserBox on the left side
 			JPanel testScroll = new JPanel();
 			testScroll.setBackground(Color.white);
