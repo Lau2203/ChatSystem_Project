@@ -138,6 +138,7 @@ public class MainWindow extends JFrame{
 		Box BoxAboutUs2 = Box.createHorizontalBox();
 		BoxAboutUsMain.add(BoxAboutUs2, BorderLayout.SOUTH);
 		
+
 		JButton buttonO 	= new JButton(MainWindow.mouseExitedO);
 		JButton buttonM 	= new JButton(MainWindow.mouseExitedM);
 		buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
@@ -193,6 +194,9 @@ public class MainWindow extends JFrame{
 
 		BoxAboutUs2.add(buttonO);
 		BoxAboutUs2.add(buttonM);
+
+		
+
 		//END of About US - NORTH.LEFT 
 		
 
@@ -446,7 +450,7 @@ public class MainWindow extends JFrame{
 		//SPLITS
     		s1 	= new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, this.panUsers);
 		s1.setDividerSize(0);
-		s1.setDividerLocation(185);
+		s1.setDividerLocation(193);
  		s1.setEnabled(false);
 
 		s2 	= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
