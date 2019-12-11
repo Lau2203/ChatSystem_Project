@@ -566,6 +566,7 @@ public class MainWindow extends JFrame{
 		this.msgBoxPanel.add(scrollMsg);
 		
 		Box leftBox = Box.createVerticalBox();
+		leftBox.setPreferredSize(new Dimension(150, 100));
 		leftBox.setBackground(MainWindow.backgroundColor);
 		leftBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		msgBox.add(leftBox, BorderLayout.WEST);
@@ -578,6 +579,7 @@ public class MainWindow extends JFrame{
 		msgBox.add(paddingBox);
 		
 		Box rightBox = Box.createVerticalBox();
+		rightBox.setPreferredSize(new Dimension(150, 100));
 		rightBox.setBackground(MainWindow.backgroundColor);
 		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		msgBox.add(rightBox, BorderLayout.EAST);
@@ -597,15 +599,15 @@ public class MainWindow extends JFrame{
 					boxLabelMsgReceived.setBackground(MainWindow.backgroundColor);
 					leftBox.add(boxLabelMsgReceived);
 					boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-					JTextArea myMsgWhite = new JTextArea("", 2, 20);
-					myMsgWhite.setForeground(MainWindow.backgroundColor);
-					myMsgWhite.setBackground(MainWindow.backgroundColor);
-					myMsgWhite.setWrapStyleWord(true);
-					myMsgWhite.setLineWrap(true);
-					myMsgWhite.setEditable(false);
+					JTextArea myMsgWhite1 = new JTextArea("", 2, 20);
+					myMsgWhite1.setForeground(MainWindow.backgroundColor);
+					myMsgWhite1.setBackground(MainWindow.backgroundColor);
+					myMsgWhite1.setWrapStyleWord(true);
+					myMsgWhite1.setLineWrap(true);
+					myMsgWhite1.setEditable(false);
 					//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
 					//myMsg.setOpaque(false)
-					boxLabelMsgReceived.add(myMsgWhite);
+					boxLabelMsgReceived.add(myMsgWhite1);
 
 					Box boxR 	= Box.createVerticalBox();
 					boxR.setBackground(MainWindow.backgroundColor);
@@ -616,9 +618,16 @@ public class MainWindow extends JFrame{
 					theirMsg.setForeground(myBlue);
 					theirMsg.setBackground(MainWindow.backgroundColor);
 					theirMsg.setEditable(false);
+					
+					JTextArea myMsgWhite2 = new JTextArea("", 2, 20);
+					myMsgWhite2.setForeground(MainWindow.backgroundColor);
+					myMsgWhite2.setBackground(MainWindow.backgroundColor);
+					myMsgWhite2.setWrapStyleWord(true);
+					myMsgWhite2.setLineWrap(true);
 					//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
 					//theirMsg.setOpaque(false);
 					boxR.add(theirMsg);
+					boxR.add(myMsgWhite2);
 				}
 				/* If we are the one who sent the message */
 				else {
