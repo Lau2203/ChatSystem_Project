@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
 import java.awt.event.MouseListener;
 import java.awt.event.KeyListener;
@@ -483,7 +484,7 @@ public class MainWindow extends JFrame{
 			JPanel testScroll = new JPanel();
 			testScroll.setBackground(Color.white);
 			
-			testScroll.setLayout(new BorderLayout());
+			//testScroll.setLayout(new BorderLayout());
 			JScrollPane scrollMsg 	= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			scrollMsg.setBackground(Color.white);
 			scrollMsg.setBorder(BorderFactory.createLineBorder(Color.white));
@@ -522,7 +523,9 @@ public class MainWindow extends JFrame{
 			mainBox.add(rightBox);
 
 			JButton buttonUser1 	= new JButton();
-			testScroll.add(buttonUser1,BorderLayout.NORTH);
+			buttonUser1.setPreferredSize(new Dimension(305,70));
+			testScroll.setLayout(new GridLayout(5, 1)); //5 users displayed max, scroll pane after
+			testScroll.add(buttonUser1, 1, 0); //TODO
 			buttonUser1.setBackground(MainWindow.backgroundColor);
 			buttonUser1.setBorderPainted(false);
 			buttonUser1.setLayout(new BorderLayout());
