@@ -472,6 +472,7 @@ public class MainWindow extends JFrame{
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
 	
+		int i = 1;
 
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getUserList()) {	
@@ -525,7 +526,7 @@ public class MainWindow extends JFrame{
 			JButton buttonUser1 	= new JButton();
 			buttonUser1.setPreferredSize(new Dimension(305,70));
 			testScroll.setLayout(new GridLayout(5, 1)); //5 users displayed max, scroll pane after
-			testScroll.add(buttonUser1, 1, 0); //TODO
+			testScroll.add(buttonUser1, i, 0); //TODO
 			buttonUser1.setBackground(MainWindow.backgroundColor);
 			buttonUser1.setBorderPainted(false);
 			buttonUser1.setLayout(new BorderLayout());
@@ -552,6 +553,8 @@ public class MainWindow extends JFrame{
 					userName.setForeground(MainWindow.foregroundColor);
 					}
 					});
+
+			i++;
 			
 		}
 

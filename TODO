@@ -5,3 +5,7 @@ Differentiate active users of non active users in MainWindow users panel. Indeee
 
 When quitting the application, we need to send in broadcast the fact that we are leaving, and in UDP listener we need to be able to interpret such signal.
 
+Disable Write Message Bar when the recipient user is not active.
+
+Do not allow to send the placeholder "Write the message".
+
