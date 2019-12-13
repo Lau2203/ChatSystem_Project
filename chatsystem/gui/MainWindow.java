@@ -233,7 +233,7 @@ public class MainWindow extends JFrame{
 		paddingSearchBar1.setBackground(MainWindow.backgroundColor);
 
 		JTextField paddingSearchBar2 = new JTextField("");
-		//paddingSearchBar2.setFont(new Font("CALIBRI", Font.PLAIN, 6));
+		//paddingSearchBar2.setFont(new Font("CALIBRI", Font.PLAIN, 3));
 		paddingSearchBar2.setBorder(borderWhite);
 		paddingSearchBar2.setEditable(false);
 		paddingSearchBar2.setBackground(MainWindow.backgroundColor);
@@ -643,7 +643,7 @@ public class MainWindow extends JFrame{
 					boxLabelMsgReceived.add(myMsgWhite1);
 
 					Box boxR 	= Box.createVerticalBox();
-					boxR.setBorder(BorderFactory.createLineBorder(Color.black));
+					//boxR.setBorder(BorderFactory.createLineBorder(Color.black));
 					//boxR.setBackground(MainWindow.backgroundColor);
 					rightBox.add(boxR);
 					JTextArea theirMsg 	= new JTextArea(msg.getContent());
@@ -652,16 +652,10 @@ public class MainWindow extends JFrame{
 					theirMsg.setForeground(Color.white);
 					theirMsg.setBackground(MainWindow.backgroundColor);
 					theirMsg.setEditable(false);
-					
-					/*JTextArea myMsgWhite2 = new JTextArea("", 2, 20);
-					myMsgWhite2.setForeground(MainWindow.backgroundColor);
-					myMsgWhite2.setBackground(MainWindow.backgroundColor);
-					myMsgWhite2.setWrapStyleWord(true);
-					myMsgWhite2.setLineWrap(true);
-					//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
-					//theirMsg.setOpaque(false);
 					boxR.add(theirMsg);
-					boxR.add(myMsgWhite2);*/
+					
+					
+				
 				}
 				/* If we are the one who sent the message */
 				else {
@@ -670,8 +664,8 @@ public class MainWindow extends JFrame{
 					boxS.setBackground(MainWindow.backgroundColor);
 					rightBox.add(boxS);
 					JTextArea myMsg 	= new JTextArea(msg.getContent());
-					myMsg.setForeground(myBlue);
-					myMsg.setBackground(MainWindow.backgroundColor);
+					myMsg.setForeground(Color.white);
+					myMsg.setBackground(myBlue);
 					myMsg.setWrapStyleWord(true);
 					myMsg.setLineWrap(true);
 					myMsg.setEditable(false);
@@ -679,9 +673,17 @@ public class MainWindow extends JFrame{
 					//myMsg.setOpaque(false)
 					boxS.add(myMsg);
 
+					//RIGID AREA BETWEEN EACH MSH
+					Box paddingBox2 = Box.createHorizontalBox();
+					paddingBox2.add((Box.createRigidArea(new Dimension(0, 3))));
+					paddingBox2.setForeground(MainWindow.backgroundColor);
+					paddingBox2.setOpaque(true);
+					boxS.add(paddingBox2);
 
+
+					//Do not modify
 					Box boxLabelMsgReceived2 	= Box.createVerticalBox();
-					boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(Color.black));
+					//boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(Color.black));
 					//boxLabelMsgReceived2.setBackground(MainWindow.backgroundColor);
 					leftBox.add(boxLabelMsgReceived2);
 					boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
