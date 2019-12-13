@@ -1,4 +1,8 @@
 
+PROBLEM WITH SETTING THE USERNAME
+	When we connect, we receive our own signal with OUR number of active client (always 1), and THEN and only THEN we recevie the signals from others on the network, but we already notified the client that we are ready to set the username since we received the 1 active client. In the case that we do not consider OUR signal, we are blocked when we are the first and only one to be connected on the network, since we are waiting for signals from other to notify the client to be ready to set the username, thus we never set the username.
+
+
 Encrypt the config file too ?
 
 Differentiate active users of non active users in MainWindow users panel. Indeeed, we also display the users which we had a conversation with in the past, whether these users are now active or not.
