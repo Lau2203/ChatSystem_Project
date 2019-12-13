@@ -80,19 +80,19 @@ public class MainWindow extends JFrame{
 	private JTextArea writeMsg 	= new JTextArea("Write your message...", 0, 43); //padding to be done
 
 	/* Resources */
-	public static ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
+	public static ImageIcon icon 		= new ImageIcon("../resources/images/MyProfilePicture.png");
 
-	public static Icon mouseEnteredM 	= new ImageIcon("../resources/images/MsgB2.png");
-	public static Icon mouseExitedM 	= new ImageIcon("../resources/images/MsgA2.png");
-	public static Icon mouseEnteredO 	= new ImageIcon("../resources/images/OptB.png");
-	public static Icon mouseExitedO		= new ImageIcon("../resources/images/OptA.png");
-	public static Icon mouseEnteredL 	= new ImageIcon("../resources/images/15.png");
-	public static Icon mouseExitedL		= new ImageIcon("../resources/images/14.png");
-	public static Icon mouseEnteredS	= new ImageIcon("../resources/images/16.png");
-	public static Icon mouseExitedS		= new ImageIcon("../resources/images/17.png");
+	public static Icon mouseEnteredM 	= new ImageIcon("../resources/images/SendNewMsg_Button_Clicked.png");
+	public static Icon mouseExitedM 	= new ImageIcon("../resources/images/SendNewMsg_Button_IDLE.png");
+	public static Icon mouseEnteredO 	= new ImageIcon("../resources/images/SetOptions_Button_Clicked.png");
+	public static Icon mouseExitedO		= new ImageIcon("../resources/images/SetOptions_Button_IDLE.png");
+	public static Icon mouseEnteredL 	= new ImageIcon("../resources/images/AddFiles_Button_Clicked.png");
+	public static Icon mouseExitedL		= new ImageIcon("../resources/images/AddFiles_Button_IDLE.png");
+	public static Icon mouseEnteredS	= new ImageIcon("../resources/images/SendMsg_Button_Clicked.png");
+	public static Icon mouseExitedS		= new ImageIcon("../resources/images/SendMsg_Button_IDLE.png");
 	// User Image
-	public static ImageIcon user 		= new ImageIcon("../resources/images/activet.png");
-	public static ImageIcon inactiveUser 	= new ImageIcon("../resources/images/unactive.png");
+	public static ImageIcon user 		= new ImageIcon("../resources/images/ProfilePictureUserConnected.png");
+	public static ImageIcon inactiveUser 	= new ImageIcon("../resources/images/ProfilePictureUserDisconnected.png");
 
 	// Cursors
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);

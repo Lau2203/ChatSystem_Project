@@ -50,8 +50,8 @@ public class MainWindowBeginning extends JFrame{
    		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
 		
-		Icon mouseEnteredValidate 	= new ImageIcon("../resources/images/Validate2.png");
-		Icon mouseExitedValidate 	= new ImageIcon("../resources/images/Validate1.png");
+		Icon mouseEnteredValidate 	= new ImageIcon("../resources/images/Validate_Button_Clicked.png");
+		Icon mouseExitedValidate 	= new ImageIcon("../resources/images/Validate_Button_IDLE.png");
 
 		//About US - NORTH.LEFT
 		JPanel panUs 		= new JPanel();
@@ -65,7 +65,7 @@ public class MainWindowBeginning extends JFrame{
 		panUs.setBackground(Color.white);
 		JLabel padding1 	= new JLabel("\n");
 		BoxAboutUs.add(padding1);
-		ImageIcon icon 		= new ImageIcon("../resources/images/user.png");
+		ImageIcon icon 		= new ImageIcon("../resources/images/MyProfilePicture.png");
 		JLabel image 		= new JLabel(icon); 
 		image.setAlignmentX(Component.CENTER_ALIGNMENT);
 		BoxAboutUs.add(image);
@@ -80,10 +80,10 @@ public class MainWindowBeginning extends JFrame{
 
 		Box BoxAboutUs2 = Box.createHorizontalBox();
 		BoxAboutUsMain.add(BoxAboutUs2, BorderLayout.SOUTH);
-		Icon mouseEnteredM 	= new ImageIcon("../resources/images/MsgB2.png");
-		Icon mouseExitedM 	= new ImageIcon("../resources/images/MsgA2.png");
-		Icon mouseEnteredO 	= new ImageIcon("../resources/images/OptB.png");
-		Icon mouseExitedO	= new ImageIcon("../resources/images/OptA.png");
+		Icon mouseEnteredM 	= new ImageIcon("../resources/images/SendNewMsg_Button_Clicked.png");
+		Icon mouseExitedM 	= new ImageIcon("../resources/images/SendNewMsg_Button_IDLE.png");
+		Icon mouseEnteredO 	= new ImageIcon("../resources/images/SetOptions_Button_Clicked.png");
+		Icon mouseExitedO		= new ImageIcon("../resources/images/SetOptions_Button_IDLE.png");
 		
 		JButton buttonO 	= new JButton(mouseExitedO);
 		JButton buttonM 	= new JButton(mouseExitedM);
@@ -167,7 +167,7 @@ public class MainWindowBeginning extends JFrame{
 			JLabel paddingUB2 	= new JLabel("  ");
 			
 			//User Image
-			ImageIcon user 		= new ImageIcon("../resources/images/activet.png");
+			ImageIcon user 		= new ImageIcon("../resources/images/ProfilePictureUserConnected.png");
 			JLabel userL 		= new JLabel(user); 
 			
 
@@ -218,24 +218,24 @@ public class MainWindowBeginning extends JFrame{
 
 
 		// Logo
-		ImageIcon logo 			= new ImageIcon("../resources/images/Aura2.jpg");
+		ImageIcon logo 			= new ImageIcon("../resources/images/AuraLogo1.jpg");
 		JLabel imageLogo		= new JLabel(logo); 
 		imageLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		boxMsg.add(imageLogo);
 
-		ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsFinal.png");
+		ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsPicture.png");
 		JLabel aboutUsFinal		= new JLabel(logo2); 
 
 		JLabel paddingT1 		= new JLabel(" ");
 		paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
 		boxMsg.add(paddingT1);
 		//About Us
-		Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs2.png");
-		Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs1.png");
+		Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs_Button_Clicked.png");
+		Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs_Button_IDLE.png");
 		
 		//Back
-		Icon backA		= new ImageIcon("../resources/images/back1.png");
-		Icon backB 		= new ImageIcon("../resources/images/back2.png");
+		Icon backA		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
+		Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
 		
 		JButton backAButton	= new JButton(backA);
 		backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
@@ -257,6 +257,7 @@ public class MainWindowBeginning extends JFrame{
 				panelMsg.add(aboutUsFinal);
 				panelMsg.repaint();
 				buttonAU.setIcon(mouseExitedAU);
+				setCursor(defaultCursor);
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
@@ -300,6 +301,7 @@ public class MainWindowBeginning extends JFrame{
 				panelMsg.repaint();
 				backAButton.setIcon(backA);
 				panelMsg.setLayout(new FlowLayout(FlowLayout.CENTER));
+				setCursor(defaultCursor);
 			}
 			@Override
         		public void mouseReleased(MouseEvent e) {
