@@ -34,12 +34,12 @@ public class LocalClient extends Client {
 		this.askLogin();
 	}
 
-	public synchronized void notifyLoginSuccessful() {
+	public void notifyLoginSuccessful() {
 		this.runGUI();
 		this.startNetworkManager();
 	}
 
-	private synchronized void askLogin() {
+	private void askLogin() {
 		/* This window will call Client.login() to check whether the user entered
 		 * the correct password */
 		ConnectionWindow cw = new ConnectionWindow(this);
@@ -90,7 +90,15 @@ public class LocalClient extends Client {
 
 		msg.setContent(content);
 
-		recipient.getMessageHistory().addMessage(msg);
+		MessageHistory mh = recipient.getMessageHistory();
+
+		if (mh == null) {
+			mh = new MessageHistory(recipient);
+			recipient.setMessageHistory(mh);
+			this.messageHistoryManager.addMessageHistory(mh);
+		}
+
+		mh.addMessage(msg);
 
 		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
 
@@ -125,8 +133,6 @@ public class LocalClient extends Client {
 				this.mw.notifyNewUserUsername(usr);
 			}
 		}
-
-		System.out.println("NEW USERNAME : " + newUsername);
 	}
 
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {

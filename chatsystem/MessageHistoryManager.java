@@ -71,8 +71,8 @@ public class MessageHistoryManager extends DefaultHandler {
 		this.messageHistoryList = mhxmlp.getMessageHistoryList();
 	}
 
-	public synchronized void updateMessageHistory() {
-
+	public synchronized void addMessageHistory(MessageHistory mh) {
+		this.messageHistoryList.add(mh);
 	}
 
 	public synchronized void saveMessageHistory() {

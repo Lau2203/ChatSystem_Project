@@ -21,19 +21,19 @@ public abstract class Message {
 		this.hasBeenSentByRecipient = hasBeenSentByRecipient;
 	}
 
-	public User getRecipientUser() {
+	public synchronized User getRecipientUser() {
 		return this.recipientUser;
 	}
 
-	public Timestamp getTimestamp() {
+	public synchronized Timestamp getTimestamp() {
 		return this.timestamp;
 	}
 
-	public boolean getHasBeenSentByRecipient() {
+	public synchronized boolean getHasBeenSentByRecipient() {
 		return this.hasBeenSentByRecipient;
 	}
 
-	public void setHasBeenSentByRecipient(boolean b) {
+	public synchronized void setHasBeenSentByRecipient(boolean b) {
 		this.hasBeenSentByRecipient = b;
 	}
 

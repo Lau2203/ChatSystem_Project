@@ -138,11 +138,6 @@ public class NetworkSignalListener extends Thread {
 			return;
 		}
 
-		/* If we are receiving the packet we just sent, just ingore it */
-		if (fingerprint.equals(this.mainUser.getFingerprint())) {
-			return;
-		}
-
 		if (signal.equals(NetworkManagerInformation.NEW_ACTIVE_CLIENT_STRING)) {
 			this.handleNewActiveClientSignal(fingerprint, remoteAddress, remotePort);
 

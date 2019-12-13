@@ -176,7 +176,7 @@ public abstract class Client extends Thread {
 	public synchronized User getUserByAddress(InetAddress address) {
 		/* Find an existing one */
 		for (User usr: this.userList) {
-			if (usr.getAddress().equals(address)) {
+			if (usr.getAddress() != null && usr.getAddress().equals(address)) {
 				return usr;
 			}	
 		}
@@ -212,7 +212,7 @@ public abstract class Client extends Thread {
 	}
 
 	/* Returns whether or not it was able to set that new username */
-	public synchronized boolean setNewUsername(String username) {
+	public boolean setNewUsername(String username) {
 		if (username == null || username.equals("undefined") || !this.isUsernameAvailable(username)) {
 			return false;
 		}
@@ -223,11 +223,11 @@ public abstract class Client extends Thread {
 		return true;
 	}
 
-	public synchronized String getMainUserUsername() {
+	public String getMainUserUsername() {
 		return this.mainUser.getUsername();
 	}
 
-	public synchronized User getMainUser() {
+	public User getMainUser() {
 		return this.mainUser;
 	}
 

@@ -192,7 +192,7 @@ public class NetworkManager {
 	}
 
 	/* Can only be called by the NetworkSignalListener */
-	protected synchronized void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
+	protected void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
 		this.master.notifyNewActiveUser(fingerprint, address, username);
 	}
 

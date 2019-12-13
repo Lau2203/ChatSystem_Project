@@ -20,12 +20,12 @@ public class MessageString extends Message {
 	}
 
 	@Override
-	public String getContent() {
+	public synchronized String getContent() {
 		return this.content;
 	}
 
 	@Override
-	public void setContent(String content) {
+	public synchronized void setContent(String content) {
 		this.content = content;
 	}
 
