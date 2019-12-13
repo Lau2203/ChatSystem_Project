@@ -594,7 +594,7 @@ public class MainWindow extends JFrame{
 		msgBox.add((Box.createRigidArea(new Dimension(60, 0))));
 		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollMsg.setPreferredSize(new Dimension(585,532)); //NE MARCHE PAS
+		scrollMsg.setPreferredSize(new Dimension(585,532));
 		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
 		
 		
@@ -626,7 +626,7 @@ public class MainWindow extends JFrame{
 		} else {
 			for (Message msg: this.currentRecipient.getMessageHistory().getMessageList()) {
 				/* If the message comes from the recipient user */
-				if (msg.getHasBeenSentByRecipient()) {
+				if (msg.getHasBeenSentByRecipient()) { 
 
 					//For each new message received -- leftBox
 					//White Message
@@ -634,27 +634,26 @@ public class MainWindow extends JFrame{
 					boxLabelMsgReceived.setBackground(MainWindow.backgroundColor);
 					leftBox.add(boxLabelMsgReceived);
 					boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-					JTextArea myMsgWhite1 = new JTextArea("", 2, 20);
-					myMsgWhite1.setForeground(MainWindow.backgroundColor);
+					JTextArea myMsgWhite1 = new JTextArea(msg.getContent(), 2, 20);
+					myMsgWhite1.setForeground(myBlue);
 					myMsgWhite1.setBackground(MainWindow.backgroundColor);
 					myMsgWhite1.setWrapStyleWord(true);
 					myMsgWhite1.setLineWrap(true);
 					myMsgWhite1.setEditable(false);
-					//boxLabelMsgReceived.setAlignmentX(Component.CENTER_ALIGNMENT);
-					//myMsg.setOpaque(false)
 					boxLabelMsgReceived.add(myMsgWhite1);
 
 					Box boxR 	= Box.createVerticalBox();
-					boxR.setBackground(MainWindow.backgroundColor);
-					leftBox.add(boxR);
-					JTextArea theirMsg 	= new JTextArea(msg.getContent(), 2, 20);
+					boxR.setBorder(BorderFactory.createLineBorder(Color.black));
+					//boxR.setBackground(MainWindow.backgroundColor);
+					rightBox.add(boxR);
+					JTextArea theirMsg 	= new JTextArea(msg.getContent());
 					theirMsg.setWrapStyleWord(true);
 					theirMsg.setLineWrap(true);
-					theirMsg.setForeground(myBlue);
+					theirMsg.setForeground(Color.white);
 					theirMsg.setBackground(MainWindow.backgroundColor);
 					theirMsg.setEditable(false);
 					
-					JTextArea myMsgWhite2 = new JTextArea("", 2, 20);
+					/*JTextArea myMsgWhite2 = new JTextArea("", 2, 20);
 					myMsgWhite2.setForeground(MainWindow.backgroundColor);
 					myMsgWhite2.setBackground(MainWindow.backgroundColor);
 					myMsgWhite2.setWrapStyleWord(true);
@@ -662,7 +661,7 @@ public class MainWindow extends JFrame{
 					//boxR.setAlignmentX(Component.LEFT_ALIGNMENT);
 					//theirMsg.setOpaque(false);
 					boxR.add(theirMsg);
-					boxR.add(myMsgWhite2);
+					boxR.add(myMsgWhite2);*/
 				}
 				/* If we are the one who sent the message */
 				else {
@@ -670,8 +669,8 @@ public class MainWindow extends JFrame{
 					Box boxS 	= Box.createVerticalBox();
 					boxS.setBackground(MainWindow.backgroundColor);
 					rightBox.add(boxS);
-					JTextArea myMsg 	= new JTextArea(msg.getContent(), 2, 20);
-					myMsg.setForeground(MainWindow.foregroundColor);
+					JTextArea myMsg 	= new JTextArea(msg.getContent());
+					myMsg.setForeground(myBlue);
 					myMsg.setBackground(MainWindow.backgroundColor);
 					myMsg.setWrapStyleWord(true);
 					myMsg.setLineWrap(true);
@@ -679,6 +678,20 @@ public class MainWindow extends JFrame{
 					//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
 					//myMsg.setOpaque(false)
 					boxS.add(myMsg);
+
+
+					Box boxLabelMsgReceived2 	= Box.createVerticalBox();
+					boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(Color.black));
+					//boxLabelMsgReceived2.setBackground(MainWindow.backgroundColor);
+					leftBox.add(boxLabelMsgReceived2);
+					boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+					JTextArea myMsgWhite2 = new JTextArea(msg.getContent(), 2, 20);
+					myMsgWhite2.setForeground(Color.white);
+					myMsgWhite2.setBackground(MainWindow.backgroundColor);
+					myMsgWhite2.setWrapStyleWord(true);
+					myMsgWhite2.setLineWrap(true);
+					myMsgWhite2.setEditable(false);
+					boxLabelMsgReceived2.add(myMsgWhite2);
 
 				}
 			}
