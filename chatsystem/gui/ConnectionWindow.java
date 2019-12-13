@@ -46,15 +46,15 @@ public class ConnectionWindow extends JFrame {
 	 
 		
 		/* Basic resources */
-		Icon mouseEntered 	= new ImageIcon("../resources/images/buttongo.jpg");
-		Icon mouseExited 	= new ImageIcon("../resources/images/buttongoshadow.png");
+		Icon mouseEntered 	= new ImageIcon("../resources/images/Button_Go_IDLE.jpg");
+		Icon mouseExited 	= new ImageIcon("../resources/images/Button_Go_Clicked.png");
 
 		// Cursors
 		Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
 		// Logo
-		ImageIcon icon 		= new ImageIcon("../resources/images/Aura2.jpg");
+		ImageIcon icon 		= new ImageIcon("../resources/images/AuraLogo1.jpg");
 		JLabel image 		= new JLabel(icon); 
 		/* End of basic resources */
 		
