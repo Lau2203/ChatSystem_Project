@@ -81,6 +81,7 @@ public class EncryptionHandler {
 			encrypted = this.cipher.doFinal(toBeEncrypted.getBytes("UTF-8"));
 		} catch (Exception e) {System.out.println("ERROR: " + e);}
 
+
 		return Base64.getEncoder().encodeToString(encrypted);
 	}	
 
@@ -96,7 +97,6 @@ public class EncryptionHandler {
 		} 
 		catch (BadPaddingException bpe) { throw bpe; }
 		catch (Exception e) { e.printStackTrace(); }
-
 
 		return new String(decrypted);
 	}
@@ -116,6 +116,7 @@ public class EncryptionHandler {
 			if (this.decrypt(key, line).equals(EncryptionHandler.WITNESS_STRING))
 				return true;
 		} catch (BadPaddingException bpe) { return false; }
+
 
 		return false;
 	}
