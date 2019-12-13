@@ -84,8 +84,7 @@ public class NetworkManager {
 
 		this.activeUsersList 		= new ArrayList<User>();
 
-		/* We are the only active client for now */
-		this.activeClientNumber = 1;
+		this.activeClientNumber = 0;
 	}
 
 	private User getUser(String fingerprint) {

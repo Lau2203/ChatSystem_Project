@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <history>
-<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Gary">
+<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="undefined">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">Hi</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">How are you ?</message>
@@ -26,7 +26,7 @@
 <message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
 <message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
 </recipient>
-<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="Barton">
+<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="Gary">
 <message from="me" timestamp="2019-12-13 13:48:25.387">hey</message>
 <message from="him" timestamp="2019-12-13 13:48:25.409">hey</message>
 <message from="me" timestamp="2019-12-13 13:48:27.057">it's me</message>
