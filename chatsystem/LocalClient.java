@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 import java.io.IOException;
 
+import java.net.InetAddress;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-import java.net.InetAddress;
 
 import java.sql.Timestamp;
 
@@ -125,6 +125,8 @@ public class LocalClient extends Client {
 				this.mw.notifyNewUserUsername(usr);
 			}
 		}
+
+		System.out.println("NEW USERNAME : " + newUsername);
 	}
 
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
