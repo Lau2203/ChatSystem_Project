@@ -36,6 +36,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
 
+import java.util.ArrayList;
+import java.lang.Math;
+
 import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
@@ -46,6 +49,7 @@ import chatsystem.MessageHistory;
 @SuppressWarnings("serial")
 
 public class MainWindow extends JFrame{
+
 
 	private Client master;
 	private User currentRecipient;
@@ -466,20 +470,17 @@ public class MainWindow extends JFrame{
 	}
 
 	private synchronized void displayUsersPanel() {
+
+		ArrayList<JButton> usersArray = new ArrayList<JButton>();
 		/* Clean the whole panel */
 		this.panUsers.removeAll();
 		/* Do not forget to add the search bar back */
 		panUsers.setLayout(new BorderLayout());
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
-	
-		int i = 0;
-		int j = 0;
-
 		/* Retrieve all the current active users */
 		for (User usr : this.master.getUserList()) {	
 			
-			i++;
 
 			System.out.println("DISPLAY USER : " + usr.getUsername());
 			System.out.flush();
@@ -497,6 +498,7 @@ public class MainWindow extends JFrame{
 	
 			Box mainBox = Box.createHorizontalBox();
 			mainBox.setBackground(MainWindow.backgroundColor);
+			//usersArray.add(mainBox); -> add on the button
 
 			Box rightBox = Box.createVerticalBox();
 			Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -531,15 +533,18 @@ public class MainWindow extends JFrame{
 			mainBox.add(paddingUB2);
 			mainBox.add(rightBox);
 			
-			if (i>5){
-				j=1; // if there are more than 5 users on the list, we must add rows in the GridLayout
-			}
+			
 
 			JButton buttonUser1 = new JButton();
 			buttonUser1.setPreferredSize(new Dimension(305,70));
-			
-			testScroll.setLayout(new GridLayout(5+j, 1)); //5 users displayed max, scroll pane after
-			testScroll.add(buttonUser1, i, 0);
+			usersArray.add(buttonUser1); //we add on the ArrayList on each button
+
+			int nb_rows = Math.max(usersArray.size(),5); //nb_users < 5, display 5 rows 
+			testScroll.setLayout(new GridLayout(nb_rows,1));
+			for(int i = 0 ; i < usersArray.size(); i++){
+				System.out.println(usersArray.size());
+				testScroll.add(usersArray.get(i));
+			}
 			//testScroll.setLayout(new BorderLayout());
 			//testScroll.add(buttonUser1, BorderLayout.NORTH);
 
@@ -568,10 +573,11 @@ public class MainWindow extends JFrame{
 					setCursor(MainWindow.defaultCursor);
 					userName.setForeground(MainWindow.foregroundColor);
 					}
-					});
-		}
-			
+					});	
 
+		}
+		
+	
 		/* Draw the panel again */
 		this.panUsers.revalidate();
 		this.panUsers.repaint();
