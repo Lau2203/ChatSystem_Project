@@ -76,6 +76,7 @@ public class LocalClient extends Client {
 
 
 	public void notifyNewUsernameToBeSent() {
+		System.out.println("main user username : " + this.mainUser.getUsername() + "END");
 		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
 		this.mw.setVisible(true);
 

@@ -68,7 +68,7 @@ public class NetworkSignalListener extends Thread {
 
 	private void handleNewActiveClientSignal(String recipientFingerprint, InetAddress remoteAddress, int remotePort) {
 		/* Example of built packet : fingerprint:WE:243:USERNAME */
-		int currentActiveClientsNumber = this.master.getActiveClientsNumber();
+		int currentActiveClientsNumber = this.master.getActiveClientNumber();
 
 		String response;
 		String mainUserUsername = this.mainUser.getUsername();

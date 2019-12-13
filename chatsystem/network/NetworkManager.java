@@ -64,6 +64,8 @@ public class NetworkManager {
 
 	private Semaphore semaphore = new Semaphore(0, true);
 
+	private int activeClientNumber;
+
 	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort, int listeningUDPPort) {
 
 		this.networkSignalListenerListeningPort = listeningUDPPort;
@@ -81,6 +83,8 @@ public class NetworkManager {
 		this.networkManagerInformation 	= new NetworkManagerInformation();
 
 		this.activeUsersList 		= new ArrayList<User>();
+
+		this.activeClientNumber = Integer.MAX_VALUE - 1;
 	}
 
 	private User getUser(String fingerprint) {
@@ -90,6 +94,10 @@ public class NetworkManager {
 		}
 
 		return null;
+	}
+
+	public int getActiveClientNumber() {
+		return this.activeClientNumber;
 	}
 
 	/* returns a copy of the Active Users List */
@@ -193,6 +201,7 @@ public class NetworkManager {
 
 	/* Can only be called by the NetworkSignalListener */
 	protected void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
+		this.activeClientNumber++;
 		this.master.notifyNewActiveUser(fingerprint, address, username);
 	}
 
