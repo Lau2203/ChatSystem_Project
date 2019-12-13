@@ -84,7 +84,7 @@ public class NetworkManager {
 
 		this.activeUsersList 		= new ArrayList<User>();
 
-		this.activeClientNumber = 0;
+		this.activeClientNumber = Integer.MAX_VALUE - 1;
 	}
 
 	private User getUser(String fingerprint) {
