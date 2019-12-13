@@ -12,6 +12,10 @@
 <message from="me" timestamp="2019-02-28 12:33:56.0">I'm looking for someone to get my car driven by a professional</message>
 <message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
 <message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
+<message from="me" timestamp="2019-12-09 21:01:50.373">This is a test</message>
+<message from="him" timestamp="2019-12-09 21:01:50.373">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</message>
+<message from="him" timestamp="2019-12-09 21:01:50.373">Is it ok?</message>
+<message from="me" timestamp="2019-12-09 21:01:50.373">"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</message>
 </recipient>
 <recipient fingerprint="pcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Lordly">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
