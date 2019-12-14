@@ -594,8 +594,8 @@ public class MainWindow extends JFrame{
 		msgBox.setBackground(MainWindow.backgroundColor);
 		msgBox.add((Box.createRigidArea(new Dimension(40, 0))));
 		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollMsg.setPreferredSize(new Dimension(585,532));
+		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		msgBox.setPreferredSize(new Dimension(585,522));
 		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
 		
 		
