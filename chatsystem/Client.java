@@ -128,7 +128,7 @@ public abstract class Client extends Thread {
 		this.netmanager.run();
 	}
 
-	public synchronized void shutdown() {
+	public void shutdown() {
 		this.messageHistoryManager.saveMessageHistory();
 		this.netmanager.shutdown();
 		System.exit(1);
@@ -136,7 +136,7 @@ public abstract class Client extends Thread {
 
 
 
-	public synchronized boolean login(String input) {
+	public boolean login(String input) {
 		boolean loggedin = false;
 		synchronized(this.childrenLock) {
 			this.mainUser.setFingerprint(this.encryptionHandler.getFingerprint(input));	
@@ -169,11 +169,11 @@ public abstract class Client extends Thread {
 		return this.netmanager.getActiveUsersList();
 	}
 
-	public synchronized ArrayList<User> getUserList() {
+	public ArrayList<User> getUserList() {
 		return new ArrayList<User>(this.userList);
 	}
 
-	public synchronized User getUserByAddress(InetAddress address) {
+	public User getUserByAddress(InetAddress address) {
 		/* Find an existing one */
 		for (User usr: this.userList) {
 			if (usr.getAddress() != null && usr.getAddress().equals(address)) {
@@ -189,7 +189,7 @@ public abstract class Client extends Thread {
 		return null;
 	}
 
-	public synchronized User getUser(String fingerprint) {
+	public User getUser(String fingerprint) {
 		/* Find an existing one */
 		for (User usr: this.userList) {
 			if (usr.getFingerprint().equals(fingerprint)) {

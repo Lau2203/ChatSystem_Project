@@ -79,6 +79,8 @@ public class MainWindow extends JFrame{
 	private JLabel userNameC;
 
 	private JTextArea writeMsg 	= new JTextArea("Write your message...", 0, 43); //padding to be done
+	private JButton linkButton 	= new JButton(MainWindow.mouseExitedL);
+	private JButton sendButton 	= new JButton(MainWindow.mouseExitedS);
 
 	/* Resources */
 	public static ImageIcon icon 		= new ImageIcon("../resources/images/MyProfilePicture.png");
@@ -406,13 +408,11 @@ public class MainWindow extends JFrame{
 		writeMsg.setLineWrap(true);
 		textBox.add(scrollMsg2);
 		//Set Icons and Button
-		JButton linkButton 	= new JButton(MainWindow.mouseExitedL);
-		JButton sendButton 	= new JButton(MainWindow.mouseExitedS);
-		linkButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-		sendButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+		this.linkButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+		this.sendButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 		textBox.add(linkButton);
 		textBox.add(sendButton);
-		linkButton.addMouseListener(new MouseListener() {
+		this.linkButton.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent e) {}
 				@Override
 	     			public void mousePressed(MouseEvent e) {
@@ -429,7 +429,7 @@ public class MainWindow extends JFrame{
 					linkButton.setIcon(MainWindow.mouseExitedL);
 				}
 			});
-		sendButton.addMouseListener(new MouseListener() {
+		this.sendButton.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent e) {
 					sendMessage(writeMsg.getText());
 				}
@@ -470,7 +470,7 @@ public class MainWindow extends JFrame{
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 	}
 
-	private synchronized void displayUsersPanel() {
+	private void displayUsersPanel() {
 
 		ArrayList<JButton> usersArray = new ArrayList<JButton>();
 		/* Clean the whole panel */
@@ -538,7 +538,7 @@ public class MainWindow extends JFrame{
 
 			JButton buttonUser1 = new JButton();
 			buttonUser1.setPreferredSize(new Dimension(305,70));
-			usersArray.add(buttonUser1); //we add on the ArrayList on each button
+			usersArray.add(buttonUser1); //we add the ArrayList on each button
 
 			int nb_rows = Math.max(usersArray.size(),5); //nb_users < 5, display 5 rows 
 			testScroll.setLayout(new GridLayout(nb_rows,1));
@@ -584,7 +584,7 @@ public class MainWindow extends JFrame{
 		this.panUsers.repaint();
 	}
 
-	private synchronized void displayConversation() {
+	private void displayConversation() {
 
 		this.msgBoxPanel.removeAll();
 
@@ -727,30 +727,34 @@ public class MainWindow extends JFrame{
 
 		if (!this.currentRecipient.isActive()) {
 			this.writeMsg.setEnabled(false);
+			this.sendButton.setEnabled(false);
+			this.linkButton.setEnabled(false);
 		} else {
 			this.writeMsg.setEnabled(true);
+			this.sendButton.setEnabled(true);
+			this.linkButton.setEnabled(true);
 		}
 
 		this.msgBoxPanel.revalidate();
 		this.msgBoxPanel.repaint();
 	}
 
-	private synchronized void updateConversationPanel(User user) {
+	private void updateConversationPanel(User user) {
 		this.userNameC.setText(user.getUsername());
 		this.currentRecipient = user;
 		this.displayConversation();
 	}
 
 	/* Whether a user just got online or offline, we need to update the users panel */
-	public synchronized void notifyUserActivityModification() {
+	public void notifyUserActivityModification() {
 		this.displayUsersPanel();
 	}
 	
-	public synchronized void notifyNewMainUserUsername() {
+	public void notifyNewMainUserUsername() {
 		this.textName.setText(this.master.getMainUser().getUsername());
 	}
 
-	public synchronized void notifyNewUserUsername(User usr) {
+	public void notifyNewUserUsername(User usr) {
 		/* It will fetch the new username while redrawing the whole panel */
 		this.displayUsersPanel();
 		if (this.currentRecipient.equals(usr)) {
@@ -758,21 +762,21 @@ public class MainWindow extends JFrame{
 		}
 	}
 
-	public synchronized void notifyNewMessage(User recipient) {
+	public void notifyNewMessage(User recipient) {
 		if (this.currentRecipient.equals(recipient)) {
 			displayConversation();
 		}
 	}
 
-	private synchronized void sendMessage(String content) {
-		if (content == null || content.equals("")) {
+	private void sendMessage(String content) {
+		if (!this.currentRecipient.isActive() || content == null || content.equals("")) {
 			return;
 		}
 	
 		this.master.notifyNewMessageToBeSent(content, this.currentRecipient);
 	}
 
-	private synchronized void shutdown() {
+	private void shutdown() {
 		this.master.shutdown();
 		System.exit(1);
 	}

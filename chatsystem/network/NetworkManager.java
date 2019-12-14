@@ -84,7 +84,7 @@ public class NetworkManager {
 
 		this.activeUsersList 		= new ArrayList<User>();
 
-		this.activeClientNumber = Integer.MAX_VALUE - 1;
+		this.activeClientNumber = 1;
 	}
 
 	private User getUser(String fingerprint) {
@@ -107,7 +107,7 @@ public class NetworkManager {
 
 	/* Do not forget to add +1 for us */
 	public int getActiveClientsNumber() { 
-		return this.activeUsersList.size() + 1;
+		return this.activeUsersList.size();
 	}
 
 	private ConnectionHandler getConnectionHandler(InetAddress remoteAddress) {
@@ -139,23 +139,21 @@ public class NetworkManager {
 	/* Can only be called by the main client process */
 	public void shutdown() {
 
-		synchronized(this.lock) {
-			ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
+		ArrayList<ConnectionHandler> subs = new ArrayList<ConnectionHandler>(this.getConnectionHandlers());
 
-			Logs.printinfo(this.instanceName, "Shutting down all the ConnectionHandlers...");
-			for (ConnectionHandler s: subs) {
+		Logs.printinfo(this.instanceName, "Shutting down all the ConnectionHandlers...");
+		for (ConnectionHandler s: subs) {
 
-				s.shutdown();
-			}		
+			s.shutdown();
+		}		
 
-			Logs.printinfo(this.instanceName, "Shutting down the ConnectionListener...");
-			try {
-				this.connectionListener.shutdown();
-				Logs.printinfo(this.instanceName, "All has been shot down successfully.");
-			} catch (IOException ioe) {
-				Logs.printerro(this.instanceName, "Issue while shutting down the connection listener, aborted.");
-				System.exit(1);
-			}
+		Logs.printinfo(this.instanceName, "Shutting down the ConnectionListener...");
+		try {
+			this.connectionListener.shutdown();
+			Logs.printinfo(this.instanceName, "All has been shot down successfully.");
+		} catch (IOException ioe) {
+			Logs.printerro(this.instanceName, "Issue while shutting down the connection listener, aborted.");
+			System.exit(1);
 		}
 	}
 

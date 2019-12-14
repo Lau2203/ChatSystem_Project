@@ -80,9 +80,7 @@ public class LocalClient extends Client {
 		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
 		this.mw.setVisible(true);
 
-		synchronized(this.userList) {
-			this.mw.notifyNewMainUserUsername();
-		}
+		this.mw.notifyNewMainUserUsername();
 	}
 
 	public void notifyNewMessageToBeSent(String content, User recipient) {
@@ -103,9 +101,7 @@ public class LocalClient extends Client {
 
 		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
 
-		synchronized(this.userList) {
-			this.mw.notifyNewMessage(recipient);
-		}
+		this.mw.notifyNewMessage(recipient);
 	}
 
 	public void notifyNewMessage(User recipient, Message msg) {
@@ -113,9 +109,7 @@ public class LocalClient extends Client {
 
 		recipient.getMessageHistory().addMessage(msg);
 
-		synchronized(this.userList) {
-			this.mw.notifyNewMessage(recipient);
-		}
+		this.mw.notifyNewMessage(recipient);
 	}
 
 	public void notifyReadyToCheckUsername() {
@@ -130,9 +124,7 @@ public class LocalClient extends Client {
 
 		/* If the user just got a valid username and didn't have one before */
 		if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
-			synchronized(this.userList) {
-				this.mw.notifyNewUserUsername(usr);
-			}
+			this.mw.notifyNewUserUsername(usr);
 		}
 	}
 

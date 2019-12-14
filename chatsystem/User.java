@@ -12,13 +12,13 @@ public class User {
 
 	private MessageHistory messageHistory;
 
-	private boolean isActive;
+	private boolean isActiveBoolean;
 
 	public User() {
 		this.fingerprint = new String();
 		this.username = new String();
 		this.address = null;
-		this.isActive = false;
+		this.isActiveBoolean = false;
 
 		this.messageHistory = null;
 	}
@@ -27,7 +27,7 @@ public class User {
 		this.fingerprint = fingerprint;
 		this.username = null;
 		this.address = null;
-		this.isActive = false;
+		this.isActiveBoolean = false;
 
 		this.messageHistory = null;
 	}
@@ -36,7 +36,7 @@ public class User {
 		this.fingerprint = fingerprint;
 		this.username = username;
 		this.address = null;
-		this.isActive = false;
+		this.isActiveBoolean = false;
 
 		this.messageHistory = null;
 	}
@@ -45,48 +45,48 @@ public class User {
 		this.fingerprint = fingerprint;
 		this.username = username;
 		this.address = address;
-		this.isActive = false;
+		this.isActiveBoolean = false;
 
 		this.messageHistory = null;
 	}
 
-	public synchronized String getFingerprint() {
+	public String getFingerprint() {
 		return this.fingerprint;
 	}
 
-	public synchronized String getUsername() {
+	public String getUsername() {
 		return this.username;
 	}
 
-	public synchronized InetAddress getAddress() {
+	public InetAddress getAddress() {
 		return this.address;
 	}
 
-	public synchronized boolean isActive() {
-		return this.isActive;
+	public boolean isActive() {
+		return this.isActiveBoolean;
 	}
 
-	public synchronized MessageHistory getMessageHistory() {
+	public MessageHistory getMessageHistory() {
 		return this.messageHistory;
 	}
 
-	public synchronized void setFingerprint(String fingerprint) {
+	public void setFingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
 	}
 
-	public synchronized void setUsername(String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public synchronized void setAddress(InetAddress address) {
+	public void setAddress(InetAddress address) {
 		this.address = address;
 	}
 
-	public synchronized void setActive(boolean active) {
-		this.isActive = active;
+	public void setActive(boolean active) {
+		this.isActiveBoolean = active;
 	}
 
-	public synchronized void setMessageHistory(MessageHistory mh) {
+	public void setMessageHistory(MessageHistory mh) {
 		this.messageHistory = mh;
 	}
 }
