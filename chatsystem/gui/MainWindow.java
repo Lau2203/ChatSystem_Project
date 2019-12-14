@@ -681,7 +681,7 @@ public class MainWindow extends JFrame{
 					Box boxS 	= Box.createVerticalBox();
 					boxS.setBackground(Color.white);
 					rightBox.add(boxS);
-					boxS.setPreferredSize(new Dimension(10,10));
+					//boxS.setPreferredSize(new Dimension(10,10));
 					JTextArea myMsg 	= new JTextArea(msg.getContent());
 					myMsg.setForeground(Color.white);
 					myMsg.setBackground(myBlue);
