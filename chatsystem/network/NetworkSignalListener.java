@@ -118,17 +118,17 @@ public class NetworkSignalListener extends Thread {
 
 
 	private void handleUsernameModificationSignal(String fingerprint, InetAddress remoteAddress, int remotePort, String new_username) {
-			if (this.mainUser.getUsername() != null && !this.mainUser.getUsername().equals("undefined") && !this.mainUser.getUsername().equals(new_username)) {
-				this.master.notifyNewUsername(fingerprint, new_username);
-			} 
 			/* We have the same username as new_username, we tell the recipient that he has a invalid username */
-			else {	
+			if (this.mainUser.getUsername() != null && !this.mainUser.getUsername().equals("undefined") && this.mainUser.getUsername().equals(new_username)) {
 				String response = this.mainUser.getFingerprint() + ":" +
 					NetworkManagerInformation.INVALID_USERNAME_STRING;
 
 				DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
 
 				try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
+			} 
+			else {	
+				this.master.notifyNewUsername(fingerprint, new_username);
 			}
 	}
 

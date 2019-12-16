@@ -118,7 +118,6 @@ public class LocalClient extends Client {
 
 	public void notifyNewUsername(String fingerprint, String newUsername) {
 		User usr = this.getUser(fingerprint);
-		String previousUsername = usr.getUsername();
 
 		usr.setUsername(newUsername);
 
