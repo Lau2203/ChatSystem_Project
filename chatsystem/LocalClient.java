@@ -41,6 +41,7 @@ public class LocalClient extends Client {
 	public void notifyLoginSuccessful() {
 		this.runGUI();
 		this.startNetworkManager();
+		//this.notifySetNewUsername();
 	}
 
 	private void askLogin() {
@@ -112,7 +113,15 @@ public class LocalClient extends Client {
 	public void notifyNewMessage(User recipient, Message msg) {
 		System.out.println("NEW MESSAGE : '" + msg.getContent() + "'");
 
-		recipient.getMessageHistory().addMessage(msg);
+		MessageHistory mh = recipient.getMessageHistory();
+
+		if (mh == null) {
+			mh = new MessageHistory(recipient);
+			recipient.setMessageHistory(mh);
+			this.messageHistoryManager.addMessageHistory(mh);
+		}
+		
+		mh.addMessage(msg);
 
 		this.mw.notifyNewMessage(recipient);
 	}
