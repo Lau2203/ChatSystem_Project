@@ -41,7 +41,7 @@ public class LocalClient extends Client {
 	public void notifyLoginSuccessful() {
 		this.runGUI();
 		this.startNetworkManager();
-		//this.notifySetNewUsername();
+		this.mandatorySetUsername();
 	}
 
 	private void askLogin() {
@@ -64,7 +64,6 @@ public class LocalClient extends Client {
 	 * Open JOptionPane until a valid username is entered */
 	private void mandatorySetUsername() {
 
-		boolean usernameWasModified = false;
 		String username = ConfigParser.get("username");
 
 		/* If the Main User's username need to be set */

@@ -30,6 +30,7 @@ public class NetworkSignalListener extends Thread {
 	private final String instanceName = "NetworkSignalListener";
 
 	private int activeClientsResponseToWaitFor;
+	private int totalActiveClientNumber;
 
 	public NetworkSignalListener(NetworkManager master, MainUser mainUser, int listeningPort) {
 		this.master = master;
@@ -96,7 +97,7 @@ public class NetworkSignalListener extends Thread {
 	private void handleWelcomeSignal(String fingerprint, InetAddress remoteAddress, String username, int activeClientsTotal) {
 
 		if (username == null) { username = "undefined"; }
-
+		/*
 		if (this.activeClientsResponseToWaitFor == -1) {
 			this.activeClientsResponseToWaitFor = activeClientsTotal;
 			if (activeClientsTotal != 0)
@@ -104,15 +105,18 @@ public class NetworkSignalListener extends Thread {
 		} else {
 			this.activeClientsResponseToWaitFor--;
 		}
+		*/
 
 		this.master.notifyNewActiveUser(fingerprint, remoteAddress, username);
 		/* The NetworkManager will create a new user is it does not already exist */
 		this.master.notifyNewUsername(fingerprint, username);
 
 		/* If we received the Welcome Signal from all the active clients */
+		/*
 		if (this.activeClientsResponseToWaitFor == 0) {
 			this.master.notifySetNewUsername();
 		}
+		*/
 	}
 
 
