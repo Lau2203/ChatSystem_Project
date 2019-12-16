@@ -73,9 +73,9 @@ public class LocalClient extends Client {
 			NewIDWindow nidw = new NewIDWindow(this);
 			nidw.setVisible(true);
 
+		} else {
+			this.notifyNewUsernameToBeSent();
 		}
-
-		this.notifyNewUsernameToBeSent();
 	}
 
 
