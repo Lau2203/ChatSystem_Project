@@ -33,7 +33,6 @@ public class MessageHistoryManager extends DefaultHandler {
 	public MessageHistoryManager(Client master, String messageHistoryPath) {
 		this.master = master;
 		this.messageHistoryPath = messageHistoryPath;
-		this.messageHistoryList = new ArrayList<MessageHistory>();
 	}
 
 	private void createMessageHistory() {
@@ -59,16 +58,23 @@ public class MessageHistoryManager extends DefaultHandler {
 		File xmlFile;
 		MessageHistoryXMLParser mhxmlp = new MessageHistoryXMLParser(this.master);
 
-		try {
-			xmlFile = new File(this.messageHistoryPath);
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser saxParser = factory.newSAXParser();
-			saxParser.parse(xmlFile, mhxmlp);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		xmlFile = new File(this.messageHistoryPath);
+		
+		if (xmlFile.exists()) {
 
-		this.messageHistoryList = mhxmlp.getMessageHistoryList();
+			try {
+				SAXParserFactory factory = SAXParserFactory.newInstance();
+				SAXParser saxParser = factory.newSAXParser();
+				saxParser.parse(xmlFile, mhxmlp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			this.messageHistoryList = mhxmlp.getMessageHistoryList();
+
+		} else {
+			this.messageHistoryList = new ArrayList<MessageHistory>();
+		}
 	}
 
 	public synchronized void addMessageHistory(MessageHistory mh) {

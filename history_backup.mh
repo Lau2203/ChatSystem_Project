@@ -30,7 +30,7 @@
 <message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
 <message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
 </recipient>
-<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="Gary">
+<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="undefined">
 <message from="me" timestamp="2019-12-13 13:48:25.387">hey</message>
 <message from="him" timestamp="2019-12-13 13:48:25.409">hey</message>
 <message from="me" timestamp="2019-12-13 13:48:27.057">it's me</message>
