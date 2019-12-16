@@ -593,10 +593,10 @@ public class MainWindow extends JFrame{
 		Box msgBox = Box.createHorizontalBox();
 		msgBox.setOpaque(true);
 		msgBox.setBackground(MainWindow.backgroundColor);
-		msgBox.add((Box.createRigidArea(new Dimension(40, 0))));
+		//msgBox.add((Box.createRigidArea(new Dimension(40, 0))));
 		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		msgBox.setPreferredSize(new Dimension(585,522));
+		msgBox.setPreferredSize(new Dimension(585,530));
 		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
 		
 		
@@ -604,21 +604,21 @@ public class MainWindow extends JFrame{
 		
 		Box leftBox = Box.createVerticalBox();
 		//leftBox.setLayout(new GridLayout(10,1));
-		leftBox.setPreferredSize(new Dimension(150, 100));
+		leftBox.setPreferredSize(new Dimension(150, 50));
 		leftBox.setBackground(MainWindow.backgroundColor);
 		leftBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		msgBox.add(leftBox, BorderLayout.WEST);
 
 		//RIGID AREA BETWEEN LEFT AND RIHGT
 		Box paddingBox = Box.createHorizontalBox();
-		paddingBox.add((Box.createRigidArea(new Dimension(5, 0))));
+		paddingBox.add((Box.createRigidArea(new Dimension(25, 0))));
 		paddingBox.setForeground(MainWindow.backgroundColor);
 		paddingBox.setOpaque(true);
 		msgBox.add(paddingBox);
 		
 		Box rightBox = Box.createVerticalBox();
 		//rightBox.setLayout(new GridLayout(10,1));
-		rightBox.setPreferredSize(new Dimension(150, 100));
+		rightBox.setPreferredSize(new Dimension(150, 50));
 		rightBox.setBackground(MainWindow.backgroundColor);
 		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		msgBox.add(rightBox, BorderLayout.EAST);
@@ -633,11 +633,10 @@ public class MainWindow extends JFrame{
 				if (msg.getHasBeenSentByRecipient()) { 
 
 					//For each new message received -- leftBox
-					//White Message
 					Box boxLabelMsgReceived 	= Box.createVerticalBox();
 					boxLabelMsgReceived.setBackground(Color.white);
 					leftBox.add(boxLabelMsgReceived);
-					boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+					boxLabelMsgReceived.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 3));
 					JTextArea myMsgWhite1 = new JTextArea(msg.getContent());
 					myMsgWhite1.setForeground(Color.black);
 					myMsgWhite1.setBackground(myGray);
@@ -646,21 +645,8 @@ public class MainWindow extends JFrame{
 					myMsgWhite1.setEditable(false);
 					boxLabelMsgReceived.add(myMsgWhite1);
 
-					Box paddingBox3 = Box.createHorizontalBox();
-					paddingBox3.add((Box.createRigidArea(new Dimension(2, 3))));
-					paddingBox3.setForeground(MainWindow.backgroundColor);
-					paddingBox3.setOpaque(true);
-					boxLabelMsgReceived.add(paddingBox3);
-
-					Box paddingBox5 = Box.createHorizontalBox();
-					paddingBox5.add((Box.createRigidArea(new Dimension(2, 3))));
-					paddingBox5.setForeground(MainWindow.backgroundColor);
-					paddingBox5.setOpaque(true);
-					
-
 					Box boxR 	= Box.createVerticalBox();
-					//boxR.setBorder(BorderFactory.createLineBorder(Color.black));
-					//boxR.setBackground(MainWindow.backgroundColor);
+					boxR.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 3));
 					rightBox.add(boxR);
 					JTextArea theirMsg 	= new JTextArea(msg.getContent());
 					theirMsg.setWrapStyleWord(true);
@@ -668,13 +654,8 @@ public class MainWindow extends JFrame{
 					theirMsg.setForeground(Color.white);
 					theirMsg.setBackground(Color.white);
 					theirMsg.setEditable(false);
-					boxR.add(paddingBox5);
 					boxR.add(theirMsg);
-					boxR.add(paddingBox5);
-					
-					
-					
-				
+						
 				}
 				/* If we are the one who sent the message */
 				else {
@@ -682,43 +663,25 @@ public class MainWindow extends JFrame{
 					Box boxS 	= Box.createVerticalBox();
 					boxS.setBackground(Color.white);
 					rightBox.add(boxS);
-					//boxS.setPreferredSize(new Dimension(10,10));
+					boxS.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 3));
 					JTextArea myMsg 	= new JTextArea(msg.getContent());
 					myMsg.setForeground(Color.white);
 					myMsg.setBackground(myBlue);
 					myMsg.setWrapStyleWord(true);
 					myMsg.setLineWrap(true);
 					myMsg.setEditable(false);
-					//boxS.setAlignmentX(Component.CENTER_ALIGNMENT);
-					//myMsg.setOpaque(false)
 					boxS.add(myMsg);
 
-					//RIGID AREA BETWEEN EACH MSG //TODO do it on the right and left side and laso for msg not displayed
-					Box paddingBox2 = Box.createHorizontalBox();
-					paddingBox2.add((Box.createRigidArea(new Dimension(2, 3))));
-					paddingBox2.setForeground(MainWindow.backgroundColor);
-					paddingBox2.setOpaque(true);
-					boxS.add(paddingBox2);
-				
-
-					Box paddingBox4 = Box.createHorizontalBox();
-					paddingBox4.add((Box.createRigidArea(new Dimension(2, 3))));
-					paddingBox4.setForeground(MainWindow.backgroundColor);
-					paddingBox4.setOpaque(true);
-					
-					//Do not modify
+			
 					Box boxLabelMsgReceived2 	= Box.createVerticalBox();
-					//boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(Color.black));
-					//boxLabelMsgReceived2.setBackground(MainWindow.backgroundColor);
 					leftBox.add(boxLabelMsgReceived2);
-					boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+					boxLabelMsgReceived2.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 3));;
 					JTextArea myMsgWhite2 = new JTextArea(msg.getContent());
 					myMsgWhite2.setForeground(Color.white);
 					myMsgWhite2.setBackground(Color.white);
 					myMsgWhite2.setWrapStyleWord(true);
 					myMsgWhite2.setLineWrap(true);
 					myMsgWhite2.setEditable(false);
-					boxLabelMsgReceived2.add(paddingBox4);
 					boxLabelMsgReceived2.add(myMsgWhite2);
 					
 
