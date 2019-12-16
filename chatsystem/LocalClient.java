@@ -68,10 +68,11 @@ public class LocalClient extends Client {
 
 		/* If the Main User's username need to be set */
 		if (!this.setNewUsername(username)) {
-			this.mw.setVisible(false);
+			this.mw.dispose();
 
 			NewIDWindow nidw = new NewIDWindow(this);
 			nidw.setVisible(true);
+			nidw.toFront();
 
 		} else {
 			this.notifyNewUsernameToBeSent();
