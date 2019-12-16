@@ -30,6 +30,10 @@ public class LocalClient extends Client {
 		super();
 	}
 
+	public LocalClient(String configFilePath) {
+		super(configFilePath);
+	}
+
 	public void run() {
 		this.askLogin();
 	}
@@ -77,10 +81,12 @@ public class LocalClient extends Client {
 
 	public void notifyNewUsernameToBeSent() {
 		System.out.println("main user username : " + this.mainUser.getUsername() + "END");
-		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+
 		this.mw.setVisible(true);
 
 		this.mw.notifyNewMainUserUsername();
+
+		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
 	}
 
 	public void notifyNewMessageToBeSent(String content, User recipient) {
@@ -99,9 +105,8 @@ public class LocalClient extends Client {
 
 		mh.addMessage(msg);
 
-		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
-
 		this.mw.notifyNewMessage(recipient);
+		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
 	}
 
 	public void notifyNewMessage(User recipient, Message msg) {
@@ -141,6 +146,10 @@ public class LocalClient extends Client {
 
 	/* Update the GUI */
 	public static void main(String[] args) {
-		(new LocalClient()).run();
+		if (args.length != 0) {
+			(new LocalClient(args[0])).run();
+		} else {
+			(new LocalClient()).run();
+		}
 	}
 }

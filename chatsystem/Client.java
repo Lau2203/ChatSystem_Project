@@ -39,13 +39,14 @@ public abstract class Client extends Thread {
 
 	private static final String DEFAULT_MESSAGE_HISTORY_FILE_PATH 	= "../history.mh";
 	private static final String DEFAULT_CONFIG_FILE_PATH 		= "../config.cfg";
-	private static final String DEFAULT_WITNESS_FILE_PATH 		= "../witness2";
+	private static final String DEFAULT_WITNESS_FILE_PATH 		= "../witness";
 
 	private static final int DEFAULT_CONNECTION_LISTENER_PORT 	= 5555;
 	private static final int DEFAULT_NETWORK_SIGNAL_LISTENER_PORT 	= 54321;
 
 	protected boolean isLogEnabled;
 
+	private String configFilePath;
 	private String logFilePath;
 	private String witnessFilePath;
 	private String messageHistoryFilePath;
@@ -63,6 +64,8 @@ public abstract class Client extends Thread {
 
 	protected Client() {
 
+		this.configFilePath = Client.DEFAULT_CONFIG_FILE_PATH;
+
 		this.initWithConfigFile();
 
 		this.mainUser 			= new MainUser();
@@ -79,6 +82,27 @@ public abstract class Client extends Thread {
 		this.messageHistoryManager.fetchMessageHistory();
 	}
 
+	protected Client(String configFilePath) {
+
+		this.configFilePath = configFilePath;
+
+		this.initWithConfigFile();
+
+		this.mainUser 			= new MainUser();
+
+		this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort);
+
+		this.networkManagerInformation	= new NetworkManagerInformation();
+
+		this.encryptionHandler 		= new EncryptionHandler(this.witnessFilePath);
+		this.messageHistoryManager	= new MessageHistoryManager(this, this.messageHistoryFilePath);
+
+		this.userList = new ArrayList<User>();
+
+		this.messageHistoryManager.fetchMessageHistory();
+
+	}
+
 	private void initWithConfigFile() {
 
 		String isLogEnabledString;
@@ -88,9 +112,9 @@ public abstract class Client extends Thread {
 
 		isLogEnabledString		= ConfigParser.get("log-filling");
 
-		this.logFilePath 		= ConfigParser.get("logfile");	
-		this.messageHistoryFilePath 	= ConfigParser.get("message-history-path");	
-		this.witnessFilePath 		= ConfigParser.get("witness-file-path");
+		this.logFilePath 		= ConfigParser.get("log-file");	
+		this.messageHistoryFilePath 	= ConfigParser.get("message-history");	
+		this.witnessFilePath 		= ConfigParser.get("witness-file");
 
 		/* Fetch the ConnectionListener port and the NetworkSignalListener port */
 		clp 	= ConfigParser.get("server-port");
@@ -147,7 +171,7 @@ public abstract class Client extends Thread {
 
 	private void parseConfigFile() {
 		try {
-			ConfigParser.parse(Client.DEFAULT_CONFIG_FILE_PATH);
+			ConfigParser.parse(this.configFilePath);
 		} catch (IOException ioe) {
 			Logs.printerro(this.instanceName, "Could not retrieve configuration file, aborted");
 			System.exit(1);
