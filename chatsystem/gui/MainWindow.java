@@ -480,22 +480,23 @@ public class MainWindow extends JFrame{
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
 		/* Retrieve all the current active users */
+		/*JScroll the Panel Users*/ //TO DO Maybe we could put the UserBox on the left side
+		JPanel testScroll = new JPanel();
+		testScroll.setBackground(Color.white);
+
+		//testScroll.setLayout(new BorderLayout());
+		JScrollPane scrollMsg 	= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollMsg.setBackground(Color.white);
+		scrollMsg.setBorder(BorderFactory.createLineBorder(Color.white));
+		this.panUsers.add(scrollMsg, BorderLayout.CENTER);	
+		/*End of JScrollPane Code*/		
+
 		for (User usr : this.master.getUserList()) {	
 			
 
 			System.out.println("DISPLAY USER : " + usr.getUsername());
 			System.out.flush();
 
-			/*JScroll the Panel Users*/ //TO DO Maybe we could put the UserBox on the left side
-			JPanel testScroll = new JPanel();
-			testScroll.setBackground(Color.white);
-			
-			//testScroll.setLayout(new BorderLayout());
-			JScrollPane scrollMsg 	= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			scrollMsg.setBackground(Color.white);
-			scrollMsg.setBorder(BorderFactory.createLineBorder(Color.white));
-			panUsers.add(scrollMsg, BorderLayout.CENTER);	
-			/*End of JScrollCode*/		
 	
 			Box mainBox = Box.createHorizontalBox();
 			mainBox.setBackground(MainWindow.backgroundColor);
@@ -747,7 +748,7 @@ public class MainWindow extends JFrame{
 
 	/* Whether a user just got online or offline, we need to update the users panel */
 	public void notifyUserActivityModification() {
-		System.out.println("GUI RECEIVED : USER ACTIVITE MODIFICATION");
+		System.out.println("GUI RECEIVED : USER ACTIVITY MODIFICATION");
 		System.out.flush();
 		this.displayUsersPanel();
 	}
