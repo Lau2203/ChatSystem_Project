@@ -111,14 +111,25 @@ public class NetworkSignalListener extends Thread {
 
 		/* If we received the Welcome Signal from all the active clients */
 		if (this.activeClientsResponseToWaitFor == 0) {
-			this.master.notifyReadyToCheckUsername();
+			this.master.notifySetNewUsername();
 		}
 	}
 
 
 
-	private void handleUsernameModificationSignal(String fingerprint, InetAddress remoteAddress, String new_username) {
-			this.master.notifyNewUsername(fingerprint, new_username);
+	private void handleUsernameModificationSignal(String fingerprint, InetAddress remoteAddress, int remotePort, String new_username) {
+			if (this.mainUser.getUsername() != null && !this.mainUser.getUsername().equals("undefined") && !this.mainUser.getUsername().equals(new_username)) {
+				this.master.notifyNewUsername(fingerprint, new_username);
+			} 
+			/* We have the same username as new_username, we tell the recipient that he has a invalid username */
+			else {	
+				String response = this.mainUser.getFingerprint() + ":" +
+					NetworkManagerInformation.INVALID_USERNAME_STRING;
+
+				DatagramPacket dp = new DatagramPacket(response.getBytes(), response.length(), remoteAddress, remotePort);
+
+				try { this.ds.send(dp); } catch (IOException ioe) {ioe.printStackTrace();}
+			}
 	}
 
 	/* UDP Packets will at least have this shape : fingerprint:signal */
@@ -144,7 +155,7 @@ public class NetworkSignalListener extends Thread {
 		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_CLIENT_STRING)) {
 
 		} else if (signal.equals(NetworkManagerInformation.USERNAME_MODIFICATION_STRING)) {
-			this.handleUsernameModificationSignal(fingerprint, remoteAddress, information[2]);
+			this.handleUsernameModificationSignal(fingerprint, remoteAddress, remotePort, information[2]);
 		}
 		/* No problem when we are the first and only one to connect to the network. Since we also receive the broadcast signal,
 		 * this.activeClientsResponseToWaitFor will first be set to 0 and unlock the whole system by notifying
@@ -156,6 +167,9 @@ public class NetworkSignalListener extends Thread {
 			} catch (Exception e) {username = "undefined";}
 	
 			this.handleWelcomeSignal(fingerprint, remoteAddress, username, Integer.parseInt(information[2]));
+		} else if (signal.equals(NetworkManagerInformation.INVALID_USERNAME_STRING)) {
+			/* If our new username we just sent is still not available */
+			this.master.notifySetNewUsername();
 		} else {
 
 			Logs.printwarn(this.instanceName, "received unknown signal '" + signal + "'");

@@ -112,7 +112,7 @@ public class LocalClient extends Client {
 		this.mw.notifyNewMessage(recipient);
 	}
 
-	public void notifyReadyToCheckUsername() {
+	public void notifySetNewUsername() {
 		this.mandatorySetUsername();
 	}
 
@@ -123,9 +123,12 @@ public class LocalClient extends Client {
 		usr.setUsername(newUsername);
 
 		/* If the user just got a valid username and didn't have one before */
+		/*
 		if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
 			this.mw.notifyNewUserUsername(usr);
 		}
+		*/
+		this.mw.notifyNewUserUsername(usr);
 	}
 
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {

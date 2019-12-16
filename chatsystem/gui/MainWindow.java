@@ -747,14 +747,20 @@ public class MainWindow extends JFrame{
 
 	/* Whether a user just got online or offline, we need to update the users panel */
 	public void notifyUserActivityModification() {
+		System.out.println("GUI RECEIVED : USER ACTIVITE MODIFICATION");
+		System.out.flush();
 		this.displayUsersPanel();
 	}
 	
 	public void notifyNewMainUserUsername() {
+		System.out.println("GUI RECEIVED : NEW MAIN USER USERNAME");
+		System.out.flush();
 		this.textName.setText(this.master.getMainUser().getUsername());
 	}
 
 	public void notifyNewUserUsername(User usr) {
+		System.out.println("GUI RECEIVED : NEW USER USERNAME");
+		System.out.flush();
 		/* It will fetch the new username while redrawing the whole panel */
 		this.displayUsersPanel();
 		if (this.currentRecipient.equals(usr)) {
@@ -763,6 +769,8 @@ public class MainWindow extends JFrame{
 	}
 
 	public void notifyNewMessage(User recipient) {
+		System.out.println("GUI RECEIVED : NEW MESSAGE");
+		System.out.flush();
 		if (this.currentRecipient.equals(recipient)) {
 			displayConversation();
 		}

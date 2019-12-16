@@ -232,7 +232,7 @@ public abstract class Client extends Thread {
 	}
 
 	public void notifyNewUsername(String fingerprint, String newUsername) {}
-	public void notifyReadyToCheckUsername() {}
+	public void notifySetNewUsername() {}
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {}
 	public void notifyNewMessage(User recipient, Message msg) {}
 	public void notifyNewUsernameToBeSent() {}

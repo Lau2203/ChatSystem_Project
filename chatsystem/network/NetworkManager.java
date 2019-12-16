@@ -207,8 +207,8 @@ public class NetworkManager {
 		this.master.notifyNewUsername(fingerprint, username);
 	}
 
-	protected void notifyReadyToCheckUsername() {
-		this.master.notifyReadyToCheckUsername();
+	protected void notifySetNewUsername() {
+		this.master.notifySetNewUsername();
 	}
 
 	public void notifyNewUsernameToBeSent(String fingerprint, String username) {

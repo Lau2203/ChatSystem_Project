@@ -33,6 +33,7 @@ public class NetworkManagerInformation {
 	public static final String USERNAME_MODIFICATION_STRING = "NU";
 
 	public static final String WELCOME_STRING 		= "WE";
+	public static final String INVALID_USERNAME_STRING 	= "IU";
 
 
 	public NetworkManagerInformation() {
