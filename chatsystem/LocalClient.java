@@ -153,6 +153,11 @@ public class LocalClient extends Client {
 		active.setAddress(address);
 	}
 
+	public void notifyEndOfActiveUser(String fingerprint) {
+		User usr = this.getUser(fingerprint);
+
+		this.mw.notifyUserActivityModification();
+	}
 	/* Update the GUI */
 	public static void main(String[] args) {
 		if (args.length != 0) {

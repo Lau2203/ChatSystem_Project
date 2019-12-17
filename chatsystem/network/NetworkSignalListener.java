@@ -58,9 +58,7 @@ public class NetworkSignalListener extends Thread {
 
 		DatagramPacket dp = null;
 
-		try {
-			dp = new DatagramPacket(request.getBytes(), request.length(), InetAddress.getByName("255.255.255.255"), this.listeningPort);
-		} catch (UnknownHostException uhe) { uhe.printStackTrace(); }
+		dp = new DatagramPacket(request.getBytes(), request.length(), NetworkManagerInformation.BROADCAST_ADDR, this.listeningPort);
 
 		try { this.ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 	}
@@ -92,7 +90,9 @@ public class NetworkSignalListener extends Thread {
 		this.master.notifyNewActiveUser(recipientFingerprint, remoteAddress, "undefined");
 	}
 	
-	
+	private void handleEndOfActiveClientSignal(String recipientFingerprint) {
+		this.master.notifyEndOfActiveUser(recipientFingerprint);
+	}
 
 	private void handleWelcomeSignal(String fingerprint, InetAddress remoteAddress, String username, int activeClientsTotal) {
 
@@ -157,6 +157,7 @@ public class NetworkSignalListener extends Thread {
 			this.handleNewActiveClientSignal(fingerprint, remoteAddress, remotePort);
 
 		} else if (signal.equals(NetworkManagerInformation.END_OF_ACTIVE_CLIENT_STRING)) {
+			this.handleEndOfActiveClientSignal(fingerprint);
 
 		} else if (signal.equals(NetworkManagerInformation.USERNAME_MODIFICATION_STRING)) {
 			this.handleUsernameModificationSignal(fingerprint, remoteAddress, remotePort, information[2]);

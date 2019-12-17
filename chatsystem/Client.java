@@ -258,6 +258,7 @@ public abstract class Client extends Thread {
 	public void notifyNewUsername(String fingerprint, String newUsername) {}
 	public void notifySetNewUsername() {}
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {}
+	public void notifyEndOfActiveUser(String fingerprint) {}
 	public void notifyNewMessage(User recipient, Message msg) {}
 	public void notifyNewUsernameToBeSent() {}
 	public void notifyNewMessageToBeSent(String content, User recipient) {}

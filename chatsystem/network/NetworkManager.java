@@ -136,6 +136,27 @@ public class NetworkManager {
 		this.nsl.start();
 	}
 
+	private void disconnect() {
+		String request = this.master.getMainUser().getFingerprint() + ":" + NetworkManagerInformation.END_OF_ACTIVE_CLIENT_STRING;
+
+		DatagramSocket ds;
+		DatagramPacket dp = null;
+
+		try {
+			ds = new DatagramSocket();
+		} catch (SocketException se) {
+			ds = null;
+			Logs.printerro(this.instanceName, "Could not create datagram socket while trying to notify a username modification to others, aborted");
+			System.exit(1);
+		}
+
+		try {
+			dp = new DatagramPacket(request.getBytes(), request.length(), NetworkManagerInformation.BROADCAST_ADDR, this.networkSignalListenerListeningPort);
+		} catch (Exception uhe) { uhe.printStackTrace(); }
+
+		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
+	}
+
 	/* Can only be called by the main client process */
 	public void shutdown() {
 
@@ -201,6 +222,11 @@ public class NetworkManager {
 	protected void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
 		this.activeClientNumber++;
 		this.master.notifyNewActiveUser(fingerprint, address, username);
+	}
+
+	protected void notifyEndOfActiveUser(String fingerprint) {
+		this.activeClientNumber--;
+		this.master.notifyEndOfActiveUser(fingerprint);
 	}
 
 	protected void notifyNewUsername(String fingerprint, String username) {

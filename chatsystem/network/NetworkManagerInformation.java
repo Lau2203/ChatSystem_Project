@@ -35,12 +35,15 @@ public class NetworkManagerInformation {
 	public static final String WELCOME_STRING 		= "WE";
 	public static final String INVALID_USERNAME_STRING 	= "IU";
 
+	public static InetAddress BROADCAST_ADDR; 
 
 	public NetworkManagerInformation() {
 		this.info = null;
 		this.fingerprint = null;
 		this.username = null;
 		this.address = null;
+
+		NetworkManagerInformation.setBroadcastAddress();
 	}
 
 	public NetworkManagerInformation(User recipient,
@@ -58,6 +61,12 @@ public class NetworkManagerInformation {
 		this.address = address;
 
 		this.msg = msg;
+	}
+
+	private static void setBroadcastAddress() {
+		try {
+			NetworkManagerInformation.BROADCAST_ADDR = InetAddress.getByName("255.255.255.255");
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	/* Getters */
