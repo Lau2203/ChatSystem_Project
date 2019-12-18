@@ -176,6 +176,8 @@ public class NetworkManager {
 			Logs.printerro(this.instanceName, "Issue while shutting down the connection listener, aborted.");
 			System.exit(1);
 		}
+
+		this.disconnect();
 	}
 
 	private ArrayList<ConnectionHandler> getConnectionHandlers() { return this.connectionHandlers; }
