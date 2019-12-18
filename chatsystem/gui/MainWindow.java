@@ -590,19 +590,19 @@ public class MainWindow extends JFrame{
 		this.msgBoxPanel.removeAll();
 
 		//Messages Box
-		Box msgBox = Box.createHorizontalBox();
+		Box msgBox = Box.createVerticalBox();
 		msgBox.setOpaque(true);
 		msgBox.setBackground(MainWindow.backgroundColor);
 		//msgBox.add((Box.createRigidArea(new Dimension(40, 0))));
 		msgBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JScrollPane scrollMsg 	= new JScrollPane(msgBox, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		msgBox.setPreferredSize(new Dimension(585,530));
+		msgBox.setPreferredSize(new Dimension(585,520));
 		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
 		
 		
 		this.msgBoxPanel.add(scrollMsg);
 		
-		Box leftBox = Box.createVerticalBox();
+		/*Box leftBox = Box.createVerticalBox();
 		//leftBox.setLayout(new GridLayout(10,1));
 		leftBox.setPreferredSize(new Dimension(150, 50));
 		leftBox.setBackground(MainWindow.backgroundColor);
@@ -621,7 +621,7 @@ public class MainWindow extends JFrame{
 		rightBox.setPreferredSize(new Dimension(150, 50));
 		rightBox.setBackground(MainWindow.backgroundColor);
 		rightBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		msgBox.add(rightBox, BorderLayout.EAST);
+		msgBox.add(rightBox, BorderLayout.EAST);*/
 
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
 		
@@ -632,7 +632,15 @@ public class MainWindow extends JFrame{
 				/* If the message comes from the recipient user */
 				if (msg.getHasBeenSentByRecipient()) { 
 
-					//For each new message received -- leftBox
+					JTextArea myMsgWhite1 = new JTextArea(msg.getContent());
+					myMsgWhite1.setForeground(Color.black);
+					myMsgWhite1.setBackground(myGray);
+					myMsgWhite1.setWrapStyleWord(true);
+					myMsgWhite1.setLineWrap(true);
+					myMsgWhite1.setEditable(false);
+					msgBox.add(myMsgWhite1);
+
+					/*//For each new message received -- leftBox
 					Box boxLabelMsgReceived 	= Box.createVerticalBox();
 					boxLabelMsgReceived.setBackground(Color.white);
 					leftBox.add(boxLabelMsgReceived);
@@ -654,13 +662,22 @@ public class MainWindow extends JFrame{
 					theirMsg.setForeground(Color.white);
 					theirMsg.setBackground(Color.white);
 					theirMsg.setEditable(false);
-					boxR.add(theirMsg);
+					boxR.add(theirMsg);*/
 						
 				}
 				/* If we are the one who sent the message */
 				else {
+
+					JTextArea myMsg 	= new JTextArea(msg.getContent());
+					myMsg.setForeground(Color.white);
+					myMsg.setBackground(myBlue);
+					myMsg.setWrapStyleWord(true);
+					myMsg.setLineWrap(true);
+					myMsg.setEditable(false);
+					msgBox.add(myMsg);
+
 					//For each new message sent -- rightBoxUs
-					Box boxS 	= Box.createVerticalBox();
+					/*Box boxS 	= Box.createVerticalBox();
 					boxS.setBackground(Color.white);
 					rightBox.add(boxS);
 					boxS.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 3));
@@ -682,7 +699,7 @@ public class MainWindow extends JFrame{
 					myMsgWhite2.setWrapStyleWord(true);
 					myMsgWhite2.setLineWrap(true);
 					myMsgWhite2.setEditable(false);
-					boxLabelMsgReceived2.add(myMsgWhite2);
+					boxLabelMsgReceived2.add(myMsgWhite2);*/
 					
 
 				}
