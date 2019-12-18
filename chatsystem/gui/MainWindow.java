@@ -474,7 +474,6 @@ public class MainWindow extends JFrame{
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
 		/* Retrieve all the current active users */
-		/*JScroll the Panel Users*/ //TO DO Maybe we could put the UserBox on the left side
 		JPanel testScroll = new JPanel();
 		testScroll.setBackground(Color.white);
 
@@ -585,23 +584,24 @@ public class MainWindow extends JFrame{
 		this.conversationPanel.removeAll();
 
 		this.panMsg.add(this.nameBox);
-
-		this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
-		this.conversationPanel.setPreferredSize(new Dimension(275, 540));
-		this.conversationPanel.setBackground(MainWindow.backgroundColor);
 		
-		JScrollPane scrollMsg 	= new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//scrollMsg.setBorder(BorderFactory.createEmptyBorder());
-		scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
-		scrollMsg.setPreferredSize(new Dimension(400,500));
-		this.panMsg.add(scrollMsg);
-
 
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
 		
 		if (mh == null) {
 			/* What to do if there is no conversation yet with the recipient user */
 		} else {
+				
+			this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
+			this.conversationPanel.setBackground(MainWindow.backgroundColor);
+			
+			JScrollPane scrollMsg = new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
+			scrollMsg.setPreferredSize(new Dimension(300,550));
+			this.panMsg.add(scrollMsg);
+			this.panMsg.add(textBox);
+
+
 			for (Message msg: this.currentRecipient.getMessageHistory().getMessageList()) {
 				/* If the message comes from the recipient user */
 				if (msg.getHasBeenSentByRecipient()) { 
@@ -613,7 +613,8 @@ public class MainWindow extends JFrame{
 
 					String content = msg.getContent();
 
-					JTextArea receivedMsg = new JTextArea(content);
+					JTextArea receivedMsg = new JTextArea(content, 1, 30);
+					
 					
 					receivedMsg.setForeground(Color.black);
 					receivedMsg.setBackground(myGray);
@@ -638,9 +639,8 @@ public class MainWindow extends JFrame{
 
 					String content = msg.getContent();
 
-					JTextArea sentMsg = new JTextArea(content);
-			
-					
+					JTextArea sentMsg = new JTextArea(content, 1, 30);
+				
 
 					sentMsg.setForeground(Color.white);
 					sentMsg.setBackground(myBlue);
@@ -674,7 +674,7 @@ public class MainWindow extends JFrame{
 		this.conversationPanel.revalidate();
 		this.conversationPanel.repaint();
 
-		this.panMsg.add(textBox);		
+				
 
 		this.panMsg.add(Box.createVerticalGlue());
 
