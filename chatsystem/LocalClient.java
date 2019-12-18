@@ -156,6 +156,8 @@ public class LocalClient extends Client {
 	public void notifyEndOfActiveUser(String fingerprint) {
 		User usr = this.getUser(fingerprint);
 
+		usr.setActive(false);
+
 		this.mw.notifyUserActivityModification();
 	}
 	/* Update the GUI */

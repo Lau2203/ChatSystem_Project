@@ -30,7 +30,7 @@
 <message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
 <message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
 </recipient>
-<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="undefined">
+<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="Gatwick">
 <message from="me" timestamp="2019-12-13 13:48:25.387">hey</message>
 <message from="him" timestamp="2019-12-13 13:48:25.409">hey</message>
 <message from="me" timestamp="2019-12-13 13:48:27.057">it's me</message>
@@ -47,5 +47,9 @@
 <message from="him" timestamp="2019-12-16 13:39:29.457">bonsoir</message>
 <message from="me" timestamp="2019-12-16 13:40:17.191">yellow</message>
 <message from="him" timestamp="2019-12-16 13:40:17.2">yellow</message>
+<message from="me" timestamp="2019-12-18 09:34:04.713">hello</message>
+<message from="him" timestamp="2019-12-18 09:34:12.914">hey</message>
+<message from="me" timestamp="2019-12-18 09:34:18.4">it's me</message>
+<message from="me" timestamp="2019-12-18 09:34:23.641">no ?</message>
 </recipient>
 </history>
