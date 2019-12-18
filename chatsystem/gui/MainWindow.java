@@ -587,7 +587,7 @@ public class MainWindow extends JFrame{
 		this.panMsg.add(this.nameBox);
 
 		this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
-		this.conversationPanel.setPreferredSize(new Dimension(275, 547));
+		this.conversationPanel.setPreferredSize(new Dimension(275, 540));
 		this.conversationPanel.setBackground(MainWindow.backgroundColor);
 		
 		JScrollPane scrollMsg 	= new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -607,20 +607,18 @@ public class MainWindow extends JFrame{
 
 					JPanel msgRow = new JPanel();
 					msgRow.setLayout(new BorderLayout());
-					//msgRow.setPreferredSize(new Dimension(200, 100));
+					msgRow.setPreferredSize(new Dimension(200, 100));
 
 					String content = msg.getContent();
 
-					JTextField receivedMsg = new JTextField(content);
-					//receivedMsg.setColumns(3);
-					//receivedMsg.setPreferredSize(new Dimension(50,50));
-					//receivedMsg.setPreferredSize(new Dimension(50,50));
+					JTextArea receivedMsg = new JTextArea(content);
+				
 					receivedMsg.setForeground(Color.black);
 					receivedMsg.setBackground(myGray);
-					//receivedMsg.setWrapStyleWord(true);
-					//receivedMsg.setLineWrap(true);
+					receivedMsg.setWrapStyleWord(true);
+					receivedMsg.setLineWrap(true);
 					receivedMsg.setEditable(false);
-					//receivedMsg.setHorizontalAlignment(JTextField.LEFT);
+					
 					
 					receivedMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
@@ -633,22 +631,19 @@ public class MainWindow extends JFrame{
 
 					JPanel msgRow = new JPanel();
 					msgRow.setLayout(new BorderLayout());
-					//msgRow.setPreferredSize(new Dimension(200, 100));
+					msgRow.setPreferredSize(new Dimension(200, 100));
 
 					String content = msg.getContent();
 
-					JTextField sentMsg = new JTextField(content);
-					//sentMsg.setColumns(3);
+					JTextArea sentMsg = new JTextArea(content);
 					
 
-					//sentMsg.setPreferredSize(new Dimension(50,50));
 					sentMsg.setForeground(Color.white);
 					sentMsg.setBackground(myBlue);
-					//sentMsg.setWrapStyleWord(true);
-					//sentMsg.setLineWrap(true);
+					sentMsg.setWrapStyleWord(true);
+					sentMsg.setLineWrap(true);
 					sentMsg.setEditable(false);
-					//sentMsg.setHorizontalAlignment(JTextField.RIGHT);
-
+				
 					sentMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
 					msgRow.add(sentMsg, BorderLayout.LINE_END);
