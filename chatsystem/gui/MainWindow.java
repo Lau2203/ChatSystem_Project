@@ -593,8 +593,9 @@ public class MainWindow extends JFrame{
 		JScrollPane scrollMsg 	= new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		//scrollMsg.setBorder(BorderFactory.createEmptyBorder());
 		scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
-		
+		scrollMsg.setPreferredSize(new Dimension(400,500));
 		this.panMsg.add(scrollMsg);
+
 
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
 		
@@ -606,13 +607,14 @@ public class MainWindow extends JFrame{
 				if (msg.getHasBeenSentByRecipient()) { 
 
 					JPanel msgRow = new JPanel();
+					msgRow.setBackground(MainWindow.backgroundColor);
 					msgRow.setLayout(new BorderLayout());
-					msgRow.setPreferredSize(new Dimension(200, 100));
+					
 
 					String content = msg.getContent();
 
 					JTextArea receivedMsg = new JTextArea(content);
-				
+					
 					receivedMsg.setForeground(Color.black);
 					receivedMsg.setBackground(myGray);
 					receivedMsg.setWrapStyleWord(true);
@@ -630,12 +632,14 @@ public class MainWindow extends JFrame{
 				else {
 
 					JPanel msgRow = new JPanel();
+					msgRow.setBackground(MainWindow.backgroundColor);
 					msgRow.setLayout(new BorderLayout());
-					msgRow.setPreferredSize(new Dimension(200, 100));
+					
 
 					String content = msg.getContent();
 
 					JTextArea sentMsg = new JTextArea(content);
+			
 					
 
 					sentMsg.setForeground(Color.white);
