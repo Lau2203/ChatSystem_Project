@@ -613,7 +613,13 @@ public class MainWindow extends JFrame{
 
 					String content = msg.getContent();
 
-					JTextArea receivedMsg = new JTextArea(content, 1, 30);
+					JTextArea receivedMsg;
+					if(content.length() > 30) {
+						receivedMsg = new JTextArea(content, 1, 30);
+					} else {
+						receivedMsg = new JTextArea(content, 1, content.length());
+					}
+
 					
 					
 					receivedMsg.setForeground(Color.black);
@@ -639,7 +645,12 @@ public class MainWindow extends JFrame{
 
 					String content = msg.getContent();
 
-					JTextArea sentMsg = new JTextArea(content, 1, 30);
+					JTextArea sentMsg;
+					if(content.length() > 30) {
+						sentMsg = new JTextArea(content, 1, 30);
+					} else {
+						sentMsg = new JTextArea(content, 1, content.length());
+					}
 				
 
 					sentMsg.setForeground(Color.white);
