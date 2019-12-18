@@ -606,22 +606,25 @@ public class MainWindow extends JFrame{
 				if (msg.getHasBeenSentByRecipient()) { 
 
 					JPanel msgRow = new JPanel();
-					msgRow.setPreferredSize(new Dimension(50, 100));
+					msgRow.setLayout(new BorderLayout());
+					//msgRow.setPreferredSize(new Dimension(200, 100));
 
 					String content = msg.getContent();
 
-					JTextArea receivedMsg = new JTextArea(content, content.length() % 40, 40);
+					JTextField receivedMsg = new JTextField(content);
+					//receivedMsg.setColumns(3);
 					//receivedMsg.setPreferredSize(new Dimension(50,50));
 					//receivedMsg.setPreferredSize(new Dimension(50,50));
 					receivedMsg.setForeground(Color.black);
 					receivedMsg.setBackground(myGray);
 					//receivedMsg.setWrapStyleWord(true);
-					receivedMsg.setLineWrap(true);
+					//receivedMsg.setLineWrap(true);
 					receivedMsg.setEditable(false);
-
+					//receivedMsg.setHorizontalAlignment(JTextField.LEFT);
+					
 					receivedMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
-					msgRow.add(receivedMsg);
+					msgRow.add(receivedMsg, BorderLayout.LINE_START);
 					this.conversationPanel.add(msgRow);
 						
 				}
@@ -629,22 +632,26 @@ public class MainWindow extends JFrame{
 				else {
 
 					JPanel msgRow = new JPanel();
-					msgRow.setPreferredSize(new Dimension(50, 100));
+					msgRow.setLayout(new BorderLayout());
+					//msgRow.setPreferredSize(new Dimension(200, 100));
 
 					String content = msg.getContent();
 
-					JTextArea sentMsg = new JTextArea(content, content.length() % 40, 40);
+					JTextField sentMsg = new JTextField(content);
+					//sentMsg.setColumns(3);
+					
 
 					//sentMsg.setPreferredSize(new Dimension(50,50));
 					sentMsg.setForeground(Color.white);
 					sentMsg.setBackground(myBlue);
 					//sentMsg.setWrapStyleWord(true);
-					sentMsg.setLineWrap(true);
+					//sentMsg.setLineWrap(true);
 					sentMsg.setEditable(false);
+					//sentMsg.setHorizontalAlignment(JTextField.RIGHT);
 
 					sentMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
-					msgRow.add(sentMsg);
+					msgRow.add(sentMsg, BorderLayout.LINE_END);
 
 					this.conversationPanel.add(msgRow);
 
