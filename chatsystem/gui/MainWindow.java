@@ -323,6 +323,9 @@ public class MainWindow extends JFrame{
 		/*********************************************Conversation*********************************************/
 
 //		this.panMsg.add(conversationPanel);
+
+
+			
 		this.displayConversation();		
 
 		
@@ -584,12 +587,11 @@ public class MainWindow extends JFrame{
 		this.conversationPanel.removeAll();
 
 		this.panMsg.add(this.nameBox);
-		
-
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
 		
 		if (mh == null) {
 			/* What to do if there is no conversation yet with the recipient user */
+			
 		} else {
 				
 			this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
@@ -600,7 +602,6 @@ public class MainWindow extends JFrame{
 			scrollMsg.setPreferredSize(new Dimension(300,550));
 			this.panMsg.add(scrollMsg);
 			this.panMsg.add(textBox);
-
 
 			for (Message msg: this.currentRecipient.getMessageHistory().getMessageList()) {
 				/* If the message comes from the recipient user */
@@ -667,6 +668,8 @@ public class MainWindow extends JFrame{
 
 				}
 			}
+
+			
 		}
 
 		this.conversationPanel.add(Box.createVerticalGlue());
