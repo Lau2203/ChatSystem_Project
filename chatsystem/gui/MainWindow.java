@@ -727,10 +727,13 @@ public class MainWindow extends JFrame{
 	}
 
 	/* Whether a user just got online or offline, we need to update the users panel */
-	public void notifyUserActivityModification() {
+	public void notifyUserActivityModification(User usr) {
 		System.out.println("GUI RECEIVED : USER ACTIVITY MODIFICATION");
 		System.out.flush();
 		this.displayUsersPanel();
+		if (this.currentRecipient.equals(usr)) {
+			this.updateConversationPanel(usr);
+		}
 	}
 	
 	public void notifyNewMainUserUsername() {

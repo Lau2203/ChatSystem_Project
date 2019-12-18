@@ -158,7 +158,7 @@ public class LocalClient extends Client {
 
 		usr.setActive(false);
 
-		this.mw.notifyUserActivityModification();
+		this.mw.notifyUserActivityModification(usr);
 	}
 	/* Update the GUI */
 	public static void main(String[] args) {
