@@ -304,10 +304,11 @@ public class MainWindow extends JFrame{
 		/**************************************Messages***********************************************************/
 
     		this.panMsg.setBackground(MainWindow.backgroundColor); 
+		this.panMsg.setLayout(new BoxLayout(this.panMsg, BoxLayout.Y_AXIS));
 
 		//NameBox
 		
-		this.panMsg.add(nameBox);
+//		this.panMsg.add(nameBox);
 	
 		this.userNameC	= new JLabel("");
 		userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
@@ -321,7 +322,7 @@ public class MainWindow extends JFrame{
 		
 		/*********************************************Conversation*********************************************/
 
-		this.panMsg.add(conversationPanel);
+//		this.panMsg.add(conversationPanel);
 		this.displayConversation();		
 
 		
@@ -583,10 +584,15 @@ public class MainWindow extends JFrame{
 		this.panMsg.removeAll();
 		this.conversationPanel.removeAll();
 
-		this.panMsg.add(nameBox);
+		this.panMsg.add(this.nameBox);
+
+		this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
+		this.conversationPanel.setPreferredSize(new Dimension(275, 547));
+		this.conversationPanel.setBackground(MainWindow.backgroundColor);
 		
 		JScrollPane scrollMsg 	= new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollMsg.setBorder(BorderFactory.createEmptyBorder());
+		//scrollMsg.setBorder(BorderFactory.createEmptyBorder());
+		scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
 		
 		this.panMsg.add(scrollMsg);
 
@@ -599,33 +605,54 @@ public class MainWindow extends JFrame{
 				/* If the message comes from the recipient user */
 				if (msg.getHasBeenSentByRecipient()) { 
 
-					JTextArea myMsgWhite1 = new JTextArea(msg.getContent());
-					myMsgWhite1.setPreferredSize(new Dimension(50,50));
-					myMsgWhite1.setForeground(Color.black);
-					myMsgWhite1.setBackground(myGray);
-					myMsgWhite1.setWrapStyleWord(true);
-					myMsgWhite1.setLineWrap(true);
-					myMsgWhite1.setEditable(false);
-					
-					this.conversationPanel.add(myMsgWhite1);
+					JPanel msgRow = new JPanel();
+					msgRow.setPreferredSize(new Dimension(50, 100));
+
+					String content = msg.getContent();
+
+					JTextArea receivedMsg = new JTextArea(content, content.length() % 40, 40);
+					//receivedMsg.setPreferredSize(new Dimension(50,50));
+					//receivedMsg.setPreferredSize(new Dimension(50,50));
+					receivedMsg.setForeground(Color.black);
+					receivedMsg.setBackground(myGray);
+					//receivedMsg.setWrapStyleWord(true);
+					receivedMsg.setLineWrap(true);
+					receivedMsg.setEditable(false);
+
+					receivedMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+
+					msgRow.add(receivedMsg);
+					this.conversationPanel.add(msgRow);
 						
 				}
 				/* If we are the one who sent the message */
 				else {
 
-					JTextArea myMsg 	= new JTextArea(msg.getContent());
-					myMsg.setPreferredSize(new Dimension(50,50));
-					myMsg.setForeground(Color.white);
-					myMsg.setBackground(myBlue);
-					myMsg.setWrapStyleWord(true);
-					myMsg.setLineWrap(true);
-					myMsg.setEditable(false);
-					
-					this.conversationPanel.add(myMsg);
+					JPanel msgRow = new JPanel();
+					msgRow.setPreferredSize(new Dimension(50, 100));
+
+					String content = msg.getContent();
+
+					JTextArea sentMsg = new JTextArea(content, content.length() % 40, 40);
+
+					//sentMsg.setPreferredSize(new Dimension(50,50));
+					sentMsg.setForeground(Color.white);
+					sentMsg.setBackground(myBlue);
+					//sentMsg.setWrapStyleWord(true);
+					sentMsg.setLineWrap(true);
+					sentMsg.setEditable(false);
+
+					sentMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+
+					msgRow.add(sentMsg);
+
+					this.conversationPanel.add(msgRow);
 
 				}
 			}
 		}
+
+		this.conversationPanel.add(Box.createVerticalGlue());
 
 		if (!this.currentRecipient.isActive()) {
 			this.writeMsg.setEnabled(false);
@@ -637,11 +664,13 @@ public class MainWindow extends JFrame{
 			this.linkButton.setEnabled(true);
 		}
 
-		
-		this.panMsg.add(textBox);		
 
 		this.conversationPanel.revalidate();
 		this.conversationPanel.repaint();
+
+		this.panMsg.add(textBox);		
+
+		this.panMsg.add(Box.createVerticalGlue());
 
 		this.panMsg.revalidate();
 		this.panMsg.repaint();
