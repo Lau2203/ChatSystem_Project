@@ -668,11 +668,10 @@ public class MainWindow extends JFrame{
 
 				}
 			}
-
-			
 		}
 
 		this.conversationPanel.add(Box.createVerticalGlue());
+
 
 		if (!this.currentRecipient.isActive()) {
 			this.writeMsg.setEnabled(false);
