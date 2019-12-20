@@ -40,6 +40,8 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.lang.Math;
 
+import javax.swing.text.*;
+
 import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
@@ -225,14 +227,14 @@ public class MainWindow extends JFrame{
 		search.setBackground(MainWindow.backgroundColor);
 		
 
-		JTextField textField 		= new JTextField(" Search something ? ...                  "); 
+		JTextField textField 		= new JTextField(" Search something ? ...     "); 
 		textField.setFont(new Font("CALIBRI", Font.PLAIN, 15));
 		textField.getFont().deriveFont(Font.ITALIC);
 		textField.setForeground(Color.gray);
 		textField.setBackground(MainWindow.backgroundColor);
 
 		
-		Border borderWhite = BorderFactory.createLineBorder(Color.white, 0);
+		Border borderWhite = BorderFactory.createLineBorder(Color.white, 1);
 		JTextField paddingSearchBar1 = new JTextField("");
 		//paddingSearchBar1.setFont(new Font("CALIBRI", Font.PLAIN, 6));
 		paddingSearchBar1.setBorder(borderWhite);
@@ -282,7 +284,7 @@ public class MainWindow extends JFrame{
 			public void focusLost(FocusEvent e) {
 				if (textField.getText().equals("")) {
 					isSearchBarEmpty = true;
-					textField.setText(" Search something ? ...               ");
+					textField.setText(" Search something ? ...     ");
 					textField.setForeground(Color.gray);
 				} else {
 					isSearchBarEmpty = false;
@@ -303,153 +305,29 @@ public class MainWindow extends JFrame{
 		/*********************************************************************************************************/
 		/**************************************Messages***********************************************************/
 
-    		this.panMsg.setBackground(MainWindow.backgroundColor); 
-		this.panMsg.setLayout(new BoxLayout(this.panMsg, BoxLayout.Y_AXIS));
+    		
 
 		//NameBox
-		
-//		this.panMsg.add(nameBox);
+			this.userNameC	= new JLabel("");
+			userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
+			JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
+			lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
+			userNameC.setForeground(myBlue);
+			lastMsgS.setForeground(Color.gray);
+			nameBox.add(userNameC);
+			nameBox.add(lastMsgS);
+		//this.panMsg.add(nameBox);
 	
-		this.userNameC	= new JLabel("");
-		userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
-		JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
-		lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
-		userNameC.setForeground(myBlue);
-		lastMsgS.setForeground(Color.gray);
-		nameBox.add(userNameC);
-		nameBox.add(lastMsgS);
-		
-		
+	
 		/*********************************************Conversation*********************************************/
 
-//		this.panMsg.add(conversationPanel);
-
-
-			
 		this.displayConversation();		
 
 		
 		/***********************************End of Code about Conversation**************************************/
 		//Write Text Box 
 		
-		textBox.setBackground(MainWindow.backgroundColor);
-
-		textField.setFont(new Font("CALIBRI", Font.PLAIN, 13));
-		textField.getFont().deriveFont(Font.ITALIC);
-		textField.setForeground(Color.gray);
-		textField.setBackground(MainWindow.backgroundColor);
-		JScrollPane scrollMsg2 	= new JScrollPane(this.writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	
 		
-		Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, MainWindow.foregroundColor);
-		//Border borderG2 = BorderFactory.createLineBorder(Color.gray, 1);
-		Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, MainWindow.backgroundColor);
-		Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
-		
-		scrollMsg2.setBorder(borderTextField);
-		this.writeMsg.setBorder(borderW);	
-
-		this.writeMsg.addMouseListener(new MouseListener() {           
-			@Override
-		   	public void mouseReleased(MouseEvent e) {}         
-		   	@Override
-		   	public void mousePressed(MouseEvent e) {}          
-		    	@Override
-		    	public void mouseExited(MouseEvent e) {
-				textField.setBorder(borderG);
-			}           
-		    	@Override
-		    	public void mouseEntered(MouseEvent e) {
-				textField.setBorder(borderB);
-			}          
-		    	@Override
-		    	public void mouseClicked(MouseEvent e) {
-		    }
-		});	
-
-		writeMsg.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (isMsgBarEmpty) {
-					writeMsg.setText("");
-					writeMsg.setForeground(MainWindow.foregroundColor);
-				}
-			}
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (writeMsg.getText().equals("")) {
-					isMsgBarEmpty = true;
-					writeMsg.setText("Write your message...");
-					writeMsg.setForeground(Color.gray);
-				} else {
-					isMsgBarEmpty = false;
-				}
-			}
-		});
-
-		writeMsg.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					e.consume();
-					sendMessage(writeMsg.getText());
-					writeMsg.setText("");
-				}
-			}
-			public void keyTyped(KeyEvent e) {}
-			public void keyReleased(KeyEvent e) {}
-		});
-
-		//Do not split words
-		writeMsg.setWrapStyleWord(true);
-		writeMsg.setLineWrap(true);
-		textBox.add(scrollMsg2);
-		//Set Icons and Button
-		this.linkButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-		this.sendButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-		textBox.add(linkButton);
-		textBox.add(sendButton);
-		this.linkButton.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {}
-				@Override
-	     			public void mousePressed(MouseEvent e) {
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-				@Override
-				public void mouseEntered(MouseEvent e){
-					linkButton.setIcon(MainWindow.mouseEnteredL);
-	       			}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					linkButton.setIcon(MainWindow.mouseExitedL);
-				}
-			});
-		this.sendButton.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {
-					sendMessage(writeMsg.getText());
-				}
-				@Override
-	     			public void mousePressed(MouseEvent e) {
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-				@Override
-				public void mouseEntered(MouseEvent e){
-					sendButton.setIcon(MainWindow.mouseEnteredS);
-	       			}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					sendButton.setIcon(MainWindow.mouseExitedS);
-				}
-			});
-
-		this.panMsg.add(textBox);
-		
-
-
 		/************************************END OF MESSAGES PART*************************************************/
 		/*********************************************************************************************************/
 		//SPLITS
@@ -581,18 +459,143 @@ public class MainWindow extends JFrame{
 		this.panUsers.repaint();
 	}
 
+	
+
 	private void displayConversation() {
-
-		this.panMsg.removeAll();
-		this.conversationPanel.removeAll();
-
-		this.panMsg.add(this.nameBox);
+		
+		this.panMsg.setBackground(MainWindow.backgroundColor); 
+		this.panMsg.setLayout(new BoxLayout(this.panMsg, BoxLayout.Y_AXIS));
+		
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
 		
 		if (mh == null) {
+			this.panMsg.removeAll();
+			this.conversationPanel.removeAll();
+
 			/* What to do if there is no conversation yet with the recipient user */
+			JPanel panelMsg 	= new JPanel();
+	    		panelMsg.setBackground(Color.white);
+			
+			panMsg.add(panelMsg);
+			//this.conversationPanel.add(panelMsg);
+			
+			Box boxMsg = Box.createVerticalBox();
+			//boxMsg.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			panelMsg.add(boxMsg);
+
+
+			// Logo
+			ImageIcon logo 			= new ImageIcon("../resources/images/AuraLogo1.jpg");
+			JLabel imageLogo		= new JLabel(logo); 
+			imageLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+			boxMsg.add(imageLogo);
+
+			ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsPicture.png");
+			JLabel aboutUsFinal		= new JLabel(logo2); 
+
+			JLabel paddingT1 		= new JLabel(" ");
+			paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+			boxMsg.add(paddingT1);
+			//About Us
+			Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs_Button_Clicked.png");
+			Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs_Button_IDLE.png");
+			
+			//Back
+			Icon backA		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
+			Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
+			
+			JButton backAButton	= new JButton(backA);
+			backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
+
+
+			
+			JButton buttonAU 	= new JButton(mouseExitedAU);
+			buttonAU.setBorder(BorderFactory.createLineBorder(Color.white));
+			buttonAU.setAlignmentX(Component.CENTER_ALIGNMENT);
+			boxMsg.add(buttonAU, BorderLayout.CENTER);
+			buttonAU.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {}
+				@Override
+	     			public void mousePressed(MouseEvent e) {
+					panelMsg.removeAll();
+					panelMsg.setLayout(new FlowLayout(FlowLayout.LEFT));
+					panelMsg.add(backAButton);
+					panelMsg.revalidate();
+					panelMsg.add(aboutUsFinal);
+					panelMsg.repaint();
+					buttonAU.setIcon(mouseExitedAU);
+					setCursor(defaultCursor);
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+				@Override
+				public void mouseEntered(MouseEvent e){
+					setCursor(handCursor);
+					buttonAU.setIcon(mouseEnteredAU);
+	       			}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					setCursor(defaultCursor);
+					buttonAU.setIcon(mouseExitedAU);
+					
+				}
+			});
+			
+			//Texte
+			JLabel paddingT2 		= new JLabel(" ");
+			paddingT2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
+			JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session.");
+			sendTextMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,15));
+			sendTextMsg.setForeground(Color.gray);
+			sendTextMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+			boxMsg.add(paddingT2, BorderLayout.CENTER);
+			boxMsg.add(sendTextMsg, BorderLayout.CENTER);
+
+			backAButton.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {}
+				@Override
+	     			public void mousePressed(MouseEvent e) {
+					panelMsg.removeAll();
+					panelMsg.add(boxMsg);
+					boxMsg.add(imageLogo);
+					boxMsg.add(paddingT1);
+					boxMsg.add(buttonAU, BorderLayout.CENTER);
+					boxMsg.add(paddingT2, BorderLayout.CENTER);
+					boxMsg.add(sendTextMsg, BorderLayout.CENTER);
+					panelMsg.revalidate();
+					panelMsg.repaint();
+					backAButton.setIcon(backA);
+					panelMsg.setLayout(new FlowLayout(FlowLayout.CENTER));
+					setCursor(defaultCursor);
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+				@Override
+				public void mouseEntered(MouseEvent e){
+					setCursor(handCursor);
+					backAButton.setIcon(backB);
+	       			}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					setCursor(defaultCursor);
+					backAButton.setIcon(backA);
+					
+				}
+			});
 			
 		} else {
+			
+			this.panMsg.removeAll();
+			this.conversationPanel.removeAll();
+
+			/***********Name at the top**************/
+
+			this.panMsg.add(this.nameBox);
+			/***************************************/
 				
 			this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
 			this.conversationPanel.setBackground(MainWindow.backgroundColor);
@@ -600,8 +603,132 @@ public class MainWindow extends JFrame{
 			JScrollPane scrollMsg = new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
 			scrollMsg.setPreferredSize(new Dimension(300,550));
+			
 			this.panMsg.add(scrollMsg);
+			
+			/***********TextBox at the bottom**************/
+			//this.panMsg.add(textBox);
+			Border borderG = BorderFactory.createLineBorder(Color.gray, 2);
+			Border borderB = BorderFactory.createLineBorder(myBlue, 2);
+
+			textBox.setBackground(MainWindow.backgroundColor);
+
+			JTextField textField2 		= new JTextField(" Write your message...");
+			textField2.setFont(new Font("CALIBRI", Font.PLAIN, 13));
+			textField2.getFont().deriveFont(Font.ITALIC);
+			textField2.setForeground(Color.gray);
+			textField2.setBackground(MainWindow.backgroundColor);
+			JScrollPane scrollMsg2 	= new JScrollPane(this.writeMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+			
+			Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, MainWindow.foregroundColor);
+			//Border borderG2 = BorderFactory.createLineBorder(Color.gray, 1);
+			Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, MainWindow.backgroundColor);
+			Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
+			
+			scrollMsg2.setBorder(borderTextField);
+			this.writeMsg.setBorder(borderW);	
+
+			this.writeMsg.addMouseListener(new MouseListener() {           
+				@Override
+			   	public void mouseReleased(MouseEvent e) {}         
+			   	@Override
+			   	public void mousePressed(MouseEvent e) {}          
+			    	@Override
+			    	public void mouseExited(MouseEvent e) {
+					textField2.setBorder(borderG);
+				}           
+			    	@Override
+			    	public void mouseEntered(MouseEvent e) {
+					textField2.setBorder(borderB);
+				}          
+			    	@Override
+			    	public void mouseClicked(MouseEvent e) {
+			    }
+			});	
+
+			writeMsg.addFocusListener(new FocusListener() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					if (isMsgBarEmpty) {
+						writeMsg.setText("");
+						writeMsg.setForeground(MainWindow.foregroundColor);
+					}
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					if (writeMsg.getText().equals("")) {
+						isMsgBarEmpty = true;
+						writeMsg.setText("Write your message...");
+						writeMsg.setForeground(Color.gray);
+					} else {
+						isMsgBarEmpty = false;
+					}
+				}
+			});
+
+			writeMsg.addKeyListener(new KeyListener() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						e.consume();
+						sendMessage(writeMsg.getText());
+						writeMsg.setText("");
+					}
+				}
+				public void keyTyped(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {}
+			});
+
+			//Do not split words
+			writeMsg.setWrapStyleWord(true);
+			writeMsg.setLineWrap(true);
+			textBox.add(scrollMsg2);
+			//Set Icons and Button
+			this.linkButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+			this.sendButton.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+			textBox.add(linkButton);
+			textBox.add(sendButton);
+			this.linkButton.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {}
+					@Override
+		     			public void mousePressed(MouseEvent e) {
+					}
+					@Override
+					public void mouseReleased(MouseEvent e) {
+					}
+					@Override
+					public void mouseEntered(MouseEvent e){
+						linkButton.setIcon(MainWindow.mouseEnteredL);
+		       			}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						linkButton.setIcon(MainWindow.mouseExitedL);
+					}
+				});
+			this.sendButton.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {
+						sendMessage(writeMsg.getText());
+					}
+					@Override
+		     			public void mousePressed(MouseEvent e) {
+					}
+					@Override
+					public void mouseReleased(MouseEvent e) {
+					}
+					@Override
+					public void mouseEntered(MouseEvent e){
+						sendButton.setIcon(MainWindow.mouseEnteredS);
+		       			}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						sendButton.setIcon(MainWindow.mouseExitedS);
+					}
+				});
+
 			this.panMsg.add(textBox);
+
+			/********************************/
 
 			for (Message msg: this.currentRecipient.getMessageHistory().getMessageList()) {
 				/* If the message comes from the recipient user */
@@ -615,6 +742,9 @@ public class MainWindow extends JFrame{
 					String content = msg.getContent();
 
 					JTextArea receivedMsg;
+
+				
+
 					if(content.length() > 30) {
 						receivedMsg = new JTextArea(content, 1, 30);
 					} else {
