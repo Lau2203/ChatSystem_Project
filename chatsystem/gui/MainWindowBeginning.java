@@ -357,7 +357,7 @@ public class MainWindowBeginning extends JFrame{
 				textOption1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 				textOption1.setForeground(myBlue);
 				UserN.add(textOption1);
-				JLabel textOption2 = new JLabel("You can change your username. This username is how all the connected users will see you.");
+				JLabel textOption2 = new JLabel("You can change your username.");
 				//textOption2.setPreferredSize(new Dimension(100,20));
 				textOption2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textOption2.setForeground(Color.gray);
@@ -365,14 +365,14 @@ public class MainWindowBeginning extends JFrame{
 				
 				Box set = Box.createHorizontalBox();
 				set.setBackground(Color.white);
-				mainBoxMsg.add(set);
+				UserN.add(set);
 				Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
 				Border downBlue = BorderFactory.createMatteBorder(0, 0, 1, 0, myBlue);
 				Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.white);
 				Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
 				Border borderTextField2 = BorderFactory.createCompoundBorder(downBlue, borderW);
 				
-				JTextArea newUserName = new JTextArea("Write your new username...");
+				JTextField newUserName = new JTextField("Write your new username...");
 				newUserName.setFont(new Font("CALIBRI", Font.PLAIN, 13));
 				newUserName.getFont().deriveFont(Font.ITALIC);
 				newUserName.setForeground(Color.gray);
