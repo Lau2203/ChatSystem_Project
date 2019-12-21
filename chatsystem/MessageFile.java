@@ -29,4 +29,5 @@ public class MessageFile extends Message {
     public String toString() {
         return this.filePath;
     }
+
 }

@@ -42,6 +42,12 @@ import java.lang.Math;
 
 import javax.swing.text.*;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
@@ -234,7 +240,7 @@ public class MainWindow extends JFrame{
 		textField.setBackground(MainWindow.backgroundColor);
 
 		
-		Border borderWhite = BorderFactory.createLineBorder(Color.white, 1);
+		Border borderWhite = BorderFactory.createLineBorder(backgroundColor, 1);
 		JTextField paddingSearchBar1 = new JTextField("");
 		//paddingSearchBar1.setFont(new Font("CALIBRI", Font.PLAIN, 6));
 		paddingSearchBar1.setBorder(borderWhite);
@@ -294,20 +300,15 @@ public class MainWindow extends JFrame{
 
 		this.panUsers.add(this.search);		
 
-		/************************************TO BE DONE IN USER BOX CLASS***************************************/
+		
 		/*********************************************************************************************************/
-		/******************* Create seven UB ****************************/
+		
 		this.displayUsersPanel();		
 		
 		/*********************************************************************************************************/
 		/*********************************************************************************************************/
 
-		/*********************************************************************************************************/
-		/**************************************Messages***********************************************************/
-
-    		
-
-		//NameBox
+		//User name and last mmessage time at the top of the conversation part
 			this.userNameC	= new JLabel("");
 			userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
 			JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
@@ -316,19 +317,12 @@ public class MainWindow extends JFrame{
 			lastMsgS.setForeground(Color.gray);
 			nameBox.add(userNameC);
 			nameBox.add(lastMsgS);
-		//this.panMsg.add(nameBox);
-	
-	
+		
 		/*********************************************Conversation*********************************************/
 
 		this.displayConversation();		
 
-		
-		/***********************************End of Code about Conversation**************************************/
-		//Write Text Box 
-		
-		
-		/************************************END OF MESSAGES PART*************************************************/
+		/******************************************************************************************************/
 		/*********************************************************************************************************/
 		//SPLITS
     		s1 	= new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, this.panUsers);
@@ -356,12 +350,12 @@ public class MainWindow extends JFrame{
 
 		/* Retrieve all the current active users */
 		JPanel testScroll = new JPanel();
-		testScroll.setBackground(Color.white);
+		testScroll.setBackground(backgroundColor);
 
 		//testScroll.setLayout(new BorderLayout());
 		JScrollPane scrollMsg 	= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollMsg.setBackground(Color.white);
-		scrollMsg.setBorder(BorderFactory.createLineBorder(Color.white));
+		scrollMsg.setBackground(backgroundColor);
+		scrollMsg.setBorder(BorderFactory.createLineBorder(backgroundColor));
 		this.panUsers.add(scrollMsg, BorderLayout.CENTER);	
 		/*End of JScrollPane Code*/		
 
@@ -474,7 +468,7 @@ public class MainWindow extends JFrame{
 
 			/* What to do if there is no conversation yet with the recipient user */
 			JPanel panelMsg 	= new JPanel();
-	    		panelMsg.setBackground(Color.white);
+	    		panelMsg.setBackground(backgroundColor);
 			
 			panMsg.add(panelMsg);
 			//this.conversationPanel.add(panelMsg);
@@ -505,12 +499,12 @@ public class MainWindow extends JFrame{
 			Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
 			
 			JButton backAButton	= new JButton(backA);
-			backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
+			backAButton.setBorder(BorderFactory.createLineBorder(backgroundColor));
 
 
 			
 			JButton buttonAU 	= new JButton(mouseExitedAU);
-			buttonAU.setBorder(BorderFactory.createLineBorder(Color.white));
+			buttonAU.setBorder(BorderFactory.createLineBorder(backgroundColor));
 			buttonAU.setAlignmentX(Component.CENTER_ALIGNMENT);
 			boxMsg.add(buttonAU, BorderLayout.CENTER);
 			buttonAU.addMouseListener(new MouseListener() {
@@ -758,6 +752,14 @@ public class MainWindow extends JFrame{
 					receivedMsg.setWrapStyleWord(true);
 					receivedMsg.setLineWrap(true);
 					receivedMsg.setEditable(false);
+
+	
+					Timestamp ts = msg.getTimestamp();
+					Date date=new Date(ts.getTime());
+					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy -- HH:mm");  
+                			String strDate = dateFormat.format(date);
+					
+					receivedMsg.setToolTipText(strDate);
 					
 					
 					receivedMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
@@ -773,7 +775,7 @@ public class MainWindow extends JFrame{
 					msgRow.setBackground(MainWindow.backgroundColor);
 					msgRow.setLayout(new BorderLayout());
 					
-
+					
 					String content = msg.getContent();
 
 					JTextArea sentMsg;
@@ -783,12 +785,20 @@ public class MainWindow extends JFrame{
 						sentMsg = new JTextArea(content, 1, content.length());
 					}
 				
+					
 
-					sentMsg.setForeground(Color.white);
+					sentMsg.setForeground(backgroundColor);
 					sentMsg.setBackground(myBlue);
 					sentMsg.setWrapStyleWord(true);
 					sentMsg.setLineWrap(true);
 					sentMsg.setEditable(false);
+
+					
+					Timestamp ts = msg.getTimestamp();
+					Date date=new Date(ts.getTime());
+					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");  
+                			String strDate = dateFormat.format(date);    
+					sentMsg.setToolTipText(strDate);
 				
 					sentMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
