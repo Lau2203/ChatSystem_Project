@@ -106,6 +106,8 @@ public class MainWindow extends JFrame{
 	public static Icon mouseExitedL		= new ImageIcon("../resources/images/AddFiles_Button_IDLE.png");
 	public static Icon mouseEnteredS	= new ImageIcon("../resources/images/SendMsg_Button_Clicked.png");
 	public static Icon mouseExitedS		= new ImageIcon("../resources/images/SendMsg_Button_IDLE.png");
+	public static Icon mouseEnteredValidate 	= new ImageIcon("../resources/images/Validate_Button_Clicked.png");
+	public static Icon mouseExitedValidate 	= new ImageIcon("../resources/images/Validate_Button_IDLE.png");
 	// User Image
 	public static ImageIcon user 		= new ImageIcon("../resources/images/ProfilePictureUserConnected.png");
 	public static ImageIcon inactiveUser 	= new ImageIcon("../resources/images/ProfilePictureUserDisconnected.png");
@@ -113,6 +115,15 @@ public class MainWindow extends JFrame{
 	// Cursors
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
+
+	//Back
+	public static Icon backA		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
+	public static Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
+	//About Us
+	Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs_Button_Clicked.png");
+	Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs_Button_IDLE.png");
+		
+	private JButton backAButton	= new JButton(backA);	
 
 	public MainWindow(Client master)  {  
 
@@ -168,6 +179,9 @@ public class MainWindow extends JFrame{
 		buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 		buttonO.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 		
+		BoxAboutUs2.add(buttonO);
+		BoxAboutUs2.add(buttonM);
+
 		buttonM.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {}
 			@Override
@@ -193,32 +207,182 @@ public class MainWindow extends JFrame{
 		});
 
 		buttonO.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				panMsg.removeAll();
+				conversationPanel.removeAll();
+				
+				backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
+				panMsg.setLayout(new FlowLayout(FlowLayout.LEFT));
+				Box mainBoxMsg = Box.createVerticalBox();
+				panMsg.add(mainBoxMsg);
+				mainBoxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+				
+				mainBoxMsg.add(backAButton);
+				backAButton.addMouseListener(new MouseListener() {
+				public void mouseClicked(MouseEvent e) {}
+				@Override
+	     			public void mousePressed(MouseEvent e) {
+					
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					
+				}
+				@Override
+				public void mouseEntered(MouseEvent e){
+					setCursor(handCursor);
+					backAButton.setIcon(backB);
+	       			}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					setCursor(defaultCursor);
+					backAButton.setIcon(backA);
+					
+				}
+			});
+	
+				
+				Box title = Box.createVerticalBox();
+				mainBoxMsg.add(title);
+				title.setAlignmentX(Component.LEFT_ALIGNMENT);
+				JLabel pad1 = new JLabel(" ");
+				pad1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
+				JLabel titleOption = new JLabel("Option");
+				JLabel pad2 = new JLabel(" ");
+				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
+				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,20));
+				titleOption.setForeground(Color.gray);
+				title.add(pad1);
+				title.add(titleOption);
+				title.add(pad2);
+
+				//Change UserName
+				Box UserN = Box.createVerticalBox();
+				UserN.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(UserN);
+				JLabel textOption1 = new JLabel("Set Username");
+				textOption1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				textOption1.setForeground(myBlue);
+				UserN.add(textOption1);
+				JLabel textOption2 = new JLabel("You can change your username. Other users will see it.");
+				textOption2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textOption2.setForeground(Color.gray);
+				UserN.add(textOption2);
+				
+				Box set = Box.createHorizontalBox();
+				set.setAlignmentX(Component.LEFT_ALIGNMENT);
+				set.setBackground(Color.white);
+				UserN.add(set);
+				Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
+				Border downBlue = BorderFactory.createMatteBorder(0, 0, 1, 0, myBlue);
+				Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.white);
+				Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
+				Border borderTextField2 = BorderFactory.createCompoundBorder(downBlue, borderW);
+				
+				JTextField newUserName = new JTextField("Write your new username...");
+				newUserName.setFont(new Font("CALIBRI", Font.PLAIN, 13));
+				newUserName.getFont().deriveFont(Font.ITALIC);
+				newUserName.setForeground(Color.gray);
+				newUserName.setBorder(borderTextField);
+				set.add(newUserName);
+					newUserName.addMouseListener(new MouseListener() {
+							public void mouseClicked(MouseEvent e) {}
+							@Override
+				     			public void mousePressed(MouseEvent e) {}
+							@Override
+							public void mouseReleased(MouseEvent e) {}
+							@Override
+							public void mouseEntered(MouseEvent e){
+								setCursor(handCursor);
+								newUserName.setBorder(borderTextField2);
+				       			}
+							@Override
+							public void mouseExited(MouseEvent e) {
+								setCursor(defaultCursor);
+								newUserName.setBorder(borderTextField);
+					
+							}
+					});
+
+				JButton buttonGo = new JButton(mouseExitedValidate);
+				set.add(buttonGo);
+				Border emptyBorderButton = BorderFactory.createEmptyBorder();
+				buttonGo.setBorder(emptyBorderButton);
+				
+
+					buttonGo.addMouseListener(new MouseListener() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+							}
+							@Override
+				     			public void mousePressed(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseReleased(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseEntered(MouseEvent e){
+								setCursor(handCursor);
+								buttonGo.setIcon(mouseEnteredValidate);
+				       			}
+							@Override
+							public void mouseExited(MouseEvent e) {
+								setCursor(defaultCursor);
+								buttonGo.setIcon(mouseExitedValidate);
+							}
+					});
+
+				//Clear History
+				Box clear = Box.createVerticalBox();
+				clear.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(clear);
+				JLabel pad3 = new JLabel(" ");
+				pad3.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				JLabel textOption3 = new JLabel("Clear your history");
+				textOption3.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				textOption3.setForeground(myBlue);
+				clear.add(pad3);
+				clear.add(textOption3);
+				JLabel textHistory = new JLabel("You can delete your chat sessions at any time.");
+				textHistory.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textHistory.setForeground(Color.gray);
+				JLabel textHistory2 = new JLabel("Careful, it is an irreversible operation!");
+				textHistory2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textHistory2.setForeground(Color.gray);
+				clear.add(textHistory);
+				clear.add(textHistory2);
+						
+
+				
+				conversationPanel.revalidate();
+				conversationPanel.repaint();
+				panMsg.revalidate();
+				panMsg.repaint();
+
+				} //end of mouse clicked on Option
 			@Override
-     			public void mousePressed(MouseEvent e) {
-				//buttonO.setIcon(MainWindow.mouseEnteredO);
-			}
+     			public void mousePressed(MouseEvent e) {}
 			@Override
-        		public void mouseReleased(MouseEvent e) {
-				//buttonO.setIcon(MainWindow.mouseExitedO);
-			}
+			public void mouseReleased(MouseEvent e) {}
 			@Override
-        		public void mouseEntered(MouseEvent e){
-				setCursor(MainWindow.handCursor);
-				buttonO.setIcon(MainWindow.mouseEnteredO);
+			public void mouseEntered(MouseEvent e){
+				setCursor(handCursor);
+				buttonO.setIcon(mouseEnteredO);
 				buttonO.setBorder(BorderFactory.createLineBorder(myBlue));
        			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setCursor(MainWindow.defaultCursor);
-				buttonO.setIcon(MainWindow.mouseExitedO);
-				buttonO.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-			}
+				setCursor(defaultCursor);
+				buttonO.setIcon(mouseExitedO);
+				buttonO.setBorder(BorderFactory.createLineBorder(Color.white));
+			}	
+			
+
 		});
 
-		BoxAboutUs2.add(buttonO);
-		BoxAboutUs2.add(buttonM);
-
+		
 		
 
 		//END of About US - NORTH.LEFT 
@@ -491,13 +655,7 @@ public class MainWindow extends JFrame{
 			JLabel paddingT1 		= new JLabel(" ");
 			paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
 			boxMsg.add(paddingT1);
-			//About Us
-			Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs_Button_Clicked.png");
-			Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs_Button_IDLE.png");
 			
-			//Back
-			Icon backA		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
-			Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
 			
 			JButton backAButton	= new JButton(backA);
 			backAButton.setBorder(BorderFactory.createLineBorder(backgroundColor));
