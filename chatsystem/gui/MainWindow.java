@@ -93,6 +93,7 @@ public class MainWindow extends JFrame{
 	private JTextArea writeMsg 	= new JTextArea("Write your message...", 0, 43); //padding to be done
 	private JButton linkButton 	= new JButton(MainWindow.mouseExitedL);
 	private JButton sendButton 	= new JButton(MainWindow.mouseExitedS);
+	private JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
 
 	/* Resources */
 	public static ImageIcon icon 		= new ImageIcon("../resources/images/MyProfilePicture.png");
@@ -308,10 +309,10 @@ public class MainWindow extends JFrame{
 		/*********************************************************************************************************/
 		/*********************************************************************************************************/
 
-		//User name and last mmessage time at the top of the conversation part
+		//User name and last message time at the top of the conversation part
 			this.userNameC	= new JLabel("");
 			userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
-			JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
+			//JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
 			lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
 			userNameC.setForeground(myBlue);
 			lastMsgS.setForeground(Color.gray);
@@ -756,11 +757,16 @@ public class MainWindow extends JFrame{
 	
 					Timestamp ts = msg.getTimestamp();
 					Date date=new Date(ts.getTime());
-					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy -- HH:mm");  
+					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy | HH:mm");  
                 			String strDate = dateFormat.format(date);
-					
 					receivedMsg.setToolTipText(strDate);
 					
+
+					DateFormat dateFormat2 = new SimpleDateFormat("MM/dd");  
+                			String strDate2 = dateFormat2.format(date);
+					DateFormat dateFormat3 = new SimpleDateFormat("HH:mm");  
+                			String strDate3 = dateFormat3.format(date);
+					lastMsgS.setText("  Last message sent the " + strDate2 + " at " + strDate3 );
 					
 					receivedMsg.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 4), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
@@ -796,7 +802,7 @@ public class MainWindow extends JFrame{
 					
 					Timestamp ts = msg.getTimestamp();
 					Date date=new Date(ts.getTime());
-					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");  
+					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy | HH:mm");  
                 			String strDate = dateFormat.format(date);    
 					sentMsg.setToolTipText(strDate);
 				
