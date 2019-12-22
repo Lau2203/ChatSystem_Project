@@ -33,7 +33,8 @@ public class MainWindowBeginning extends JFrame{
   	Color myBlue = new Color(24, 147, 248);
 	private JSplitPane s1;
 	private JSplitPane s2;
-
+	Image bg = Toolkit.getDefaultToolkit().getImage("../resources/images/backgroundPicture.png");
+	
 	public MainWindowBeginning()  {  
 
 		super();   
@@ -50,6 +51,7 @@ public class MainWindowBeginning extends JFrame{
    		Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 	
 		
+
 		Icon mouseEnteredValidate 	= new ImageIcon("../resources/images/Validate_Button_Clicked.png");
 		Icon mouseExitedValidate 	= new ImageIcon("../resources/images/Validate_Button_IDLE.png");
 
@@ -331,10 +333,16 @@ public class MainWindowBeginning extends JFrame{
 		/*****************Buttons New and Option**********************************/
 		BoxAboutUs2.add(buttonO);
 		BoxAboutUs2.add(buttonM);
+		
+		
+
+		//ImageIcon bg 		 = new ImageIcon("../resources/images/backgroundPicture.png");
 
 		buttonO.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				panelMsg.removeAll();
+				
+				
 				panelMsg.setLayout(new FlowLayout(FlowLayout.LEFT));
 				Box mainBoxMsg = Box.createVerticalBox();
 				panelMsg.add(mainBoxMsg);
@@ -345,25 +353,33 @@ public class MainWindowBeginning extends JFrame{
 				
 				Box title = Box.createVerticalBox();
 				mainBoxMsg.add(title);
+				title.setAlignmentX(Component.LEFT_ALIGNMENT);
+				JLabel pad1 = new JLabel(" ");
+				pad1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
 				JLabel titleOption = new JLabel("Option");
-				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
-				titleOption.setForeground(myBlue);
+				JLabel pad2 = new JLabel(" ");
+				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
+				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,20));
+				titleOption.setForeground(Color.gray);
+				title.add(pad1);
 				title.add(titleOption);
+				title.add(pad2);
 
 				//Change UserName
 				Box UserN = Box.createVerticalBox();
+				UserN.setAlignmentX(Component.LEFT_ALIGNMENT);
 				mainBoxMsg.add(UserN);
 				JLabel textOption1 = new JLabel("Set Username");
 				textOption1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 				textOption1.setForeground(myBlue);
 				UserN.add(textOption1);
-				JLabel textOption2 = new JLabel("You can change your username.");
-				//textOption2.setPreferredSize(new Dimension(100,20));
+				JLabel textOption2 = new JLabel("You can change your username. Other users will see it.");
 				textOption2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textOption2.setForeground(Color.gray);
 				UserN.add(textOption2);
 				
 				Box set = Box.createHorizontalBox();
+				set.setAlignmentX(Component.LEFT_ALIGNMENT);
 				set.setBackground(Color.white);
 				UserN.add(set);
 				Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black);
@@ -426,6 +442,26 @@ public class MainWindowBeginning extends JFrame{
 								buttonGo.setIcon(mouseExitedValidate);
 							}
 					});
+
+				//Clear History
+				Box clear = Box.createVerticalBox();
+				clear.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(clear);
+				JLabel pad3 = new JLabel(" ");
+				pad3.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				JLabel textOption3 = new JLabel("Clear your history");
+				textOption3.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				textOption3.setForeground(myBlue);
+				clear.add(pad3);
+				clear.add(textOption3);
+				JLabel textHistory = new JLabel("You can delete your chat sessions at any time.");
+				textHistory.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textHistory.setForeground(Color.gray);
+				JLabel textHistory2 = new JLabel("Careful, it is an irreversible operation!");
+				textHistory2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textHistory2.setForeground(Color.gray);
+				clear.add(textHistory);
+				clear.add(textHistory2);
 						
 
 				panelMsg.revalidate();
@@ -468,6 +504,7 @@ public class MainWindowBeginning extends JFrame{
 		
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 	}
+
 
 	public static void main(String[] args) {
 		MainWindowBeginning mw = new MainWindowBeginning();
