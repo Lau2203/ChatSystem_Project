@@ -206,6 +206,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 
+		/*******************************Option Button****************************/
 		buttonO.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				panMsg.removeAll();
@@ -381,6 +382,7 @@ public class MainWindow extends JFrame{
 			
 
 		});
+		/*********************************End of Option Button******************************************/
 
 		
 		
