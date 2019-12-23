@@ -48,6 +48,8 @@ import java.util.Locale;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import javax.swing.JCheckBox;
+
 import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
@@ -403,6 +405,23 @@ public class MainWindow extends JFrame{
 				textOffline.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textOffline.setForeground(Color.gray);
 				offline.add(textOffline);
+				Box offline2 = Box.createHorizontalBox();
+				offline2.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(offline2);
+				JLabel textOffline2 = new JLabel("You will still be able to send messages. ");
+				textOffline2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textOffline2.setForeground(Color.gray);
+				JCheckBox check = new JCheckBox("Offline");
+				check.setFont(new java.awt.Font("CALIBRI", Font.PLAIN, 13));
+				check.setBackground(Color.white);
+				check.setForeground(myBlue);
+				if (check.isSelected()) {
+				    //what to do if check box is selected -> be offline
+				} else {
+				    //do nothing -> be connected
+				}
+				offline2.add(textOffline2);
+				offline2.add(check);
 				
 
 				//Footer
