@@ -106,22 +106,23 @@ public class MainWindow extends JFrame{
 	public static Icon mouseExitedL		= new ImageIcon("../resources/images/AddFiles_Button_IDLE.png");
 	public static Icon mouseEnteredS	= new ImageIcon("../resources/images/SendMsg_Button_Clicked.png");
 	public static Icon mouseExitedS		= new ImageIcon("../resources/images/SendMsg_Button_IDLE.png");
-	public static Icon mouseEnteredValidate 	= new ImageIcon("../resources/images/Validate_Button_Clicked.png");
+	public static Icon mouseEnteredValidate = new ImageIcon("../resources/images/Validate_Button_Clicked.png");
 	public static Icon mouseExitedValidate 	= new ImageIcon("../resources/images/Validate_Button_IDLE.png");
 	// User Image
 	public static ImageIcon user 		= new ImageIcon("../resources/images/ProfilePictureUserConnected.png");
 	public static ImageIcon inactiveUser 	= new ImageIcon("../resources/images/ProfilePictureUserDisconnected.png");
-
-	// Cursors
-	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
-   	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
-
 	//Back
 	public static Icon backA		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
 	public static Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
 	//About Us
 	Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs_Button_Clicked.png");
 	Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs_Button_IDLE.png");
+	
+	// Cursors
+	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
+   	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
+
+	
 		
 	private JButton backAButton	= new JButton(backA);	
 
@@ -261,7 +262,7 @@ public class MainWindow extends JFrame{
 				Box UserN = Box.createVerticalBox();
 				UserN.setAlignmentX(Component.LEFT_ALIGNMENT);
 				mainBoxMsg.add(UserN);
-				JLabel textOption1 = new JLabel("Set Username");
+				JLabel textOption1 = new JLabel("Set new username");
 				textOption1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 				textOption1.setForeground(myBlue);
 				UserN.add(textOption1);
@@ -349,12 +350,67 @@ public class MainWindow extends JFrame{
 				JLabel textHistory = new JLabel("You can delete your chat sessions at any time.");
 				textHistory.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textHistory.setForeground(Color.gray);
-				JLabel textHistory2 = new JLabel("Careful, it is an irreversible operation!");
+				clear.add(textHistory);
+				Box textAndButton = Box.createHorizontalBox();
+				textAndButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(textAndButton);
+				JLabel textHistory2 = new JLabel("Careful, it is an irreversible operation ! ");
 				textHistory2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textHistory2.setForeground(Color.gray);
-				clear.add(textHistory);
-				clear.add(textHistory2);
-						
+				textAndButton.add(textHistory2);
+				JButton buttonGo2 = new JButton(mouseExitedValidate);
+				textAndButton.add(buttonGo2);
+				buttonGo2.setBorder(emptyBorderButton);
+				
+
+					buttonGo2.addMouseListener(new MouseListener() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+							}
+							@Override
+				     			public void mousePressed(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseReleased(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseEntered(MouseEvent e){
+								setCursor(handCursor);
+								buttonGo2.setIcon(mouseEnteredValidate);
+				       			}
+							@Override
+							public void mouseExited(MouseEvent e) {
+								setCursor(defaultCursor);
+								buttonGo2.setIcon(mouseExitedValidate);
+							}
+					});
+
+				//Appear offline
+				
+				Box offline = Box.createVerticalBox();
+				offline.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(offline);
+				JLabel pad5 = new JLabel(" ");
+				pad5.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				JLabel textOption5 = new JLabel("Appear offline");
+				textOption5.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				textOption5.setForeground(myBlue);
+				offline.add(pad5);
+				offline.add(textOption5);
+				JLabel textOffline = new JLabel("You can choose to be invisible to other users.");
+				textOffline.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
+				textOffline.setForeground(Color.gray);
+				offline.add(textOffline);
+				
+
+				//Footer
+				
+				ImageIcon footer		= new ImageIcon("../resources/images/backgroundPicture1.png");
+				JLabel footerLabel		= new JLabel(footer); 
+
+				panMsg.add(footerLabel);
 
 				
 				conversationPanel.revalidate();

@@ -457,11 +457,43 @@ public class MainWindowBeginning extends JFrame{
 				JLabel textHistory = new JLabel("You can delete your chat sessions at any time.");
 				textHistory.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textHistory.setForeground(Color.gray);
-				JLabel textHistory2 = new JLabel("Careful, it is an irreversible operation!");
+				clear.add(textHistory);
+				Box textAndButton = Box.createHorizontalBox();
+				textAndButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+				mainBoxMsg.add(textAndButton);
+				JLabel textHistory2 = new JLabel("Careful, it is an irreversible operation !   ");
 				textHistory2.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,13));
 				textHistory2.setForeground(Color.gray);
-				clear.add(textHistory);
-				clear.add(textHistory2);
+				
+				textAndButton.add(textHistory2);
+				JButton buttonGo2 = new JButton(mouseExitedValidate);
+				textAndButton.add(buttonGo2);
+				buttonGo2.setBorder(emptyBorderButton);
+				
+
+					buttonGo2.addMouseListener(new MouseListener() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+							}
+							@Override
+				     			public void mousePressed(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseReleased(MouseEvent e) {
+								
+							}
+							@Override
+							public void mouseEntered(MouseEvent e){
+								setCursor(handCursor);
+								buttonGo2.setIcon(mouseEnteredValidate);
+				       			}
+							@Override
+							public void mouseExited(MouseEvent e) {
+								setCursor(defaultCursor);
+								buttonGo2.setIcon(mouseExitedValidate);
+							}
+					});
 						
 
 				panelMsg.revalidate();
