@@ -116,6 +116,8 @@ public class MainWindow extends JFrame{
 	//Back
 	public static Icon backA		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
 	public static Icon backB 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
+	public static Icon back1		= new ImageIcon("../resources/images/Back_Button_IDLE.png");
+	public static Icon back2 		= new ImageIcon("../resources/images/Back_Button_Clicked.png");
 	//About Us
 	Icon mouseEnteredAU 	= new ImageIcon("../resources/images/AboutUs_Button_Clicked.png");
 	Icon mouseExitedAU 	= new ImageIcon("../resources/images/AboutUs_Button_IDLE.png");
@@ -126,7 +128,9 @@ public class MainWindow extends JFrame{
 
 	
 		
-	private JButton backAButton	= new JButton(backA);	
+	
+	
+	
 
 	public MainWindow(Client master)  {  
 
@@ -176,74 +180,54 @@ public class MainWindow extends JFrame{
 		Box BoxAboutUs2 = Box.createHorizontalBox();
 		BoxAboutUsMain.add(BoxAboutUs2, BorderLayout.SOUTH);
 		
-
-		JButton buttonO 	= new JButton(MainWindow.mouseExitedO);
 		JButton buttonM 	= new JButton(MainWindow.mouseExitedM);
+		JButton buttonO 	= new JButton(MainWindow.mouseExitedO);
+		
 		buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
 		buttonO.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-		
-		BoxAboutUs2.add(buttonO);
 		BoxAboutUs2.add(buttonM);
-
-		buttonM.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {}
-			@Override
-     			public void mousePressed(MouseEvent e) {
-				//buttonM.setIcon(MainWindow.mouseEnteredM);
-			}
-			@Override
-        		public void mouseReleased(MouseEvent e) {
-				//buttonM.setIcon(MainWindow.mouseExitedM);
-			}
-			@Override
-        		public void mouseEntered(MouseEvent e){
-				setCursor(MainWindow.handCursor);
-				buttonM.setIcon(MainWindow.mouseEnteredM);
-				buttonM.setBorder(BorderFactory.createLineBorder(myBlue));
-       			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				setCursor(MainWindow.defaultCursor);
-				buttonM.setIcon(MainWindow.mouseExitedM);
-				buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
-			}
-		});
-
+		BoxAboutUs2.add(buttonO);
+		
 		/*******************************Option Button****************************/
 		buttonO.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				panMsg.removeAll();
 				conversationPanel.removeAll();
 				
-				backAButton.setBorder(BorderFactory.createLineBorder(Color.white));
-				panMsg.setLayout(new FlowLayout(FlowLayout.LEFT));
+				panMsg.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 10));
 				Box mainBoxMsg = Box.createVerticalBox();
 				panMsg.add(mainBoxMsg);
 				mainBoxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
 				
-				mainBoxMsg.add(backAButton);
-				backAButton.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {}
-				@Override
-	     			public void mousePressed(MouseEvent e) {
-					
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					
-				}
-				@Override
-				public void mouseEntered(MouseEvent e){
-					setCursor(handCursor);
-					backAButton.setIcon(backB);
-	       			}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					setCursor(defaultCursor);
-					backAButton.setIcon(backA);
-					
-				}
-			});
+				//Back button
+				JButton backButton	= new JButton(back1);
+				backButton.setBorder(BorderFactory.createLineBorder(Color.white));
+				mainBoxMsg.add(backButton); 
+				backButton.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {
+					}
+					@Override
+		     			public void mousePressed(MouseEvent e) {
+						displayConversation();
+						setCursor(defaultCursor);
+						backButton.setIcon(back1);
+					}
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						
+					}
+					@Override
+					public void mouseEntered(MouseEvent e){
+						setCursor(handCursor);
+						backButton.setIcon(back2);
+		       			}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						setCursor(defaultCursor);
+						backButton.setIcon(back1);
+						
+					}
+				});
 	
 				
 				Box title = Box.createVerticalBox();
@@ -251,10 +235,10 @@ public class MainWindow extends JFrame{
 				title.setAlignmentX(Component.LEFT_ALIGNMENT);
 				JLabel pad1 = new JLabel(" ");
 				pad1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
-				JLabel titleOption = new JLabel("Option");
+				JLabel titleOption = new JLabel("Options");
 				JLabel pad2 = new JLabel(" ");
-				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
-				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,20));
+				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,8));
+				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,23));
 				titleOption.setForeground(Color.gray);
 				title.add(pad1);
 				title.add(titleOption);
@@ -422,11 +406,13 @@ public class MainWindow extends JFrame{
 				}
 				offline2.add(textOffline2);
 				offline2.add(check);
+
+				//
 				
 
 				//Footer
 				
-				ImageIcon footer		= new ImageIcon("../resources/images/backgroundPicture1.png");
+				ImageIcon footer		= new ImageIcon("../resources/images/backgroundPicture4.png");
 				JLabel footerLabel		= new JLabel(footer); 
 
 				panMsg.add(footerLabel);
@@ -458,18 +444,93 @@ public class MainWindow extends JFrame{
 
 		});
 		/*********************************End of Option Button******************************************/
+		/*********************************New Button******************************************/
+		buttonM.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				panMsg.removeAll();
+				conversationPanel.removeAll();
+				
+				panMsg.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 10));
+				Box mainBoxMsg = Box.createVerticalBox();
+				panMsg.add(mainBoxMsg);
+				mainBoxMsg.setAlignmentX(Component.CENTER_ALIGNMENT);
+				
+				//Back button
+				JButton backButton	= new JButton(back1);
+				backButton.setBorder(BorderFactory.createLineBorder(Color.white));
+				mainBoxMsg.add(backButton); 
+				backButton.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {
+					}
+					@Override
+		     			public void mousePressed(MouseEvent e) {
+						displayConversation();
+						setCursor(defaultCursor);
+						backButton.setIcon(back1);
+					}
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						
+					}
+					@Override
+					public void mouseEntered(MouseEvent e){
+						setCursor(handCursor);
+						backButton.setIcon(back2);
+		       			}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						setCursor(defaultCursor);
+						backButton.setIcon(back1);
+						
+					}
+				});
+	
+				
+				Box title = Box.createVerticalBox();
+				mainBoxMsg.add(title);
+				title.setAlignmentX(Component.LEFT_ALIGNMENT);
+				JLabel pad1 = new JLabel(" ");
+				pad1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
+				JLabel titleOption = new JLabel("New Message");
+				JLabel pad2 = new JLabel(" ");
+				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,8));
+				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,23));
+				titleOption.setForeground(Color.gray);
+				title.add(pad1);
+				title.add(titleOption);
+				title.add(pad2);
 
-		
-		
 
+				conversationPanel.revalidate();
+				conversationPanel.repaint();
+				panMsg.revalidate();
+				panMsg.repaint();
+			}
+			@Override
+     			public void mousePressed(MouseEvent e) {
+			}
+			@Override
+        		public void mouseReleased(MouseEvent e) {
+				
+			}
+			@Override
+        		public void mouseEntered(MouseEvent e){
+				setCursor(MainWindow.handCursor);
+				buttonM.setIcon(MainWindow.mouseEnteredM);
+				buttonM.setBorder(BorderFactory.createLineBorder(myBlue));
+       			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(MainWindow.defaultCursor);
+				buttonM.setIcon(MainWindow.mouseExitedM);
+				buttonM.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+			}
+		});
+		/*********************************End of New Button******************************************/
 		//END of About US - NORTH.LEFT 
-		
-
 		
     		this.panUsers.setBackground(MainWindow.backgroundColor);
         	
-
- 		
 		//Search Bar
 		this.search = Box.createHorizontalBox();
 		search.setBackground(MainWindow.backgroundColor);
@@ -699,11 +760,13 @@ public class MainWindow extends JFrame{
 
 	private void displayConversation() {
 		
+		this.panMsg.removeAll();
+		this.conversationPanel.removeAll();
+		
 		this.panMsg.setBackground(MainWindow.backgroundColor); 
 		this.panMsg.setLayout(new BoxLayout(this.panMsg, BoxLayout.Y_AXIS));
 		
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
-		
 		if (mh == null) {
 			this.panMsg.removeAll();
 			this.conversationPanel.removeAll();
@@ -733,10 +796,8 @@ public class MainWindow extends JFrame{
 			paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
 			boxMsg.add(paddingT1);
 			
-			
-			JButton backAButton	= new JButton(backA);
+			JButton backAButton	= new JButton(backA);	
 			backAButton.setBorder(BorderFactory.createLineBorder(backgroundColor));
-
 
 			
 			JButton buttonAU 	= new JButton(mouseExitedAU);
@@ -837,10 +898,10 @@ public class MainWindow extends JFrame{
 			this.panMsg.add(scrollMsg);
 			
 			/***********TextBox at the bottom**************/
-			//this.panMsg.add(textBox);
+			
 			Border borderG = BorderFactory.createLineBorder(Color.gray, 2);
 			Border borderB = BorderFactory.createLineBorder(myBlue, 2);
-
+			this.panMsg.add(textBox);
 			textBox.setBackground(MainWindow.backgroundColor);
 
 			JTextField textField2 		= new JTextField(" Write your message...");
@@ -956,7 +1017,7 @@ public class MainWindow extends JFrame{
 					}
 				});
 
-			this.panMsg.add(textBox);
+			
 
 			/********************************/
 
@@ -1071,9 +1132,10 @@ public class MainWindow extends JFrame{
 				
 
 		this.panMsg.add(Box.createVerticalGlue());
-
+		
 		this.panMsg.revalidate();
 		this.panMsg.repaint();
+		
 	}
 
 	private void updateConversationPanel(User user) {

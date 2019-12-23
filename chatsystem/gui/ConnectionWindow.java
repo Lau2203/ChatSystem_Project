@@ -67,7 +67,7 @@ public class ConnectionWindow extends JFrame {
 		JButton button = new JButton(mouseExited);
 		
 		JTextArea wrongLoginLabel = new JTextArea("Wrong login information");
-
+		wrongLoginLabel.setEditable(false);
 		//Text zone
 		JPasswordField textField = new JPasswordField(15);
 		paneltext.add(textField);
