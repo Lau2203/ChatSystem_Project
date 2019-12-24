@@ -49,6 +49,9 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.KeyListener;
 
 import chatsystem.gui.UserBox;
 
@@ -493,12 +496,55 @@ public class MainWindow extends JFrame{
 				pad1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
 				JLabel titleOption = new JLabel("New Message");
 				JLabel pad2 = new JLabel(" ");
-				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,8));
+				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,10));
 				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,23));
 				titleOption.setForeground(Color.gray);
 				title.add(pad1);
 				title.add(titleOption);
 				title.add(pad2);
+
+				//Combo Box
+				Box newMsg = Box.createHorizontalBox();
+				newMsg.setAlignmentX(Component.LEFT_ALIGNMENT);
+				
+				ArrayList<User> usersConnected = new ArrayList<User>();
+				JComboBox<User> usersConnectedBox = new JComboBox<User>();
+				for (User usr : master.getUserList()) {
+					if (usr.isActive()){
+						usersConnected.add(usr);
+					}
+				}
+				usersConnectedBox.setModel(new DefaultComboBoxModel<User>(usersConnected.toArray(new User[usersConnected.size()])));
+				usersConnectedBox.setEditable(true);
+				Component editor = usersConnectedBox.getEditor().getEditorComponent();
+				editor.addKeyListener(new KeyListener() {
+		 
+					@Override
+					public void keyTyped(KeyEvent arg0) {
+						System.out.println("keyTyped");
+					}
+		 
+					@Override
+					public void keyReleased(KeyEvent arg0) {
+						System.out.println("keyReleased");
+					}
+		 
+					@Override
+					public void keyPressed(KeyEvent arg0) {
+						System.out.println("keyPressed");
+					}
+				});
+
+				JLabel fromLabel = new JLabel("From: " + master.getMainUserUsername() + " (you) ");
+				fromLabel.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				fromLabel.setForeground(Color.gray);
+				JLabel toLabel = new JLabel("To: ");
+				toLabel.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
+				toLabel.setForeground(Color.gray);
+				mainBoxMsg.add(fromLabel);
+				mainBoxMsg.add(newMsg);
+				newMsg.add(toLabel);
+				newMsg.add(usersConnectedBox);
 
 
 				conversationPanel.revalidate();
