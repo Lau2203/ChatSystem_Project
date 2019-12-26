@@ -53,6 +53,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyListener;
 
+import javax.swing.text.JTextComponent;
+
 import chatsystem.gui.UserBox;
 
 import chatsystem.Client;
@@ -767,8 +769,10 @@ public class MainWindow extends JFrame{
 		panUsers.setLayout(new BorderLayout());
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
-		/* Retrieve all the current active users */
+		/* Retl.setCaretPosition(0);
+rieve all the current active users */
 		JPanel testScroll = new JPanel();
+		
 		testScroll.setBackground(backgroundColor);
 
 		//testScroll.setLayout(new BorderLayout());
@@ -1044,7 +1048,7 @@ public class MainWindow extends JFrame{
 			    	@Override
 			    	public void mouseExited(MouseEvent e) {
 					textField2.setBorder(borderG);
-				}           
+				}          
 			    	@Override
 			    	public void mouseEntered(MouseEvent e) {
 					textField2.setBorder(borderB);
@@ -1149,6 +1153,7 @@ public class MainWindow extends JFrame{
 					String content = msg.getContent();
 
 					JTextArea receivedMsg;
+					
 
 				
 
