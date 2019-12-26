@@ -64,6 +64,9 @@ import chatsystem.MessageHistory;
 
 @SuppressWarnings("serial")
 
+
+
+/*************************************************Main Window Constructor*********************************************************/
 public class MainWindow extends JFrame{
 
 
@@ -82,7 +85,6 @@ public class MainWindow extends JFrame{
 	private JSplitPane s1;
 	private JSplitPane s2;
 
-	// User Box - SOUTH.LEFT
    	private JPanel panUsers 	= new JPanel();
    	private JPanel panMsg 		= new JPanel();
 	private JPanel conversationPanel = new JPanel();
@@ -134,19 +136,12 @@ public class MainWindow extends JFrame{
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 
-	
-		
-	
-	
-	
 
 	public MainWindow(Client master)  {  
 
 		super();   
-	
 		this.master = master;
 		this.currentRecipient = this.master.getMainUser();
-      
 	  	this.setTitle("Aura - Chat System");
 		this.setSize(MainWindow.WIDTH, MainWindow.HEIGHT); 				
 		this.setLocationRelativeTo(null); 
@@ -160,8 +155,8 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-	
-		//About US - NORTH.LEFT
+		/************************************************************************************************************/
+		/*************************************About Us Panel, Left-North*********************************************/
 		JPanel panUs 		= new JPanel();
 		panUs.setBackground(Color.BLUE); 
 		Box BoxAboutUsMain = Box.createVerticalBox();
@@ -196,7 +191,7 @@ public class MainWindow extends JFrame{
 		BoxAboutUs2.add(buttonM);
 		BoxAboutUs2.add(buttonO);
 		
-		/*******************************Option Button****************************/
+		/*******************************Option Button***********************************/
 		buttonO.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				panMsg.removeAll();
@@ -382,7 +377,6 @@ public class MainWindow extends JFrame{
 					});
 
 				//Appear offline
-				
 				Box offline = Box.createVerticalBox();
 				offline.setAlignmentX(Component.LEFT_ALIGNMENT);
 				mainBoxMsg.add(offline);
@@ -415,17 +409,12 @@ public class MainWindow extends JFrame{
 				offline2.add(textOffline2);
 				offline2.add(check);
 
-				//
-				
-
 				//Footer
-				
 				ImageIcon footer		= new ImageIcon("../resources/images/backgroundPicture4.png");
 				JLabel footerLabel		= new JLabel(footer); 
-
 				panMsg.add(footerLabel);
 
-				
+				/* Draw the panel again */
 				conversationPanel.revalidate();
 				conversationPanel.repaint();
 				panMsg.revalidate();
@@ -451,7 +440,7 @@ public class MainWindow extends JFrame{
 			
 
 		});
-		/*********************************End of Option Button******************************************/
+		/*********************************End of Option Button********************************/
 		/*********************************New Button******************************************/
 		buttonM.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
@@ -497,10 +486,10 @@ public class MainWindow extends JFrame{
 				Box title = Box.createVerticalBox();
 				mainBoxMsg.add(title);
 				title.setAlignmentX(Component.LEFT_ALIGNMENT);
-				JLabel pad1 = new JLabel(" ");
+				JLabel pad1 				= new JLabel(" ");
 				pad1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,6));
-				JLabel titleOption = new JLabel("New Message");
-				JLabel pad2 = new JLabel(" ");
+				JLabel titleOption 			= new JLabel("New Message");
+				JLabel pad2 				= new JLabel(" ");
 				pad2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,10));
 				titleOption.setFont(new java.awt.Font("CALIBRI",Font.BOLD,23));
 				titleOption.setForeground(Color.gray);
@@ -512,8 +501,8 @@ public class MainWindow extends JFrame{
 				Box newMsg = Box.createHorizontalBox();
 				newMsg.setAlignmentX(Component.LEFT_ALIGNMENT);
 				
-				ArrayList<User> usersConnected = new ArrayList<User>();
-				JComboBox<User> usersConnectedBox = new JComboBox<User>();
+				ArrayList<User> usersConnected 		= new ArrayList<User>();
+				JComboBox<User> usersConnectedBox 	= new JComboBox<User>();
 				for (User usr : master.getUserList()) {
 					if (usr.isActive()){
 						usersConnected.add(usr);
@@ -523,25 +512,25 @@ public class MainWindow extends JFrame{
 				usersConnectedBox.setEditable(false);
 			
 
-				JLabel fromLabel = new JLabel("From: " + master.getMainUserUsername() + " (you) ");
+				JLabel fromLabel 			= new JLabel("From: " + master.getMainUserUsername() + " (you) ");
 				fromLabel.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 				fromLabel.setForeground(Color.gray);
-				JLabel toLabel = new JLabel("To: ");
+				JLabel toLabel 				= new JLabel("To: ");
 				toLabel.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 				toLabel.setForeground(Color.gray);
 				mainBoxMsg.add(fromLabel);
 				mainBoxMsg.add(newMsg);
 				newMsg.add(toLabel);
 				newMsg.add(usersConnectedBox);
-				JLabel pad6 = new JLabel(" ");
+				JLabel pad6 				= new JLabel(" ");
 				pad6.setFont(new java.awt.Font("CALIBRI",Font.BOLD,8));
 				mainBoxMsg.add(pad6);
 
 				Box newMsgBox = Box.createHorizontalBox();
 				mainBoxMsg.add(newMsgBox);
 				newMsgBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-				JTextArea writeNewMsg = new JTextArea("Write your message here...",19,25);
-				JScrollPane scrollNewMsg1 	= new JScrollPane(writeNewMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				JTextArea writeNewMsg			= new JTextArea("Write your message here...",19,25);
+				JScrollPane scrollNewMsg1 		= new JScrollPane(writeNewMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				Border border = BorderFactory.createLineBorder(Color.gray);
     				scrollNewMsg1.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 				scrollNewMsg1.setBackground(Color.white);
@@ -609,15 +598,10 @@ public class MainWindow extends JFrame{
 				}
 			});
 			
-			//Footer
-				
+				//Footer
 				ImageIcon footer2		= new ImageIcon("../resources/images/backgroundPicture5.png");
 				JLabel footerLabel2		= new JLabel(footer2); 
-
 				panMsg.add(footerLabel2);
-
-
-
 				
 				conversationPanel.revalidate();
 				conversationPanel.repaint();
@@ -645,8 +629,14 @@ public class MainWindow extends JFrame{
 			}
 		});
 		/*********************************End of New Button******************************************/
-		//END of About US - NORTH.LEFT 
+		/*****************************************About Us Panel code end here********************************************/
+		/*****************************************************************************************************************/
 		
+
+
+
+		/*****************************************************************************************************************/
+		/*************************************Users List, South Left******************************************************/
     		this.panUsers.setBackground(MainWindow.backgroundColor);
         	
 		//Search Bar
@@ -662,13 +652,13 @@ public class MainWindow extends JFrame{
 
 		
 		Border borderWhite = BorderFactory.createLineBorder(backgroundColor, 1);
-		JTextField paddingSearchBar1 = new JTextField("");
+		JTextField paddingSearchBar1 	= new JTextField("");
 		//paddingSearchBar1.setFont(new Font("CALIBRI", Font.PLAIN, 6));
 		paddingSearchBar1.setBorder(borderWhite);
 		paddingSearchBar1.setEditable(false); 
 		paddingSearchBar1.setBackground(MainWindow.backgroundColor);
 
-		JTextField paddingSearchBar2 = new JTextField("");
+		JTextField paddingSearchBar2 	= new JTextField("");
 		//paddingSearchBar2.setFont(new Font("CALIBRI", Font.PLAIN, 3));
 		paddingSearchBar2.setBorder(borderWhite);
 		paddingSearchBar2.setEditable(false);
@@ -720,105 +710,109 @@ public class MainWindow extends JFrame{
 		});
 
 		this.panUsers.add(this.search);		
+		this.displayUsersPanel();	
+		/*************************************Code about Users List end***************************************************/
+		/*****************************************************************************************************************/
+		
+		
+
 
 		
-		/*********************************************************************************************************/
-		
-		this.displayUsersPanel();		
-		
-		/*********************************************************************************************************/
-		/*********************************************************************************************************/
+		/****************************************************************************************************************/
+		/************************************Conversation Panel, right panel********************************************/
 
 		//User name and last message time at the top of the conversation part
 			this.userNameC	= new JLabel("");
 			userNameC.setFont(new java.awt.Font("CALIBRI",Font.BOLD,18));
-			//JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
 			lastMsgS.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,14));
 			userNameC.setForeground(myBlue);
 			lastMsgS.setForeground(Color.gray);
 			nameBox.add(userNameC);
 			nameBox.add(lastMsgS);
 		
-		/*********************************************Conversation*********************************************/
-
+		//Display conversation with the selected user
 		this.displayConversation();		
 
-		/******************************************************************************************************/
-		/*********************************************************************************************************/
-		//SPLITS
+		/*************************************End of Conversation Panel code****************************************/
+		/***********************************************************************************************************/
+		
+
+
+
+		//Split the three main Panel described above
     		s1 	= new JSplitPane(JSplitPane.VERTICAL_SPLIT, panUs, this.panUsers);
 		s1.setDividerSize(0);
 		s1.setDividerLocation(193);
  		s1.setEnabled(false);
-
 		s2 	= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, panMsg);
     		s2.setDividerLocation(280);
 		s2.setDividerSize(7);
 		s2.setEnabled(false);
-
-		
     		this.getContentPane().add(s2, BorderLayout.CENTER);
 	}
 
+/*************************************************End of Main Window Constructor *********************************************************/
+
+
+
+
+
+
+
+/********************************************Display Users Panel (west/south) method*****************************************************/
 	private void displayUsersPanel() {
 
-		ArrayList<JButton> usersArray = new ArrayList<JButton>();
+		ArrayList<JButton> usersArray 		= new ArrayList<JButton>();
 		/* Clean the whole panel */
 		this.panUsers.removeAll();
 		/* Do not forget to add the search bar back */
 		panUsers.setLayout(new BorderLayout());
 		this.panUsers.add(this.search, BorderLayout.NORTH);
 
-		/* Retl.setCaretPosition(0);
-rieve all the current active users */
-		JPanel testScroll = new JPanel();
-		
+		/* Retrieve all the current active users */
+		JPanel testScroll 			= new JPanel();
 		testScroll.setBackground(backgroundColor);
 
-		//testScroll.setLayout(new BorderLayout());
-		JScrollPane scrollMsg 	= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollMsg 			= new JScrollPane(testScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollMsg.setBackground(backgroundColor);
 		scrollMsg.setBorder(BorderFactory.createLineBorder(backgroundColor));
 		this.panUsers.add(scrollMsg, BorderLayout.CENTER);	
-		/*End of JScrollPane Code*/		
+				
 
 		for (User usr : this.master.getUserList()) {	
 			
-
 			System.out.println("DISPLAY USER : " + usr.getUsername());
 			System.out.flush();
-
 	
 			Box mainBox = Box.createHorizontalBox();
 			mainBox.setBackground(MainWindow.backgroundColor);
-			//usersArray.add(mainBox); -> add on the button
 
 			Box rightBox = Box.createVerticalBox();
 			Border emptyBorder = BorderFactory.createEmptyBorder();
 			rightBox.setBorder(emptyBorder);
 
 			/* Retrieve the user's username */
-			JLabel userName 	= new JLabel(usr.getUsername());
+			JLabel userName 		= new JLabel(usr.getUsername());
 			userName.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
 			rightBox.add(userName);
 
 			JLabel lastMsg;
 			if (usr.getMessageHistory() != null) {
-				lastMsg = new JLabel(usr.getMessageHistory().getLastMessage()); //get  29 letters + [...]
+				lastMsg 		= new JLabel(usr.getMessageHistory().getLastMessage()); //get  29 letters + [...]
 			} else {
-				lastMsg = new JLabel("You haven't started a chat yet"); //get  29 letters + [...]
+				lastMsg 		= new JLabel("You haven't started a chat yet"); //get  29 letters + [...]
 			}
 			lastMsg.setFont(new java.awt.Font("CALIBRI",Font.PLAIN,12));
 			lastMsg.setForeground(Color.gray);	
 			rightBox.add(lastMsg);
 
-			JLabel paddingUB2 	= new JLabel("  ");
+			JLabel paddingUB2 		= new JLabel("  ");
 
 			JLabel userL;
 			if (usr.isActive()) {
-				userL 		= new JLabel(MainWindow.user); 
+				userL 			= new JLabel(MainWindow.user); 
 			} else {
-				userL 		= new JLabel(MainWindow.inactiveUser); 
+				userL 			= new JLabel(MainWindow.inactiveUser); 
 			}
 
 			userL.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -826,20 +820,17 @@ rieve all the current active users */
 			mainBox.add(paddingUB2);
 			mainBox.add(rightBox);
 			
-			
-
-			JButton buttonUser1 = new JButton();
+			JButton buttonUser1		 = new JButton();
 			buttonUser1.setPreferredSize(new Dimension(305,70));
-			usersArray.add(buttonUser1); //we add the ArrayList on each button
-
-			int nb_rows = Math.max(usersArray.size(),5); //nb_users < 5, display 5 rows 
+			usersArray.add(buttonUser1);
+			
+			//if nb_users < 5, display 5 rows 
+			int nb_rows = Math.max(usersArray.size(),5); 
 			testScroll.setLayout(new GridLayout(nb_rows,1));
 			for(int i = 0 ; i < usersArray.size(); i++){
 				System.out.println(usersArray.size());
 				testScroll.add(usersArray.get(i));
 			}
-			//testScroll.setLayout(new BorderLayout());
-			//testScroll.add(buttonUser1, BorderLayout.NORTH);
 
 			buttonUser1.setBackground(MainWindow.backgroundColor);
 			buttonUser1.setBorderPainted(false);
@@ -866,7 +857,7 @@ rieve all the current active users */
 					setCursor(MainWindow.defaultCursor);
 					userName.setForeground(MainWindow.foregroundColor);
 					}
-					});	
+			});	
 
 		}
 		
@@ -876,23 +867,28 @@ rieve all the current active users */
 		this.panUsers.repaint();
 	}
 
+/********************************************End of display Users Panel (west/south) method***********************************************/
 	
 
+
+
+/********************************************Dislay Conversation Panel (east) method*****************************************************/
 	private void displayConversation() {
 		
 		this.panMsg.removeAll();
 		this.conversationPanel.removeAll();
-		
 		this.panMsg.setBackground(MainWindow.backgroundColor); 
 		this.panMsg.setLayout(new BoxLayout(this.panMsg, BoxLayout.Y_AXIS));
 		
 		MessageHistory mh = this.currentRecipient.getMessageHistory();
+	
+		/************************ What to do if there is no conversation yet with the recipient user *************************/
 		if (mh == null) {
 			this.panMsg.removeAll();
 			this.conversationPanel.removeAll();
 
-			/* What to do if there is no conversation yet with the recipient user */
-			JPanel panelMsg 	= new JPanel();
+			
+			JPanel panelMsg 		= new JPanel();
 	    		panelMsg.setBackground(backgroundColor);
 			
 			panMsg.add(panelMsg);
@@ -908,19 +904,16 @@ rieve all the current active users */
 			JLabel imageLogo		= new JLabel(logo); 
 			imageLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 			boxMsg.add(imageLogo);
-
 			ImageIcon logo2 		= new ImageIcon("../resources/images/AboutUsPicture.png");
 			JLabel aboutUsFinal		= new JLabel(logo2); 
-
 			JLabel paddingT1 		= new JLabel(" ");
 			paddingT1.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
 			boxMsg.add(paddingT1);
-			
-			JButton backAButton	= new JButton(backA);	
+			JButton backAButton		= new JButton(backA);	
 			backAButton.setBorder(BorderFactory.createLineBorder(backgroundColor));
 
 			
-			JButton buttonAU 	= new JButton(mouseExitedAU);
+			JButton buttonAU 		= new JButton(mouseExitedAU);
 			buttonAU.setBorder(BorderFactory.createLineBorder(backgroundColor));
 			buttonAU.setAlignmentX(Component.CENTER_ALIGNMENT);
 			boxMsg.add(buttonAU, BorderLayout.CENTER);
@@ -954,7 +947,7 @@ rieve all the current active users */
 				}
 			});
 			
-			//Texte
+			//Text
 			JLabel paddingT2 		= new JLabel(" ");
 			paddingT2.setFont(new java.awt.Font("CALIBRI",Font.BOLD,17));
 			JLabel sendTextMsg 		= new JLabel("Please, select a user to start a chat session.");
@@ -997,28 +990,31 @@ rieve all the current active users */
 					
 				}
 			});
+			/***************** End of what to do if there is no conversation yet with the recipient user ******************/
 			
+
+
+
+
+			/********************** What to do if there is a conversation with the recipient user ************************/
 		} else {
 			
 			this.panMsg.removeAll();
 			this.conversationPanel.removeAll();
 
-			/***********Name at the top**************/
-
+			//Name at the top
 			this.panMsg.add(this.nameBox);
-			/***************************************/
-				
+			
 			this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
 			this.conversationPanel.setBackground(MainWindow.backgroundColor);
 			
-			JScrollPane scrollMsg = new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			JScrollPane scrollMsg 		= new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
 			scrollMsg.setPreferredSize(new Dimension(300,550));
 			
 			this.panMsg.add(scrollMsg);
 			
-			/***********TextBox at the bottom**************/
-			
+			//TextBox at the bottom
 			Border borderG = BorderFactory.createLineBorder(Color.gray, 2);
 			Border borderB = BorderFactory.createLineBorder(myBlue, 2);
 			this.panMsg.add(textBox);
@@ -1033,7 +1029,6 @@ rieve all the current active users */
 		
 			
 			Border down = BorderFactory.createMatteBorder(0, 0, 1, 0, MainWindow.foregroundColor);
-			//Border borderG2 = BorderFactory.createLineBorder(Color.gray, 1);
 			Border borderW = BorderFactory.createMatteBorder(1, 1, 0, 1, MainWindow.backgroundColor);
 			Border borderTextField = BorderFactory.createCompoundBorder(down, borderW);
 			
@@ -1138,14 +1133,12 @@ rieve all the current active users */
 				});
 
 			
-
-			/********************************/
-
+			/**************************************New Messages Management***********************************************/
 			for (Message msg: this.currentRecipient.getMessageHistory().getMessageList()) {
 				/* If the message comes from the recipient user */
 				if (msg.getHasBeenSentByRecipient()) { 
 
-					JPanel msgRow = new JPanel();
+					JPanel msgRow 		= new JPanel();
 					msgRow.setBackground(MainWindow.backgroundColor);
 					msgRow.setLayout(new BorderLayout());
 					
@@ -1158,9 +1151,9 @@ rieve all the current active users */
 				
 
 					if(content.length() > 30) {
-						receivedMsg = new JTextArea(content, 1, 30);
+						receivedMsg 	= new JTextArea(content, 1, 30);
 					} else {
-						receivedMsg = new JTextArea(content, 1, content.length());
+						receivedMsg 	= new JTextArea(content, 1, content.length());
 					}
 
 					
@@ -1171,14 +1164,13 @@ rieve all the current active users */
 					receivedMsg.setLineWrap(true);
 					receivedMsg.setEditable(false);
 
-	
+					//How to have timestamped messages
 					Timestamp ts = msg.getTimestamp();
 					Date date=new Date(ts.getTime());
 					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy | HH:mm");  
                 			String strDate = dateFormat.format(date);
 					receivedMsg.setToolTipText(strDate);
-					
-
+			
 					DateFormat dateFormat2 = new SimpleDateFormat("MM/dd");  
                 			String strDate2 = dateFormat2.format(date);
 					DateFormat dateFormat3 = new SimpleDateFormat("HH:mm");  
@@ -1194,7 +1186,7 @@ rieve all the current active users */
 				/* If we are the one who sent the message */
 				else {
 
-					JPanel msgRow = new JPanel();
+					JPanel msgRow 		= new JPanel();
 					msgRow.setBackground(MainWindow.backgroundColor);
 					msgRow.setLayout(new BorderLayout());
 					
@@ -1203,22 +1195,20 @@ rieve all the current active users */
 
 					JTextArea sentMsg;
 					if(content.length() > 30) {
-						sentMsg = new JTextArea(content, 1, 30);
+						sentMsg		= new JTextArea(content, 1, 30);
 					} else {
-						sentMsg = new JTextArea(content, 1, content.length());
+						sentMsg 	= new JTextArea(content, 1, content.length());
 					}
 				
-					
-
 					sentMsg.setForeground(backgroundColor);
 					sentMsg.setBackground(myBlue);
 					sentMsg.setWrapStyleWord(true);
 					sentMsg.setLineWrap(true);
 					sentMsg.setEditable(false);
-
 					
+					//How to have timestamped messages
 					Timestamp ts = msg.getTimestamp();
-					Date date=new Date(ts.getTime());
+					Date date		=new Date(ts.getTime());
 					DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy | HH:mm");  
                 			String strDate = dateFormat.format(date);    
 					sentMsg.setToolTipText(strDate);
@@ -1246,24 +1236,25 @@ rieve all the current active users */
 			this.linkButton.setEnabled(true);
 		}
 
-
+		/* Draw the panel again */
 		this.conversationPanel.revalidate();
 		this.conversationPanel.repaint();
-
-				
-
 		this.panMsg.add(Box.createVerticalGlue());
-		
 		this.panMsg.revalidate();
 		this.panMsg.repaint();
 		
 	}
+/******************************************End of Dislay Conversation Panel (east) method**************************************************/
+
+
 
 	private void updateConversationPanel(User user) {
 		this.userNameC.setText(user.getUsername());
 		this.currentRecipient = user;
 		this.displayConversation();
 	}
+
+
 
 	/* Whether a user just got online or offline, we need to update the users panel */
 	public void notifyUserActivityModification(User usr) {
@@ -1275,11 +1266,15 @@ rieve all the current active users */
 		}
 	}
 	
+
+
 	public void notifyNewMainUserUsername() {
 		System.out.println("GUI RECEIVED : NEW MAIN USER USERNAME");
 		System.out.flush();
 		this.textName.setText(this.master.getMainUser().getUsername());
 	}
+
+
 
 	public void notifyNewUserUsername(User usr) {
 		System.out.println("GUI RECEIVED : NEW USER USERNAME");
@@ -1291,6 +1286,8 @@ rieve all the current active users */
 		}
 	}
 
+
+
 	public void notifyNewMessage(User recipient) {
 		System.out.println("GUI RECEIVED : NEW MESSAGE");
 		System.out.flush();
@@ -1299,6 +1296,8 @@ rieve all the current active users */
 		}
 	}
 
+
+
 	private void sendMessage(String content) {
 		if (!this.currentRecipient.isActive() || content == null || content.equals("")) {
 			return;
@@ -1306,6 +1305,8 @@ rieve all the current active users */
 	
 		this.master.notifyNewMessageToBeSent(content, this.currentRecipient);
 	}
+
+
 
 	private void shutdown() {
 		this.master.shutdown();
