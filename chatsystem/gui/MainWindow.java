@@ -66,7 +66,7 @@ import chatsystem.MessageHistory;
 
 
 
-/*************************************************Main Window Constructor*********************************************************/
+
 public class MainWindow extends JFrame{
 
 
@@ -136,7 +136,7 @@ public class MainWindow extends JFrame{
 	public static Cursor handCursor 	= new Cursor(Cursor.HAND_CURSOR);
    	public static Cursor defaultCursor 	= new Cursor(Cursor.DEFAULT_CURSOR);
 
-
+/*************************************************Main Window Constructor*********************************************************/
 	public MainWindow(Client master)  {  
 
 		super();   
