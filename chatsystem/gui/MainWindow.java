@@ -98,6 +98,8 @@ public class MainWindow extends JFrame{
 	private JTextArea writeMsg 	= new JTextArea("Write your message...", 0, 43); //padding to be done
 	private JButton linkButton 	= new JButton(MainWindow.mouseExitedL);
 	private JButton sendButton 	= new JButton(MainWindow.mouseExitedS);
+	private JButton linkButton2 	= new JButton(MainWindow.mouseExitedL);
+	private JButton sendButton2 	= new JButton(MainWindow.mouseExitedS);
 	private JLabel lastMsgS		= new JLabel(" Last message 2 minutes ago");
 
 	/* Resources */
@@ -545,8 +547,19 @@ public class MainWindow extends JFrame{
 				mainBoxMsg.add(newMsg);
 				newMsg.add(toLabel);
 				newMsg.add(usersConnectedBox);
+				JLabel pad6 = new JLabel(" ");
+				pad6.setFont(new java.awt.Font("CALIBRI",Font.BOLD,8));
+				mainBoxMsg.add(pad6);
 
-
+				Box newMsgBox = Box.createHorizontalBox();
+				mainBoxMsg.add(newMsgBox);
+				newMsgBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+				JTextArea writeNewMsg = new JTextArea("Write your message here...",25,25);
+				Border border = BorderFactory.createLineBorder(Color.gray);
+    				writeNewMsg.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+				newMsgBox.add(writeNewMsg);
+				newMsgBox.add(linkButton2);
+				newMsgBox.add(sendButton2);
 				conversationPanel.revalidate();
 				conversationPanel.repaint();
 				panMsg.revalidate();
