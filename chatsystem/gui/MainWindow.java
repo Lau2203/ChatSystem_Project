@@ -91,6 +91,7 @@ public class MainWindow extends JFrame{
 	private Box search;
 	private boolean isSearchBarEmpty = true;
 	private boolean isMsgBarEmpty = true;
+	private boolean isNewMsgEmpty = true;
 
 	private JLabel textName;
 	private JLabel userNameC;
@@ -517,25 +518,8 @@ public class MainWindow extends JFrame{
 					}
 				}
 				usersConnectedBox.setModel(new DefaultComboBoxModel<User>(usersConnected.toArray(new User[usersConnected.size()])));
-				usersConnectedBox.setEditable(true);
-				Component editor = usersConnectedBox.getEditor().getEditorComponent();
-				editor.addKeyListener(new KeyListener() {
-		 
-					@Override
-					public void keyTyped(KeyEvent arg0) {
-						System.out.println("keyTyped");
-					}
-		 
-					@Override
-					public void keyReleased(KeyEvent arg0) {
-						System.out.println("keyReleased");
-					}
-		 
-					@Override
-					public void keyPressed(KeyEvent arg0) {
-						System.out.println("keyPressed");
-					}
-				});
+				usersConnectedBox.setEditable(false);
+			
 
 				JLabel fromLabel = new JLabel("From: " + master.getMainUserUsername() + " (you) ");
 				fromLabel.setFont(new java.awt.Font("CALIBRI",Font.BOLD,15));
@@ -554,12 +538,85 @@ public class MainWindow extends JFrame{
 				Box newMsgBox = Box.createHorizontalBox();
 				mainBoxMsg.add(newMsgBox);
 				newMsgBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-				JTextArea writeNewMsg = new JTextArea("Write your message here...",25,25);
+				JTextArea writeNewMsg = new JTextArea("Write your message here...",19,25);
+				JScrollPane scrollNewMsg1 	= new JScrollPane(writeNewMsg, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				Border border = BorderFactory.createLineBorder(Color.gray);
-    				writeNewMsg.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-				newMsgBox.add(writeNewMsg);
+    				scrollNewMsg1.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+				scrollNewMsg1.setBackground(Color.white);
+				writeNewMsg.setWrapStyleWord(true);
+				writeNewMsg.setLineWrap(true);
+				newMsgBox.add(scrollNewMsg1);
 				newMsgBox.add(linkButton2);
 				newMsgBox.add(sendButton2);
+				linkButton2.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+				sendButton2.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor));
+				
+				linkButton2.addMouseListener(new MouseListener() {
+						public void mouseClicked(MouseEvent e) {}
+						@Override
+			     			public void mousePressed(MouseEvent e) {
+						}
+						@Override
+						public void mouseReleased(MouseEvent e) {
+						}
+						@Override
+						public void mouseEntered(MouseEvent e){
+							linkButton2.setIcon(MainWindow.mouseEnteredL);
+			       			}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							linkButton2.setIcon(MainWindow.mouseExitedL);
+						}
+					});
+				sendButton2.addMouseListener(new MouseListener() {
+						public void mouseClicked(MouseEvent e) {
+							sendMessage(writeMsg.getText());
+						}
+						@Override
+			     			public void mousePressed(MouseEvent e) {
+						}
+						@Override
+						public void mouseReleased(MouseEvent e) {
+						}
+						@Override
+						public void mouseEntered(MouseEvent e){
+							sendButton2.setIcon(MainWindow.mouseEnteredS);
+			       			}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							sendButton2.setIcon(MainWindow.mouseExitedS);
+						}
+					});
+				writeNewMsg.addFocusListener(new FocusListener() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					if (isNewMsgEmpty) {
+						writeNewMsg.setText("");
+						writeNewMsg.setForeground(MainWindow.foregroundColor);
+					}
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					if (writeNewMsg.getText().equals("")) {
+						isNewMsgEmpty= true;
+						writeNewMsg.setText("Write your message here...");
+						writeNewMsg.setForeground(Color.gray);
+					} else {
+						isNewMsgEmpty = false;
+					}
+				}
+			});
+			
+			//Footer
+				
+				ImageIcon footer2		= new ImageIcon("../resources/images/backgroundPicture5.png");
+				JLabel footerLabel2		= new JLabel(footer2); 
+
+				panMsg.add(footerLabel2);
+
+
+
+				
 				conversationPanel.revalidate();
 				conversationPanel.repaint();
 				panMsg.revalidate();
