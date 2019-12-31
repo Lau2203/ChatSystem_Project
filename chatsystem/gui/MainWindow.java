@@ -1004,14 +1004,11 @@ public class MainWindow extends JFrame{
 
 			//Name at the top
 			this.panMsg.add(this.nameBox);
-			
 			this.conversationPanel.setLayout(new BoxLayout(this.conversationPanel, BoxLayout.Y_AXIS));
 			this.conversationPanel.setBackground(MainWindow.backgroundColor);
-			
 			JScrollPane scrollMsg 		= new JScrollPane(this.conversationPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			scrollMsg.setBorder(BorderFactory.createLineBorder(MainWindow.backgroundColor, 10));
 			scrollMsg.setPreferredSize(new Dimension(300,550));
-			
 			this.panMsg.add(scrollMsg);
 			
 			//TextBox at the bottom
@@ -1019,7 +1016,6 @@ public class MainWindow extends JFrame{
 			Border borderB = BorderFactory.createLineBorder(myBlue, 2);
 			this.panMsg.add(textBox);
 			textBox.setBackground(MainWindow.backgroundColor);
-
 			JTextField textField2 		= new JTextField(" Write your message...");
 			textField2.setFont(new Font("CALIBRI", Font.PLAIN, 13));
 			textField2.getFont().deriveFont(Font.ITALIC);
