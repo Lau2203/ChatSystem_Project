@@ -89,4 +89,8 @@ public class User {
 	public void setMessageHistory(MessageHistory mh) {
 		this.messageHistory = mh;
 	}
+
+	public String toString() {
+		return this.username;
+	}
 }
