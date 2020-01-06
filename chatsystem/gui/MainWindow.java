@@ -715,6 +715,19 @@ public class MainWindow extends JFrame{
 		    	public void mouseClicked(MouseEvent e) {}
 		});
 
+		textField.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					e.consume();
+					// Display corresponding users
+					displaySearchedUsers(textField.getText());
+				}
+			}
+			public void keyTyped(KeyEvent e) {}
+			public void keyReleased(KeyEvent e) {}
+		});
+
 		textField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -736,7 +749,7 @@ public class MainWindow extends JFrame{
 		});
 
 		this.panUsers.add(this.search);		
-		this.displayUsersPanel();	
+		this.displayAllUsersPanel();	
 		/*************************************Code about Users List end***************************************************/
 		/*****************************************************************************************************************/
 		
@@ -786,7 +799,23 @@ public class MainWindow extends JFrame{
 
 
 /********************************************Display Users Panel (west/south) method*****************************************************/
-	private void displayUsersPanel() {
+	private void displayAllUsersPanel() {
+		this.displayUsersPanel(this.master.getUserList());
+	}
+
+	private void displaySearchedUsers(String pattern) {
+		ArrayList<User> users = new ArrayList<User>();
+
+		for (User user : this.master.getUserList()) {
+			if (user.getUsername().contains(pattern)) {
+				users.add(user);
+			}
+		}
+
+		this.displayUsersPanel(users);
+	}
+
+	private void displayUsersPanel(ArrayList<User> users) {
 
 		ArrayList<JButton> usersArray 		= new ArrayList<JButton>();
 		/* Clean the whole panel */
@@ -805,7 +834,7 @@ public class MainWindow extends JFrame{
 		this.panUsers.add(scrollMsg, BorderLayout.CENTER);	
 				
 
-		for (User usr : this.master.getUserList()) {	
+		for (User usr : users) {	
 			
 			System.out.println("DISPLAY USER : " + usr.getUsername());
 			System.out.flush();
@@ -1282,7 +1311,7 @@ public class MainWindow extends JFrame{
 	public void notifyUserActivityModification(User usr) {
 		System.out.println("GUI RECEIVED : USER ACTIVITY MODIFICATION");
 		System.out.flush();
-		this.displayUsersPanel();
+		this.displayAllUsersPanel();
 		if (this.currentRecipient.equals(usr)) {
 			this.updateConversationPanel(usr);
 		}
@@ -1302,7 +1331,7 @@ public class MainWindow extends JFrame{
 		System.out.println("GUI RECEIVED : NEW USER USERNAME");
 		System.out.flush();
 		/* It will fetch the new username while redrawing the whole panel */
-		this.displayUsersPanel();
+		this.displayAllUsersPanel();
 		if (this.currentRecipient.equals(usr)) {
 			this.updateConversationPanel(usr);
 		}
