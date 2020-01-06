@@ -93,9 +93,10 @@ public class MainWindow extends JFrame{
 	private Box nameBox = Box.createHorizontalBox();
 	
 	private Box search;
-	private boolean isSearchBarEmpty = true;
-	private boolean isMsgBarEmpty = true;
-	private boolean isNewMsgEmpty = true;
+	private boolean isSearchBarEmpty 	= true;
+	private boolean isMsgBarEmpty 		= true;
+	private boolean isNewMsgEmpty 		= true;
+	private boolean isNewUserNameBarEmpty 	= true;
 
 	private JLabel textName;
 	private JLabel userNameC;
@@ -276,24 +277,45 @@ public class MainWindow extends JFrame{
 				newUserName.setForeground(Color.gray);
 				newUserName.setBorder(borderTextField);
 				set.add(newUserName);
-					newUserName.addMouseListener(new MouseListener() {
-							public void mouseClicked(MouseEvent e) {}
-							@Override
-				     			public void mousePressed(MouseEvent e) {}
-							@Override
-							public void mouseReleased(MouseEvent e) {}
-							@Override
-							public void mouseEntered(MouseEvent e){
-								setCursor(handCursor);
-								newUserName.setBorder(borderTextField2);
-				       			}
-							@Override
-							public void mouseExited(MouseEvent e) {
-								setCursor(defaultCursor);
-								newUserName.setBorder(borderTextField);
-					
-							}
-					});
+
+				newUserName.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {}
+					@Override
+					public void mousePressed(MouseEvent e) {}
+					@Override
+					public void mouseReleased(MouseEvent e) {}
+					@Override
+					public void mouseEntered(MouseEvent e){
+						setCursor(handCursor);
+						newUserName.setBorder(borderTextField2);
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						setCursor(defaultCursor);
+						newUserName.setBorder(borderTextField);
+
+					}
+				});
+
+				newUserName.addFocusListener(new FocusListener() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						if (isNewUserNameBarEmpty) {
+							newUserName.setText("");
+							newUserName.setForeground(MainWindow.foregroundColor);
+						}
+					}
+					@Override
+					public void focusLost(FocusEvent e) {
+						if (newUserName.getText().equals("")) {
+							isNewUserNameBarEmpty = true;
+							newUserName.setText("Write your new username...");
+							newUserName.setForeground(Color.gray);
+						} else {
+							isNewUserNameBarEmpty = false;
+						}
+					}
+				});
 
 				JButton buttonGo = new JButton(mouseExitedValidate);
 				set.add(buttonGo);
@@ -304,6 +326,10 @@ public class MainWindow extends JFrame{
 					buttonGo.addMouseListener(new MouseListener() {
 							@Override
 							public void mouseClicked(MouseEvent e) {
+								if (!isNewUserNameBarEmpty) {
+									master.setNewUsername(newUserName.getText());
+									master.notifyNewUsernameToBeSent();
+								}
 							}
 							@Override
 				     			public void mousePressed(MouseEvent e) {
@@ -561,7 +587,7 @@ public class MainWindow extends JFrame{
 					});
 				sendButton2.addMouseListener(new MouseListener() {
 						public void mouseClicked(MouseEvent e) {
-							sendMessage(writeMsg.getText());
+							sendMessage(writeNewMsg.getText());
 						}
 						@Override
 			     			public void mousePressed(MouseEvent e) {
