@@ -323,33 +323,33 @@ public class MainWindow extends JFrame{
 				buttonGo.setBorder(emptyBorderButton);
 				
 
-					buttonGo.addMouseListener(new MouseListener() {
-							@Override
-							public void mouseClicked(MouseEvent e) {
-								if (!isNewUserNameBarEmpty) {
-									master.setNewUsername(newUserName.getText());
-									master.notifyNewUsernameToBeSent();
-								}
+				buttonGo.addMouseListener(new MouseListener() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							if (!isNewUserNameBarEmpty) {
+								master.setNewUsername(newUserName.getText());
+								master.notifyNewUsernameToBeSent();
 							}
-							@Override
-				     			public void mousePressed(MouseEvent e) {
-								
-							}
-							@Override
-							public void mouseReleased(MouseEvent e) {
-								
-							}
-							@Override
-							public void mouseEntered(MouseEvent e){
-								setCursor(handCursor);
-								buttonGo.setIcon(mouseEnteredValidate);
-				       			}
-							@Override
-							public void mouseExited(MouseEvent e) {
-								setCursor(defaultCursor);
-								buttonGo.setIcon(mouseExitedValidate);
-							}
-					});
+						}
+						@Override
+			     			public void mousePressed(MouseEvent e) {
+							
+						}
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							
+						}
+						@Override
+						public void mouseEntered(MouseEvent e){
+							setCursor(handCursor);
+							buttonGo.setIcon(mouseEnteredValidate);
+			       			}
+						@Override
+						public void mouseExited(MouseEvent e) {
+							setCursor(defaultCursor);
+							buttonGo.setIcon(mouseExitedValidate);
+						}
+				});
 
 				//Clear History
 				Box clear = Box.createVerticalBox();
