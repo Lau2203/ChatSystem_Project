@@ -185,7 +185,7 @@ public class NetworkSignalListener extends Thread {
 
 		DatagramPacket dp;
 		
-		byte[] buffer = new byte[256];
+		byte[] buffer = new byte[65536];
 		
 		String input;
 		String output;

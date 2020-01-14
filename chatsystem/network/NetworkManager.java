@@ -1,7 +1,9 @@
 package chatsystem.network;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -66,7 +68,11 @@ public class NetworkManager {
 
 	private int activeClientNumber;
 
-	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort, int listeningUDPPort) {
+	private boolean workRemotelyOnly = false;
+
+	private RemoteServerListener remoteServerListener;
+
+	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort, int listeningUDPPort, InetAddress remoteServerAddress) {
 
 		this.networkSignalListenerListeningPort = listeningUDPPort;
 
@@ -80,11 +86,18 @@ public class NetworkManager {
 
 		this.nsl 			= new NetworkSignalListener(this, mainUser, networkSignalListenerListeningPort);
 
+		this.remoteServerListener	= new RemoteServerListener(remoteServerAddress);
+
 		this.networkManagerInformation 	= new NetworkManagerInformation();
 
 		this.activeUsersList 		= new ArrayList<User>();
 
 		this.activeClientNumber = 1;
+	}
+
+	/* Should be called only once and before calling 'run' method */
+	public void doWorkRemotelyOnly(boolean b) {
+		this.workRemotelyOnly = b;
 	}
 
 	private User getUser(String fingerprint) {
@@ -125,7 +138,13 @@ public class NetworkManager {
 
 	public void startAll() {
 		this.startConnectionListener();
-		this.startNetworkSignalListener();
+
+		/* If we are a local client or a remote client */
+		if (!workRemotelyOnly) {
+			this.startNetworkSignalListener();
+		}
+
+		this.startRemoteServerListener();
 	}
 
 	private void startConnectionListener() {
@@ -134,6 +153,10 @@ public class NetworkManager {
 
 	private void startNetworkSignalListener() {
 		this.nsl.start();
+	}
+
+	private void startRemoteServerListener() {
+		this.remoteServerListener.start();
 	}
 
 	private void disconnect() {
@@ -193,11 +216,7 @@ public class NetworkManager {
 		this.connectionHandlers.remove(ch);
 	}
 	/* Can only be called by a ConnectionHandler, since we must be connected to the remote client first */
-	protected synchronized void notifyNewMessage(ConnectionHandler ch, String content) {
-
-		MessageString msg = new MessageString(ch.getRecipientUser(), new Timestamp(System.currentTimeMillis()), true);
-
-		msg.setContent(content);
+	protected synchronized void notifyNewMessage(ConnectionHandler ch, Message msg) {
 
 		this.master.notifyNewMessage(ch.getRecipientUser(), msg);
 	}
@@ -263,15 +282,11 @@ public class NetworkManager {
 
 	public void notifyNewMessageToBeSent(User user, Message msg) {
 
-		PrintWriter out = null;
-		String stringPacket;
-
-		stringPacket = msg.getContent();
-
+		OutputStream out = null;
 		ConnectionHandler remote = this.getConnectionHandler(user);
 
 		if (remote != null) {
-			out = remote.getWriter();
+			out = remote.getOutput();
 		}
 		/* Otherwise we need to instanciate a ConnectionHandler */
 		else {
@@ -293,12 +308,40 @@ public class NetworkManager {
 			/* wait for the connectionHandler to start properly and 
 			 * correctly estblish IO */
 			while (out == null) {
-				out = remote.getWriter();
+				out = remote.getOutput();
 			}
 		}
 
-		out.println(stringPacket);
-		out.flush();
+		if (msg instanceof MessageString) {
+
+			String stringPacket;
+
+			stringPacket = "S:" + msg.getContent();
+
+			try {
+				out.write(stringPacket.getBytes(), 0, stringPacket.getBytes().length);
+				out.flush();
+			} catch (Exception e) { e.printStackTrace(); }
+		} 
+		/* msg instanceof MessageFile */
+		else {
+
+			byte[] bytePacket = new byte[(int)msg.getFile().length() + 2 + msg.getFile().getName().length() + 1];
+			byte[] byteFile = new byte[(int)msg.getFile().length()];
+
+			try {
+
+				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(msg.getFile()));
+
+				bis.read(byteFile, 0, byteFile.length);
+
+				System.arraycopy(("F:" + msg.getFile().getName() + ":").getBytes(), 0, bytePacket, 0, ("F:" + msg.getFile().getName() + ":").getBytes().length);
+				System.arraycopy(byteFile, 0, bytePacket, ("F:" + msg.getFile().getName() + ":").getBytes().length, byteFile.length);
+
+				out.write(bytePacket, 0, bytePacket.length);
+				out.flush();
+			} catch (Exception e) { e.printStackTrace(); }
+		}
 	}
 
 	/* The whole process is here */

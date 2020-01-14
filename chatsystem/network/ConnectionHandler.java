@@ -4,13 +4,22 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import java.net.Socket;
 import java.net.InetAddress;
 
 import java.lang.Thread;
 
+import java.sql.Timestamp;
+
 import chatsystem.User;
+import chatsystem.Message;
+import chatsystem.MessageString;
+import chatsystem.MessageFile;
 
 import chatsystem.network.ConnectionListener;
 
@@ -27,8 +36,8 @@ public class ConnectionHandler extends Thread {
 
 	private Socket cs;
 
-	private BufferedReader in;
-	private PrintWriter out;
+	private InputStream in;
+	private OutputStream out;
 
 	private InetAddress remoteAddress;
 	private int remotePort;
@@ -36,6 +45,8 @@ public class ConnectionHandler extends Thread {
 	private boolean isInterrupted;
 	/* For logs filling only */
 	private String instanceName;
+
+	public long MAX_SIZE_FILE_UPLOAD = 16777216;
 
 	public ConnectionHandler(Socket clientSocket) {
 		this.cs = clientSocket;	
@@ -78,14 +89,14 @@ public class ConnectionHandler extends Thread {
 		return this.remotePort;
 	}
 
-	public synchronized PrintWriter getWriter() {
+	public synchronized OutputStream getOutput() {
 		return this.out;
 	}
 
 	private void prepareIO() {
 		try {
-			this.in = new BufferedReader(new InputStreamReader(this.cs.getInputStream()));
-			this.out = new PrintWriter(this.cs.getOutputStream(), true);
+			this.in = this.cs.getInputStream();
+			this.out = this.cs.getOutputStream();
 
 		} catch (IOException ioe) {
 			System.out.println("IO issue, aborted");
@@ -93,18 +104,47 @@ public class ConnectionHandler extends Thread {
 		}
 	}
 
-	private String readln() throws IOException {
-		return this.in.readLine();
-	}
+	private Message read() throws IOException {
 
-	private void write(String s) {
-		this.out.print(s);
-		this.out.flush();
-	}
+		Message msg = null;
+		byte[] buffer = new byte[(int)this.MAX_SIZE_FILE_UPLOAD];
 
-	private void writeln(String s) {
-		this.out.println(s);
-		this.out.flush();
+		int ret = this.in.read(buffer, 0, (int)this.MAX_SIZE_FILE_UPLOAD);
+
+		if (ret == 0 || ret == -1) {
+			return null;
+		}
+
+		/* If it's only a string message */
+		if ((new String(buffer, 0, 2)).equals("S:")) {
+			msg = new MessageString(this.recipient, new Timestamp(System.currentTimeMillis()), true);
+			msg.setContent(new String(buffer, 2, ret - 2));
+		}
+		/* Otherwise it is a file */
+		else { 
+			msg = new MessageFile(this.recipient, new Timestamp(System.currentTimeMillis()));
+
+			String filename = (new String(buffer)).split(":")[1];
+
+			File file = new File("/home/a_michau/Bureau/" + filename);
+			try {
+				file.createNewFile();
+
+				OutputStream os = new FileOutputStream(file);
+				os.write(buffer, ("F:" + filename + ":").length(), buffer.length - ("F:" + filename + ":").length());
+				os.flush();
+				os.close();
+
+			} catch (Exception e) { e.printStackTrace(); }
+
+			msg.setContent(file);
+		}
+
+		ConnectionHandler.master.notifyNewMessage(this, msg);
+
+		Logs.println(this.instanceName, "Received '" + msg.toString() + "'");
+
+		return msg;
 	}
 
 	private void disconnect() {
@@ -136,7 +176,7 @@ public class ConnectionHandler extends Thread {
 
 	public void run() {
 
-		String userInput;
+		Message userInput;
 		boolean userShotDownConnection = false;	
 
 		this.prepareIO();
@@ -145,7 +185,7 @@ public class ConnectionHandler extends Thread {
 
 		while (true) {
 			try {
-				userInput = this.readln();
+				userInput = this.read();
 			} catch (IOException ioe) {
 				/* If we are actually the one that closed the socket (or the main subserver manager) */
 				if (!this.isSubServerInterrupted()) {
@@ -161,9 +201,6 @@ public class ConnectionHandler extends Thread {
 				break;
 			}
 
-			ConnectionHandler.master.notifyNewMessage(this, userInput);
-
-			Logs.println(this.instanceName, "Received '" + userInput + "'");
 		}
 
 		/* 2 Possibilities 

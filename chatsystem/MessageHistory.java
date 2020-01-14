@@ -43,7 +43,7 @@ public class MessageHistory {
 	}
 
 	public void setLastMessage(int length) {
-		String lastMessage = this.messageList.get(this.messageList.size() - 1).getContent();
+		String lastMessage = this.messageList.get(this.messageList.size() - 1).toString();
 		try {
 			this.lastMessage = lastMessage.substring(0, length);
 		} catch (IndexOutOfBoundsException ioobe) {

@@ -54,6 +54,10 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyListener;
 
 import javax.swing.text.JTextComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
+
+import java.io.File;
 
 import chatsystem.gui.UserBox;
 
@@ -75,6 +79,8 @@ public class MainWindow extends JFrame{
 
 	public static final int WIDTH 	= 900;
 	public static final int HEIGHT 	= 650;
+
+	public long MAX_SIZE_FILE_UPLOAD = 16777216;
 
   	Color myBlue = new Color(24, 147, 248);
 	Color myGray = new Color(220,220,220);
@@ -1147,7 +1153,9 @@ public class MainWindow extends JFrame{
 			textBox.add(linkButton);
 			textBox.add(sendButton);
 			this.linkButton.addMouseListener(new MouseListener() {
-					public void mouseClicked(MouseEvent e) {}
+					public void mouseClicked(MouseEvent e) {
+						handleFileUpload();
+					}
 					@Override
 		     			public void mousePressed(MouseEvent e) {
 					}
@@ -1355,6 +1363,22 @@ public class MainWindow extends JFrame{
 		}
 	
 		this.master.notifyNewMessageToBeSent(content, this.currentRecipient);
+	}
+
+	private void handleFileUpload() {
+		JFileChooser fc = new JFileChooser();
+		int ret = fc.showOpenDialog(this);
+
+		if (ret == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+
+			if (file.length() >= this.MAX_SIZE_FILE_UPLOAD) {
+				JOptionPane.showMessageDialog(null, "'" + file.getName() + "' is too big (" + file.length() +  ")", "Error while uploading file", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			this.master.notifyNewFileToBeSent(file, this.currentRecipient);			
+		}
 	}
 
 

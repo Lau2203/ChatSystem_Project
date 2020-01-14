@@ -22,14 +22,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-import chatsystem.LocalClient;
+import chatsystem.Client;
 
 @SuppressWarnings("serial")
 public class ConnectionWindow extends JFrame {
 
-	LocalClient master;
+	Client master;
 
-	public ConnectionWindow(LocalClient master)  {    
+	public ConnectionWindow(Client master)  {    
 
 		super();         
 
@@ -173,7 +173,7 @@ public class ConnectionWindow extends JFrame {
 		
   	}       	
 
-	private void login(LocalClient master, String input, JTextArea wrongLoginLabel) {
+	private void login(Client master, String input, JTextArea wrongLoginLabel) {
 		boolean loggedIn = false;
 		
 		loggedIn = master.login(input);		

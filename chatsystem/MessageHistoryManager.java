@@ -106,7 +106,7 @@ public class MessageHistoryManager extends DefaultHandler {
 					out.print("<message from=\"me\" timestamp=\"" + msg.getTimestamp() + "\">");
 				}
 
-				out.print(msg.getContent());
+				out.print(msg.toString());
 				out.println("</message>");	
 			}
 

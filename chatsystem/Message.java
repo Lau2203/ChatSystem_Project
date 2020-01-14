@@ -1,5 +1,6 @@
 package chatsystem;
 
+import java.io.File;
 import java.sql.Timestamp;
 
 public abstract class Message {
@@ -35,6 +36,13 @@ public abstract class Message {
 
 	public synchronized void setHasBeenSentByRecipient(boolean b) {
 		this.hasBeenSentByRecipient = b;
+	}
+
+	public File getFile() {
+		return null;
+	}
+
+	public void setContent(File f) {
 	}
 
 	public abstract String getContent();

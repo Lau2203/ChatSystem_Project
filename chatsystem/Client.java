@@ -9,12 +9,14 @@ import java.net.InetAddress;
 import java.lang.Thread;
 
 import java.io.IOException;
+import java.io.File;
 
 import java.sql.Timestamp;
 
 import chatsystem.User;
 import chatsystem.MainUser;
 import chatsystem.MessageString;
+import chatsystem.MessageFile;
 import chatsystem.MessageHistoryManager;
 
 import chatsystem.network.NetworkManager;
@@ -24,11 +26,17 @@ import chatsystem.util.Logs;
 import chatsystem.util.ConfigParser;
 import chatsystem.util.EncryptionHandler;
 
+import chatsystem.gui.ConnectionWindow;
+import chatsystem.gui.MainWindow;
+import chatsystem.gui.NewIDWindow;
+
 public abstract class Client extends Thread {
 
 	protected ArrayList<User> userList;
 
 	protected MainUser mainUser;
+
+	protected MainWindow mw;
 
 	protected NetworkManager netmanager;
 
@@ -50,6 +58,7 @@ public abstract class Client extends Thread {
 	private String logFilePath;
 	private String witnessFilePath;
 	private String messageHistoryFilePath;
+	private String remoteServerAddress;
 
 	private int connectionListenerPort;
 	private int networkSignalListenerPort;
@@ -70,7 +79,12 @@ public abstract class Client extends Thread {
 
 		this.mainUser 			= new MainUser();
 
-		this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort);
+		try {
+			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, InetAddress.getByName(this.remoteServerAddress));
+		} catch (Exception e) {
+			System.out.println("Unable to retrieve remote server address");
+			System.exit(1);
+		}
 
 		this.networkManagerInformation	= new NetworkManagerInformation();
 
@@ -90,7 +104,12 @@ public abstract class Client extends Thread {
 
 		this.mainUser 			= new MainUser();
 
-		this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort);
+		try {
+			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, InetAddress.getByName(this.remoteServerAddress));
+		} catch (Exception e) {
+			System.out.println("Unable to retrieve remote server address");
+			System.exit(1);
+		}
 
 		this.networkManagerInformation	= new NetworkManagerInformation();
 
@@ -115,6 +134,7 @@ public abstract class Client extends Thread {
 		this.logFilePath 		= ConfigParser.get("log-file");	
 		this.messageHistoryFilePath 	= ConfigParser.get("message-history");	
 		this.witnessFilePath 		= ConfigParser.get("witness-file");
+		this.remoteServerAddress	= ConfigParser.get("remote-server-address");
 
 		/* Fetch the ConnectionListener port and the NetworkSignalListener port */
 		clp 	= ConfigParser.get("server-port");
@@ -255,6 +275,175 @@ public abstract class Client extends Thread {
 		return this.mainUser;
 	}
 
+
+
+
+/* ============================= CAREFULL COPYING ============================ */
+
+
+
+
+
+
+
+	public void run() {
+		this.askLogin();
+	}
+
+	public void notifyLoginSuccessful() {
+		this.runGUI();
+		this.startNetworkManager();
+		this.mandatorySetUsername();
+	}
+
+	private void askLogin() {
+		/* This window will call Client.login() to check whether the user entered
+		 * the correct password */
+		ConnectionWindow cw = new ConnectionWindow(this);
+		cw.setVisible(true);	
+	}
+	/* Called when first time lauching */
+	private void setup() {
+
+	}
+
+	private void runGUI() {
+		this.mw = new MainWindow(this);
+		this.mw.setVisible(true);
+	}
+
+	/* Function for mandatory setting the username
+	 * Open JOptionPane until a valid username is entered */
+	private void mandatorySetUsername() {
+
+		String username = ConfigParser.get("username");
+
+		/* If the Main User's username need to be set */
+		if (!this.setNewUsername(username)) {
+			this.mw.dispose();
+
+			NewIDWindow nidw = new NewIDWindow(this);
+			nidw.setVisible(true);
+			nidw.toFront();
+
+		} else {
+			this.notifyNewUsernameToBeSent();
+		}
+	}
+
+
+	public void notifyNewUsernameToBeSent() {
+		System.out.println("main user username : " + this.mainUser.getUsername() + "END");
+
+		this.mw.setVisible(true);
+
+		this.mw.notifyNewMainUserUsername();
+
+		this.netmanager.notifyNewUsernameToBeSent(this.mainUser.getFingerprint(), this.mainUser.getUsername());
+	}
+
+	public void notifyNewMessageToBeSent(String content, User recipient) {
+
+		MessageString msg = new MessageString(recipient, new Timestamp(System.currentTimeMillis()), false);
+
+		msg.setContent(content);
+
+		MessageHistory mh = recipient.getMessageHistory();
+
+		if (mh == null) {
+			mh = new MessageHistory(recipient);
+			recipient.setMessageHistory(mh);
+			this.messageHistoryManager.addMessageHistory(mh);
+		}
+
+		mh.addMessage(msg);
+
+		this.mw.notifyNewMessage(recipient);
+		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
+	}
+
+	public void notifyNewFileToBeSent(File file, User recipient) {
+
+		MessageFile msg = new MessageFile(recipient, new Timestamp(System.currentTimeMillis()), false);
+
+		msg.setContent(file);
+
+		MessageHistory mh = recipient.getMessageHistory();
+
+		if (mh == null) {
+			mh = new MessageHistory(recipient);
+			recipient.setMessageHistory(mh);
+			this.messageHistoryManager.addMessageHistory(mh);
+		}
+
+		mh.addMessage(msg);
+
+		this.mw.notifyNewMessage(recipient);
+		this.netmanager.notifyNewMessageToBeSent(recipient, msg);
+	}
+
+	public void notifyNewMessage(User recipient, Message msg) {
+		System.out.println("NEW MESSAGE : '" + msg.getContent() + "'");
+
+		MessageHistory mh = recipient.getMessageHistory();
+
+		if (mh == null) {
+			mh = new MessageHistory(recipient);
+			recipient.setMessageHistory(mh);
+			this.messageHistoryManager.addMessageHistory(mh);
+		}
+		
+		mh.addMessage(msg);
+
+		this.mw.notifyNewMessage(recipient);
+	}
+
+	public void notifySetNewUsername() {
+		this.mandatorySetUsername();
+	}
+
+	public void notifyNewUsername(String fingerprint, String newUsername) {
+		User usr = this.getUser(fingerprint);
+
+		usr.setUsername(newUsername);
+
+		/* If the user just got a valid username and didn't have one before */
+		/*
+		if ((previousUsername == null || previousUsername.equals("undefined")) && !newUsername.equals("undefined")) {
+			this.mw.notifyNewUserUsername(usr);
+		}
+		*/
+		this.mw.notifyNewUserUsername(usr);
+	}
+
+	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {
+		User active = this.getUser(fingerprint);
+
+		active.setActive(true);
+		active.setFingerprint(fingerprint);
+		active.setUsername(username);
+		active.setAddress(address);
+	}
+
+	public void notifyEndOfActiveUser(String fingerprint) {
+		User usr = this.getUser(fingerprint);
+
+		usr.setActive(false);
+
+		this.mw.notifyUserActivityModification(usr);
+	}
+	
+
+
+
+
+/* ============================= END OF CAREFULL COPYING ============================ */
+
+
+
+
+
+	/*
 	public void notifyNewUsername(String fingerprint, String newUsername) {}
 	public void notifySetNewUsername() {}
 	public void notifyNewActiveUser(String fingerprint, InetAddress address, String username) {}
@@ -262,4 +451,5 @@ public abstract class Client extends Thread {
 	public void notifyNewMessage(User recipient, Message msg) {}
 	public void notifyNewUsernameToBeSent() {}
 	public void notifyNewMessageToBeSent(String content, User recipient) {}
+	*/
 }

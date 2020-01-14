@@ -42,7 +42,7 @@ public class NewIDWindow extends JFrame {
 
 		Color myBlue = new Color(24, 147, 248);
 
-	  	this.setTitle("Aura - New ID");
+	  	this.setTitle("Aura - Set new username");
 	    	this.setSize(600, 600);
 	    	this.setLocationRelativeTo(null); 
 		this.getContentPane().setBackground(Color.white);
