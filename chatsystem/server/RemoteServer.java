@@ -1,5 +1,3 @@
-package chatsystem.server;
-
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -58,6 +56,10 @@ public class RemoteServer extends HttpServlet {
 	public RemoteServer() {
 	}
 
+	public void init() {
+		this.users = new ArrayList<User>();
+	}
+
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 		PrintWriter pw;
@@ -102,6 +104,9 @@ public class RemoteServer extends HttpServlet {
 		}
 
 		users.add(new User(fingerprint, username, address));
+	}
+
+	public void destroy() {
 	}
 }
 

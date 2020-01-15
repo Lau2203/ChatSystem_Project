@@ -86,7 +86,7 @@ public class NetworkManager {
 
 		this.nsl 			= new NetworkSignalListener(this, mainUser, networkSignalListenerListeningPort);
 
-		this.remoteServerListener	= new RemoteServerListener(this, remoteServerURL);
+		this.remoteServerListener	= new RemoteServerListener(this, mainUser, remoteServerURL);
 
 		this.networkManagerInformation 	= new NetworkManagerInformation();
 

@@ -13,7 +13,7 @@ BASE_OBJS=$(PACKAGE_PATH)/*.java
 NETWORK_OBJS=$(PACKAGE_PATH)/network/*.java
 UTIL_OBJS=$(PACKAGE_PATH)/util/*.java
 GUI_OBJS=$(PACKAGE_PATH)/gui/*.java
-SERVER_OBJS=./server/web-app/WEB-INF/classes/*.java
+SERVER_OBJS=$(PACKAGE_PATH)/server/*.java
 
 LOG_FILE=./logs
 

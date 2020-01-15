@@ -6,8 +6,8 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name></servlet-name>
-		<url-pattern>/update</url-pattern>
+		<servlet-name>AURA-Server</servlet-name>
+		<url-pattern>/AURA-Server</url-pattern>
 	</servlet-mapping>
 
 </web-app>
