@@ -58,7 +58,7 @@ public abstract class Client extends Thread {
 	private String logFilePath;
 	private String witnessFilePath;
 	private String messageHistoryFilePath;
-	private String remoteServerAddress;
+	private String remoteServerURL;
 
 	private int connectionListenerPort;
 	private int networkSignalListenerPort;
@@ -80,7 +80,7 @@ public abstract class Client extends Thread {
 		this.mainUser 			= new MainUser();
 
 		try {
-			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, InetAddress.getByName(this.remoteServerAddress));
+			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, this.remoteServerURL);
 		} catch (Exception e) {
 			System.out.println("Unable to retrieve remote server address");
 			System.exit(1);
@@ -105,7 +105,7 @@ public abstract class Client extends Thread {
 		this.mainUser 			= new MainUser();
 
 		try {
-			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, InetAddress.getByName(this.remoteServerAddress));
+			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, this.remoteServerURL);
 		} catch (Exception e) {
 			System.out.println("Unable to retrieve remote server address");
 			System.exit(1);
@@ -134,7 +134,7 @@ public abstract class Client extends Thread {
 		this.logFilePath 		= ConfigParser.get("log-file");	
 		this.messageHistoryFilePath 	= ConfigParser.get("message-history");	
 		this.witnessFilePath 		= ConfigParser.get("witness-file");
-		this.remoteServerAddress	= ConfigParser.get("remote-server-address");
+		this.remoteServerURL		= ConfigParser.get("remote-server-url");
 
 		/* Fetch the ConnectionListener port and the NetworkSignalListener port */
 		clp 	= ConfigParser.get("server-port");

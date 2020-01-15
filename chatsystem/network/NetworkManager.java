@@ -72,7 +72,7 @@ public class NetworkManager {
 
 	private RemoteServerListener remoteServerListener;
 
-	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort, int listeningUDPPort, InetAddress remoteServerAddress) {
+	public NetworkManager(Client master, MainUser mainUser, int listeningTCPPort, int listeningUDPPort, String remoteServerURL) {
 
 		this.networkSignalListenerListeningPort = listeningUDPPort;
 
@@ -86,7 +86,7 @@ public class NetworkManager {
 
 		this.nsl 			= new NetworkSignalListener(this, mainUser, networkSignalListenerListeningPort);
 
-		this.remoteServerListener	= new RemoteServerListener(remoteServerAddress);
+		this.remoteServerListener	= new RemoteServerListener(this, remoteServerURL);
 
 		this.networkManagerInformation 	= new NetworkManagerInformation();
 
@@ -139,7 +139,7 @@ public class NetworkManager {
 	public void startAll() {
 		this.startConnectionListener();
 
-		/* If we are a local client or a remote client */
+		/* If we are a local client (not a remote client), we need to listen to broadcasted signals */
 		if (!workRemotelyOnly) {
 			this.startNetworkSignalListener();
 		}

@@ -1,0 +1,13 @@
+<web-app>
+
+	<servlet>
+		<servlet-name>AURA-Server</servlet-name>
+		<servlet-class>RemoteServer</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name></servlet-name>
+		<url-pattern>/update</url-pattern>
+	</servlet-mapping>
+
+</web-app>
