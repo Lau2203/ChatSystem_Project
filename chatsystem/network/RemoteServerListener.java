@@ -70,7 +70,7 @@ public class RemoteServerListener extends Thread {
 			} else {
 				JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE);
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
 	}
 
 	private void fetchFromRemoteServer() {
@@ -102,7 +102,7 @@ public class RemoteServerListener extends Thread {
 
 				in.close();
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
 	}
 
 	public void run() {

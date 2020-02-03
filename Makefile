@@ -41,5 +41,7 @@ server: $(SERVER_OBJS)
 
 clean:
 	rm -rf $(BUILD_DIR) $(LOG_FILES)
+cleanall: 
+	rm -rf $(BUILD_DIR) $(LOG_FILES)
 	rm -rf ./jar/
 

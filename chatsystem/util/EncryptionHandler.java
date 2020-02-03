@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Scanner;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +29,12 @@ public class EncryptionHandler {
 	private final String ENCRYPTION_ALGORITHM = "AES/ECB/PKCS5PADDING";
 
 	private Cipher cipher;
+
+	public EncryptionHandler() {
+		try {
+			this.cipher = Cipher.getInstance(this.ENCRYPTION_ALGORITHM);
+		} catch (Exception e) {}
+	}
 
 	public EncryptionHandler(String witnessFilePath) {
 		try {
@@ -119,6 +126,12 @@ public class EncryptionHandler {
 
 
 		return false;
+	}
+
+	public static void main(String[] args) {
+		EncryptionHandler eh = new EncryptionHandler();
+
+		System.out.println(eh.encrypt(args[0], EncryptionHandler.WITNESS_STRING));
 	}
 }
 
