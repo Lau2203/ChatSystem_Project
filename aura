@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ ! -d "jar" ] || [ ! -r "./jar/Aura.jar" ] ; then
+	if [ -x "./setup.sh" ] ; then
+		./setup.sh
+		echo "Launching after setup..."
+	else
+		echo "ERROR : Could not find the setup shell script 'setup.sh'"
+		exit;
+	fi
+fi
+
+cd ./jar && java -cp ./Aura.jar chatsystem.LocalClient ../configs/config.cfg
+

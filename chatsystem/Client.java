@@ -13,6 +13,8 @@ import java.io.File;
 
 import java.sql.Timestamp;
 
+import javax.swing.SwingUtilities;
+
 import chatsystem.User;
 import chatsystem.MainUser;
 import chatsystem.MessageString;
@@ -65,7 +67,7 @@ public abstract class Client extends Thread {
 
 	protected String instanceName = "Client";
 
-	/* Lock objects for synchronized operationis */
+	/* Lock objects for synchronized operations */
 	protected String lock 		= new String();
 	protected String childrenLock 	= new String();
 
@@ -308,8 +310,18 @@ public abstract class Client extends Thread {
 	}
 
 	private void runGUI() {
+		MainWindow tmp;
+
 		this.mw = new MainWindow(this);
-		this.mw.setVisible(true);
+
+		tmp = this.mw;
+
+		//javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			
+		//	public void run() {
+				tmp.setVisible(true);
+		//	}
+		//});
 	}
 
 	/* Function for mandatory setting the username

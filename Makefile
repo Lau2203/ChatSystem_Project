@@ -15,7 +15,7 @@ UTIL_OBJS=$(PACKAGE_PATH)/util/*.java
 GUI_OBJS=$(PACKAGE_PATH)/gui/*.java
 SERVER_OBJS=$(PACKAGE_PATH)/server/*.java
 
-LOG_FILE=./logs
+LOG_FILES=./logs*
 
 ALL_OBJS=$(OBJ) $(BASE_OBJS) $(NETWORK_OBJS) $(UTIL_OBJS) $(GUI_OBJS) $(SERVER_OBJS)
 
@@ -40,5 +40,6 @@ server: $(SERVER_OBJS)
 .PHONY: clean
 
 clean:
-	rm -rf $(BUILD_DIR) $(LOG_FILE)
+	rm -rf $(BUILD_DIR) $(LOG_FILES)
+	rm -rf ./jar/
 
