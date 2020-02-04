@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.lang.Thread;
 
 import java.net.InetAddress;
+import java.net.ServerSocket;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,12 +30,6 @@ public class RemoteServerListener extends Thread {
 		this.master = master;
 		this.mainUser = mainUser;
 		this.serverURL = remoteServerURL;
-	}
-
-	private void init() {
-
-		this.notifyRemoteServer();
-		this.fetchFromRemoteServer();
 	}
 
 	private void notifyRemoteServer() {
@@ -70,6 +65,7 @@ public class RemoteServerListener extends Thread {
 			} else {
 				JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE);
 			}
+
 		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
 	}
 
@@ -106,7 +102,8 @@ public class RemoteServerListener extends Thread {
 	}
 
 	public void run() {
-		this.init();
+		this.notifyRemoteServer();
+		this.fetchFromRemoteServer();
 	}
 }
 
