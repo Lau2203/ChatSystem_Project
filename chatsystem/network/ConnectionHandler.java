@@ -126,7 +126,7 @@ public class ConnectionHandler extends Thread {
 
 			String filename = (new String(buffer)).split(":")[1];
 
-			File file = new File("/home/a_michau/Bureau/" + filename);
+			File file = new File("../resources/uploads/" + filename);
 			try {
 				file.createNewFile();
 

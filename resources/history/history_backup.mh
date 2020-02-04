@@ -18,22 +18,6 @@
 <message from="me" timestamp="2019-12-09 21:01:50.373">"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</message>
 <message from="me" timestamp="2020-01-14 11:48:24.393">hddh</message>
 <message from="him" timestamp="2020-01-14 11:48:24.432">hddh</message>
-<message from="me" timestamp="2020-01-14 11:48:39.609">File: desktop.ini</message>
-<message from="him" timestamp="2020-01-14 11:48:39.641">File: desktop.ini</message>
-<message from="me" timestamp="2020-01-15 10:36:05.757">hey</message>
-<message from="him" timestamp="2020-01-15 10:36:05.782">hey</message>
-<message from="me" timestamp="2020-02-03 15:49:57.887">hello</message>
-<message from="him" timestamp="2020-02-03 15:49:57.962">hello</message>
-<message from="me" timestamp="2020-02-03 15:50:10.368">File: capacitor.png</message>
-<message from="him" timestamp="2020-02-03 15:50:10.406">File: capacitor.png</message>
-<message from="me" timestamp="2020-02-03 18:21:11.86">dd</message>
-<message from="him" timestamp="2020-02-03 18:21:11.956">dd</message>
-<message from="me" timestamp="2020-02-04 13:12:43.296">et oui</message>
-<message from="him" timestamp="2020-02-04 13:12:43.345">et oui</message>
-<message from="me" timestamp="2020-02-04 13:12:48.113">Write your message...</message>
-<message from="him" timestamp="2020-02-04 13:12:48.145">Write your message...</message>
-<message from="me" timestamp="2020-02-04 16:40:35.527">hey there</message>
-<message from="him" timestamp="2020-02-04 16:40:35.622">hey there</message>
 </recipient>
 <recipient fingerprint="pcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Lordly">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
@@ -69,7 +53,5 @@
 <message from="him" timestamp="2019-12-18 09:34:12.914">hey</message>
 <message from="me" timestamp="2019-12-18 09:34:18.4">it's me</message>
 <message from="me" timestamp="2019-12-18 09:34:23.641">no ?</message>
-<message from="him" timestamp="2020-02-04 13:16:20.071">hey fdp</message>
-<message from="him" timestamp="2020-02-04 14:07:37.854">d</message>
 </recipient>
 </history>

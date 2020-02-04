@@ -44,4 +44,6 @@ clean:
 cleanall: 
 	rm -rf $(BUILD_DIR) $(LOG_FILES)
 	rm -rf ./jar/
+	rm -rf ./resources/uploads/*
+	rm -f ./resources/witness
 

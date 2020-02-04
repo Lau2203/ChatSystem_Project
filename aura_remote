@@ -13,5 +13,5 @@ if [ ! -d "jar" ] || [ ! -r "./jar/Aura.jar" ] ; then
 	fi
 fi
 
-cd ./jar && java -cp ./Aura.jar chatsystem.RemoteClient ../configs/config.cfg
+cd ./jar && java -cp ./Aura.jar chatsystem.RemoteClient ../configs/config.cfg &> /dev/null
 
