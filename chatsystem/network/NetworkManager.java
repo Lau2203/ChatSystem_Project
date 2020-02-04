@@ -178,6 +178,8 @@ public class NetworkManager {
 		} catch (Exception uhe) { uhe.printStackTrace(); }
 
 		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
+
+		this.remoteServerListener.notifyDisconnection();
 	}
 
 	/* Can only be called by the main client process */
@@ -278,6 +280,8 @@ public class NetworkManager {
 		} catch (UnknownHostException uhe) { uhe.printStackTrace(); }
 
 		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
+
+		this.remoteServerListener.notifyRemoteServer();
 	}
 
 	public void notifyNewMessageToBeSent(User user, Message msg) {

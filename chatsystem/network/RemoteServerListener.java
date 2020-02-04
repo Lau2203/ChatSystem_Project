@@ -32,7 +32,7 @@ public class RemoteServerListener {
 		this.serverURL = remoteServerURL;
 	}
 
-	private void notifyRemoteServer() {
+	public void notifyRemoteServer() {
 
 		int responseCode;
 
@@ -106,7 +106,7 @@ public class RemoteServerListener {
 		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
 	}
 
-	private void fetchFromRemoteServer() {
+	public void fetchFromRemoteServer() {
 
 		int responseCode;
 
@@ -135,7 +135,11 @@ public class RemoteServerListener {
 					}
 					/* That means that the user is now disconnected */
 					else {
-						this.master.notifyEndOfActiveUser(user[0]);
+						if (user[3].equals("disconnected")) {
+							this.master.notifyEndOfActiveUser(user[0]);
+						} else {
+							this.master.notifyNewActiveUser(user[0], InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
+						}
 					}
 				}
 

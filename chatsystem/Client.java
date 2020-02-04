@@ -77,9 +77,9 @@ public abstract class Client extends Thread {
 
 		this.configFilePath = Client.DEFAULT_CONFIG_FILE_PATH;
 
-		this.initWithConfigFile();
-
 		this.mainUser 			= new MainUser();
+
+		this.initWithConfigFile();
 
 		try {
 			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, this.remoteServerURL);
@@ -102,9 +102,10 @@ public abstract class Client extends Thread {
 
 		this.configFilePath = configFilePath;
 
+		this.mainUser 			= new MainUser();
+
 		this.initWithConfigFile();
 
-		this.mainUser 			= new MainUser();
 
 		try {
 			this.netmanager 		= new NetworkManager(this, this.mainUser, this.connectionListenerPort, this.networkSignalListenerPort, this.remoteServerURL);
@@ -165,6 +166,10 @@ public abstract class Client extends Thread {
 			this.isLogEnabled = false;
 		} else {
 			this.isLogEnabled = true;
+		}
+
+		if (ConfigParser.get("username") != null) {
+			this.mainUser.setUsername(ConfigParser.get("username"));
 		}
 
 		this.prepareLogs();
@@ -250,7 +255,7 @@ public abstract class Client extends Thread {
 
 	public boolean isUsernameAvailable(String username) {
 		for (User user: this.getUserList()) {
-			if (user.isActive() && user.getUsername() != null && user.getUsername().equals(username)) {
+			if (!user.getFingerprint().equals(this.mainUser.getFingerprint()) && user.isActive() && user.getUsername() != null && user.getUsername().equals(username)) {
 				return false;
 			}
 		}

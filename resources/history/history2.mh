@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <history>
-<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Barton">
+<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Jesus">
 <message from="me" timestamp="2019-12-16 16:40:14.123">hey</message>
 <message from="him" timestamp="2019-12-16 16:40:35.433">hello</message>
+<message from="me" timestamp="2020-02-04 13:16:20.038">hey fdp</message>
+<message from="me" timestamp="2020-02-04 14:07:37.822">d</message>
 </recipient>
 </history>

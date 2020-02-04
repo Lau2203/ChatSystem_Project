@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <history>
-<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="">
+<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Jesus">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">Hi</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">How are you ?</message>
@@ -46,7 +46,7 @@
 <message from="me" timestamp="2019-12-09 21:01:50.36">Lorem ipsum ?</message>
 <message from="him" timestamp="2019-12-09 21:01:50.373">да</message>
 </recipient>
-<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="Gatwick">
+<recipient fingerprint="H3Hg9KybR82TvyaeQBerqg==" username="Mary">
 <message from="me" timestamp="2019-12-13 13:48:25.387">hey</message>
 <message from="him" timestamp="2019-12-13 13:48:25.409">hey</message>
 <message from="me" timestamp="2019-12-13 13:48:27.057">it's me</message>
@@ -67,5 +67,7 @@
 <message from="him" timestamp="2019-12-18 09:34:12.914">hey</message>
 <message from="me" timestamp="2019-12-18 09:34:18.4">it's me</message>
 <message from="me" timestamp="2019-12-18 09:34:23.641">no ?</message>
+<message from="him" timestamp="2020-02-04 13:16:20.071">hey fdp</message>
+<message from="him" timestamp="2020-02-04 14:07:37.854">d</message>
 </recipient>
 </history>
