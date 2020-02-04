@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <history>
-<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Barton">
+<recipient fingerprint="kcpA8Ha81Qg7Pc8Nd6PmJQ==" username="">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">Hi</message>
 <message from="me" timestamp="2019-02-28 12:33:56.0">How are you ?</message>
@@ -28,6 +28,10 @@
 <message from="him" timestamp="2020-02-03 15:50:10.406">File: capacitor.png</message>
 <message from="me" timestamp="2020-02-03 18:21:11.86">dd</message>
 <message from="him" timestamp="2020-02-03 18:21:11.956">dd</message>
+<message from="me" timestamp="2020-02-04 13:12:43.296">et oui</message>
+<message from="him" timestamp="2020-02-04 13:12:43.345">et oui</message>
+<message from="me" timestamp="2020-02-04 13:12:48.113">Write your message...</message>
+<message from="him" timestamp="2020-02-04 13:12:48.145">Write your message...</message>
 </recipient>
 <recipient fingerprint="pcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Lordly">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>

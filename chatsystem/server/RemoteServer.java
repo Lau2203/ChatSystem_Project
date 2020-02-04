@@ -18,6 +18,8 @@ class User {
 	private String username;
 	private InetAddress address;
 
+	private boolean isConnected = true;
+
 	public User(String fingerprint, String username, InetAddress address) {
 		this.fingerprint 	= fingerprint;
 		this.username 		= username;
@@ -36,6 +38,10 @@ class User {
 		return this.address;
 	}
 
+	public boolean isConnected() {
+		return this.isConnected;
+	}
+
 	public void setFingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
 	}
@@ -46,6 +52,14 @@ class User {
 	
 	public void setAddress(InetAddress address) {
 		this.address = address;
+	}
+
+	public void setConnected() {
+		this.isConnected = true;
+	}
+
+	public void setDisconnected() {
+		this.isConnected = false;
 	}
 }
 
@@ -69,7 +83,11 @@ public class RemoteServer extends HttpServlet {
 		pw = res.getWriter();
 
 		for (User u: users) {
-			pw.println(u.getFingerprint() + ":" + u.getUsername() + ":" + u.getAddress());
+			if (u.isConnected()) {
+				pw.println(u.getFingerprint() + ":" + u.getUsername() + ":" + u.getAddress());
+			} else {
+				pw.println(u.getFingerprint() + ":" + u.getUsername() + ":" + u.getAddress() + ":disconnected");
+			}
 		}
 
 		pw.close();
@@ -77,13 +95,18 @@ public class RemoteServer extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
+		String cmd		= req.getParameter("cmd");
 		String fingerprint 	= req.getParameter("fingerprint");
 		String username 	= req.getParameter("username");
 		InetAddress address	= InetAddress.getByName(req.getRemoteAddr());
 
 		PrintWriter pw;
 
-		this.update(fingerprint, username, address);
+		if (cmd.equals("new")) {
+			this.update(true, fingerprint, username, address);
+		} else {
+			this.update(false, fingerprint, username, address);
+		}
 
 		res.setContentType("text/plain");
 		pw = res.getWriter();
@@ -93,18 +116,28 @@ public class RemoteServer extends HttpServlet {
 		pw.close();
 	}
 
-	private void update(String fingerprint, String username, InetAddress address) {
+	private void update(boolean newConnection, String fingerprint, String username, InetAddress address) {
 
-		for (User u: users) {
+		for (User u: this.users) {
 
 			if (u.getFingerprint().equals(fingerprint)) {
-				u.setUsername(username);
-				u.setAddress(address);
-				return;
+				if (newConnection) {
+					u.setUsername(username);
+					u.setAddress(address);
+					u.setConnected();
+					return;
+				} 
+				/* Disconnection, we need to remove that user from the list */
+				else {
+					u.setDisconnected();
+					return;
+				}
 			}
 		}
 
-		users.add(new User(fingerprint, username, address));
+		if (newConnection) {
+			this.users.add(new User(fingerprint, username, address));
+		}
 	}
 
 	public void destroy() {
