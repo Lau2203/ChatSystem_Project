@@ -48,5 +48,10 @@ fi
 echo "Removing compiled files..."
 make clean
 
+if [ ! -d "./resources/uploads/" ] ; then
+	echo "Creating resources/uploads directory for file uploading and downloading"
+	mkdir ./resources/uploads
+fi
+
 echo "Setup done."
 
