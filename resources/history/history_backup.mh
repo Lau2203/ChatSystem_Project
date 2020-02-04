@@ -32,6 +32,8 @@
 <message from="him" timestamp="2020-02-04 13:12:43.345">et oui</message>
 <message from="me" timestamp="2020-02-04 13:12:48.113">Write your message...</message>
 <message from="him" timestamp="2020-02-04 13:12:48.145">Write your message...</message>
+<message from="me" timestamp="2020-02-04 16:40:35.527">hey there</message>
+<message from="him" timestamp="2020-02-04 16:40:35.622">hey there</message>
 </recipient>
 <recipient fingerprint="pcpA8Ha81Qg7Pc8Nd6PmJQ==" username="Lordly">
 <message from="him" timestamp="2019-02-28 12:33:56.0">Hey there</message>

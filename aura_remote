@@ -1,5 +1,8 @@
 #!/bin/bash
 
+currentDir="$(cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null 2>&1 && pwd )"
+cd $currentDir
+
 if [ ! -d "jar" ] || [ ! -r "./jar/Aura.jar" ] ; then
 	if [ -x "./setup.sh" ] ; then
 		./setup.sh

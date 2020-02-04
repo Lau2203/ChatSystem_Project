@@ -26,10 +26,14 @@ public class RemoteServerListener {
 
 	private String serverURL = "https://srv-gei-tomcat.insa-toulouse.fr/manager/";
 
+	private boolean isServerAvailable;
+
 	public RemoteServerListener(NetworkManager master, User mainUser, String remoteServerURL) {
 		this.master = master;
 		this.mainUser = mainUser;
 		this.serverURL = remoteServerURL;
+
+		this.isServerAvailable = true;
 	}
 
 	public void notifyRemoteServer() {
@@ -66,7 +70,7 @@ public class RemoteServerListener {
 				JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE);
 			}
 
-		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
+		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); this.isServerAvailable = false;}
 	}
 
 	public void notifyDisconnection() {
@@ -103,7 +107,7 @@ public class RemoteServerListener {
 				JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE);
 			}
 
-		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
+		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); this.isServerAvailable = false;}
 	}
 
 	public void fetchFromRemoteServer() {
@@ -145,22 +149,24 @@ public class RemoteServerListener {
 
 				in.close();
 			}
-		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); }
+		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); this.isServerAvailable = false; }
 	}
 
 	public void start() {
 		this.notifyRemoteServer();
 
-		Timer t = new Timer();
-		TimerTask tt = new TimerTask() {
-			@Override
-			public void run() {
-				System.out.println("FETCHING SERVER INFORMATION...");
-				fetchFromRemoteServer();
-			}
-		};
+		if (this.isServerAvailable) {
+			Timer t = new Timer();
+			TimerTask tt = new TimerTask() {
+				@Override
+					public void run() {
+						System.out.println("FETCHING SERVER INFORMATION...");
+						fetchFromRemoteServer();
+					}
+			};
 
-		t.scheduleAtFixedRate(tt, 0, 3000);
+			t.scheduleAtFixedRate(tt, 0, 3000);
+		}
 	}
 }
 
