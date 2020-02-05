@@ -144,7 +144,10 @@ public class NetworkManager {
 			this.startNetworkSignalListener();
 		}
 
-		this.startRemoteServerListener();
+		String enableServer = ConfigParser.get("remote-server");
+		if (enableServer != null && !enableServer.equals("0")) {
+			this.startRemoteServerListener();
+		}
 	}
 
 	private void startConnectionListener() {
@@ -179,7 +182,10 @@ public class NetworkManager {
 
 		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 
-		this.remoteServerListener.notifyDisconnection();
+		String enableServer = ConfigParser.get("remote-server");
+		if (enableServer != null && !enableServer.equals("0")) {
+			this.remoteServerListener.notifyDisconnection();
+		}
 	}
 
 	/* Can only be called by the main client process */
@@ -281,7 +287,10 @@ public class NetworkManager {
 
 		try { ds.send(dp); } catch (IOException ioe) { ioe.printStackTrace(); }
 
-		this.remoteServerListener.notifyRemoteServer();
+		String enableServer = ConfigParser.get("remote-server");
+		if (enableServer != null && !enableServer.equals("0")) {
+			this.remoteServerListener.notifyRemoteServer();
+		}
 	}
 
 	public void notifyNewMessageToBeSent(User user, Message msg) {

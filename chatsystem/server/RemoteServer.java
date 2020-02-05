@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.net.URLEncoder;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -84,9 +86,9 @@ public class RemoteServer extends HttpServlet {
 
 		for (User u: users) {
 			if (u.isConnected()) {
-				pw.println(u.getFingerprint() + ":" + u.getUsername() + ":" + u.getAddress());
+				pw.println(URLEncoder.encode(u.getFingerprint(), "UTF-8") + ":" + u.getUsername() + ":" + u.getAddress());
 			} else {
-				pw.println(u.getFingerprint() + ":" + u.getUsername() + ":" + u.getAddress() + ":disconnected");
+				pw.println(URLEncoder.encode(u.getFingerprint(), "UTF-8") + ":" + u.getUsername() + ":" + u.getAddress() + ":disconnected");
 			}
 		}
 

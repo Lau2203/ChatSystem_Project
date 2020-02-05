@@ -8,6 +8,8 @@ import java.net.InetAddress;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.net.URLDecoder;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,7 +58,7 @@ public class RemoteServerListener {
 
 			con.setDoOutput(true);
 			OutputStream os = con.getOutputStream();
-			os.write(("cmd=new&fingerprint=" + this.mainUser.getFingerprint()  + "&username=" + this.mainUser.getUsername()).getBytes());
+			os.write(("cmd=new&fingerprint=" + URLEncoder.encode(this.mainUser.getFingerprint(), "UTF-8")  + "&username=" + this.mainUser.getUsername()).getBytes());
 			os.flush();
 			os.close();
 
@@ -147,7 +149,7 @@ public class RemoteServerListener {
 					String[] user = line.split(":");
 					System.out.println("AFTER SUBSTRING ; " + user[2].substring(1, user[2].length()));
 					if (user.length == 3) {
-						this.master.notifyNewActiveUser(user[0], InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
+						this.master.notifyNewActiveUser(URLDecoder.decode(user[0], "UTF-8"), InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
 					}
 					/* That means that the user is now disconnected */
 					else {
