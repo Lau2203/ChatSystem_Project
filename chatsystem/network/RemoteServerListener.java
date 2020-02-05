@@ -13,6 +13,7 @@ import java.net.URLDecoder;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -30,12 +31,16 @@ public class RemoteServerListener {
 
 	private boolean isServerAvailable;
 
+	private ArrayList<String> fingerprints;
+
 	public RemoteServerListener(NetworkManager master, User mainUser, String remoteServerURL) {
 		this.master = master;
 		this.mainUser = mainUser;
 		this.serverURL = remoteServerURL;
 
 		this.isServerAvailable = true;
+
+		this.fingerprints = new ArrayList<String>();
 	}
 
 	public void notifyRemoteServer() {
@@ -120,6 +125,15 @@ public class RemoteServerListener {
 		} catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: Could not connect to remote server", "Error from remote server", JOptionPane.ERROR_MESSAGE); this.isServerAvailable = false;}
 	}
 
+	private String get(String f) {
+		for (String fp : this.fingerprints) {
+			if (fp.equals(f)) {
+				return fp;
+			}
+		}
+		return null;
+	}
+
 	public void fetchFromRemoteServer() {
 
 		int responseCode;
@@ -145,19 +159,39 @@ public class RemoteServerListener {
 				String line;
 
 				while ((line = in.readLine()) != null) {
+
 					System.out.println("SERVER ==== " + line);
 					String[] user = line.split(":");
+
 					System.out.println("AFTER SUBSTRING ; " + user[2].substring(1, user[2].length()));
-					System.out.println("but the fingerprint is : " + URLDecoder.decode(user[0], "UTF-8"));
+
+					String fingerprint = URLDecoder.decode(user[0], "UTF-8");
+
+					System.out.println("but the fingerprint is : " + fingerprint);
+
 					if (user.length == 3) {
-						this.master.notifyNewActiveUser(URLDecoder.decode(user[0], "UTF-8"), InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
+
+						String f = this.get(fingerprint);
+						if (f == null) {
+							this.master.notifyNewActiveUser(fingerprint, InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
+							this.fingerprints.add(fingerprint);
+						}
 					}
 					/* That means that the user is now disconnected */
 					else {
 						if (user[3].equals("disconnected")) {
-							this.master.notifyEndOfActiveUser(user[0]);
+
+							String f = this.get(fingerprint);
+							if (f != null) {
+								this.master.notifyEndOfActiveUser(user[0]);
+								this.fingerprints.remove(f);
+							}
+
 						} else {
-							this.master.notifyNewActiveUser(user[0], InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
+							String f = this.get(fingerprint);
+							if (f == null) {
+								this.master.notifyNewActiveUser(user[0], InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
+							}
 						}
 					}
 				}
