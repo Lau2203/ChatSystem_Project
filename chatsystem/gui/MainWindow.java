@@ -1366,6 +1366,11 @@ public class MainWindow extends JFrame{
 	}
 
 	private void handleFileUpload() {
+
+		if (!this.currentRecipient.isActive()) {
+			return;
+		}
+
 		JFileChooser fc = new JFileChooser();
 		int ret = fc.showOpenDialog(this);
 

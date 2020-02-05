@@ -40,6 +40,10 @@ public class RemoteServerListener {
 
 		int responseCode;
 
+		if (!isServerAvailable) {
+			return;
+		}
+
 		try {
 
 			URL u = new URL(this.serverURL);
@@ -77,6 +81,10 @@ public class RemoteServerListener {
 
 		int responseCode;
 
+		if (!isServerAvailable) {
+			return;
+		}
+
 		try {
 
 			URL u = new URL(this.serverURL);
@@ -113,6 +121,10 @@ public class RemoteServerListener {
 	public void fetchFromRemoteServer() {
 
 		int responseCode;
+
+		if (!isServerAvailable) {
+			return;
+		}
 
 		try {
 			URL u = new URL(this.serverURL);
