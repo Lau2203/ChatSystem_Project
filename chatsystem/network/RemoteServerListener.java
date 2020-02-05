@@ -99,7 +99,7 @@ public class RemoteServerListener {
 
 			con.setDoOutput(true);
 			OutputStream os = con.getOutputStream();
-			os.write(("cmd=disconnection&fingerprint=" + this.mainUser.getFingerprint()  + "&username=" + this.mainUser.getUsername()).getBytes());
+			os.write(("cmd=disconnection&fingerprint=" + URLEncoder.encode(this.mainUser.getFingerprint(), "UTF-8")  + "&username=" + this.mainUser.getUsername()).getBytes());
 			os.flush();
 			os.close();
 
@@ -148,6 +148,7 @@ public class RemoteServerListener {
 					System.out.println("SERVER ==== " + line);
 					String[] user = line.split(":");
 					System.out.println("AFTER SUBSTRING ; " + user[2].substring(1, user[2].length()));
+					System.out.println("but the fingerprint is : " + URLDecoder.decode(user[0], "UTF-8"));
 					if (user.length == 3) {
 						this.master.notifyNewActiveUser(URLDecoder.decode(user[0], "UTF-8"), InetAddress.getByName(user[2].substring(1, user[2].length())), user[1]);
 					}
