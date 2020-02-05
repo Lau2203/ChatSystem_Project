@@ -49,7 +49,7 @@ message-history=../resources/history/history_backup.mh
 log-filling=true
 ```
 
-If log-filling is true, do not hesitate to have a look into the log file (its path is the value of the log-file key). message-history mentions the path of the message history xml file. As you can see, it can be useful to modify the remote-server-url, nsl-port or server-port, but keep in mind that all the instances of Aura will need to get their configuration file modified, since they all work with the same port numbers and remote server URL. For obvious reasons dealing with the witness file, this config file should only have root permission for writing.
+If log-filling is true, do not hesitate to have a look into the log file (its path is the value of the log-file key). message-history mentions the path of the message history xml file. As you can see, it can be useful to modify the remote-server-url, nsl-port or server-port, but keep in mind that all the instances of Aura will need to get their configuration file modified, since they all work with the same port numbers and remote server URL. You can also see the remote-server boolean variable, which disables the servlet requests when equals to 0, and enables it otherwise. As it will be later explained, the implementation of the servlet is still fragile, so you can toggle its function by changing that remote-server value. For obvious reasons dealing with the witness file, this config file should only have root permission for writing.
 
 ### resources/history/ ###
 
